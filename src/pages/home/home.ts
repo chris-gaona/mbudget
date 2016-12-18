@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
+import { ModalController, NavController, PopoverController } from 'ionic-angular';
+
+import { PopoverPage } from '../popovers/userInfo';
+import { ModalContentPage } from '../modals/modalContent';
 
 @Component({
   selector: 'page-home',
@@ -8,8 +11,24 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController) {
 
+  }
+
+  presentPopover(ev) {
+
+    let popover = this.popoverCtrl.create(PopoverPage, {
+    });
+
+    popover.present({
+      ev: ev
+    });
+  }
+
+  openModal(characterNum) {
+
+    let modal = this.modalCtrl.create(ModalContentPage, characterNum);
+    modal.present();
   }
 
 }
