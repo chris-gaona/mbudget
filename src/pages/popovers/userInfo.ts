@@ -2,34 +2,24 @@ import { Component } from '@angular/core';
 
 @Component({
   template: `
-    <ion-list radio-group>
-      <ion-item class="text-athelas">
-        <ion-label>Athelas</ion-label>
-        <ion-radio value="Athelas"></ion-radio>
+    <!--<ion-list>-->
+      <!--<ion-item class="hello-text">-->
+        <!--<ion-label>Hello, Chris</ion-label>-->
+      <!--</ion-item>-->
+    <!--</ion-list>-->
+    <ion-list no-lines no-margin>
+      <ion-list-header>
+        User Info
+      </ion-list-header>
+      <ion-item>
+        <ion-avatar item-left>
+          <img src="https://placeimg.com/100/100/people">
+        </ion-avatar>
+        <h2>Hello, Chris</h2>
+        <p>Enjoy today!</p>
       </ion-item>
-      <ion-item class="text-charter">
-        <ion-label>Charter</ion-label>
-        <ion-radio value="Charter"></ion-radio>
-      </ion-item>
-      <ion-item class="text-iowan">
-        <ion-label>Iowan</ion-label>
-        <ion-radio value="Iowan"></ion-radio>
-      </ion-item>
-      <ion-item class="text-palatino">
-        <ion-label>Palatino</ion-label>
-        <ion-radio value="Palatino"></ion-radio>
-      </ion-item>
-      <ion-item class="text-san-francisco">
-        <ion-label>San Francisco</ion-label>
-        <ion-radio value="San Francisco"></ion-radio>
-      </ion-item>
-      <ion-item class="text-seravek">
-        <ion-label>Seravek</ion-label>
-        <ion-radio value="Seravek"></ion-radio>
-      </ion-item>
-      <ion-item class="text-times-new-roman">
-        <ion-label>Times New Roman</ion-label>
-        <ion-radio value="Times New Roman"></ion-radio>
+      <ion-item>
+        <button ion-button round full>Logout</button>
       </ion-item>
     </ion-list>
   `

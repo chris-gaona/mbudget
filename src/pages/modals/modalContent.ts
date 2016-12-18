@@ -7,7 +7,7 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Description
+      I love change!
     </ion-title>
     <ion-buttons start>
       <button ion-button (click)="dismiss()">
@@ -18,26 +18,45 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
   </ion-toolbar>
 </ion-header>
 <ion-content>
+  <p ion-text padding no-margin class="sub-text">Please be careful while editing...I take no responsibility for your mistakes.</p>
   <ion-list>
-      <ion-item>
-        <ion-avatar item-left>
-          <img src="{{character.image}}">
-        </ion-avatar>
-        <h2>{{character.name}}</h2>
-        <p>{{character.quote}}</p>
-      </ion-item>
-      <ion-item *ngFor="let item of character['items']">
-        {{item.title}}
-        <ion-note item-right>
-          {{item.note}}
-        </ion-note>
-      </ion-item>
+
+    <ion-item>
+      <ion-label><ion-icon name="calendar"></ion-icon> Current period start?</ion-label>
+      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="event.month"></ion-datetime>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label floating><ion-icon name="logo-usd"></ion-icon> What's your current total cash?</ion-label>
+      <ion-input type="number"></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label floating><ion-icon name="logo-usd"></ion-icon> What's your current income?</ion-label>
+      <ion-input type="number"></ion-input>
+    </ion-item>
   </ion-list>
+  <ion-fab left bottom>
+    <button ion-button round color="royal">
+      Update
+    </button>
+  </ion-fab>
+  <ion-fab right bottom>
+    <button ion-button round color="danger" icon-only>
+      <ion-icon name="trash"></ion-icon>
+    </button>
+  </ion-fab>
 </ion-content>
 `
 })
 export class ModalContentPage {
   character;
+
+  public event = {
+    month: '1990-02-19',
+    timeStarts: '07:43',
+    timeEnds: '1990-02-20'
+  };
 
   constructor(
     public platform: Platform,
