@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ModalController, NavController, PopoverController } from 'ionic-angular';
 

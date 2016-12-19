@@ -26,15 +26,15 @@
 
   </ion-card>
 
-  <p no-margin margin-vertical margin-left id="last-updated">
+  <p no-margin margin-vertical margin-left class="small-text" color="light">
     Last Updated - 1 day ago
   </p>
 
   <ion-card>
 
     <ion-card-content no-padding padding-horizontal id="total-dollars">
-      <ion-icon name="cash" item-left class="header-icon" color="light"></ion-icon>
-      <p class="header-dollars" color="light"><span>Total: </span>$27,652</p>
+      <ion-icon name="cash" item-left class="header-icon" color="lighter"></ion-icon>
+      <p class="header-dollars" color="lighter"><span>Total: </span>$27,652</p>
       <div class="clearfix"></div>
     </ion-card-content>
 
@@ -43,22 +43,73 @@
   <ion-card>
 
     <ion-card-content no-padding padding-horizontal id="total-income">
-      <ion-icon name="log-in" item-left class="header-icon" color="light"></ion-icon>
-      <p class="header-dollars" color="light"><span>Income: </span>$1,875</p>
+      <ion-icon name="log-in" item-left class="header-icon" color="lighter"></ion-icon>
+      <p class="header-dollars" color="lighter"><span>Income: </span>$1,875</p>
     </ion-card-content>
 
   </ion-card>
 
-  <ion-card>
+  <ion-card margin-bottom>
 
     <ion-card-content no-padding padding-horizontal id="total-expense">
-      <ion-icon name="log-out" item-left class="header-icon" color="light"></ion-icon>
-      <p class="header-dollars" color="light"><span>Expense: </span>$1,100</p>
+      <ion-icon name="log-out" item-left class="header-icon" color="lighter"></ion-icon>
+      <p class="header-dollars" color="lighter"><span>Expense: </span>$1,100</p>
     </ion-card-content>
 
   </ion-card>
 
+  <hr>
+
+  <div padding>
+    <ion-segment [(ngModel)]="projActual">
+      <ion-segment-button value="projection">
+        Projection
+      </ion-segment-button>
+      <ion-segment-button value="actual">
+        Actual
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <ion-list class="projActual">
+
+    <ion-list-header>
+      Projection
+    </ion-list-header>
+
+    <ion-item>Gas<span>$0.00</span></ion-item>
+    <ion-item>Verizon<span>$25.00</span></ion-item>
+    <ion-item>Food<span>$115.86</span></ion-item>
+    <ion-item>Credit Card<span>$50.00</span></ion-item>
+    <ion-item>Miscellaneous<span>$125.65</span></ion-item>
+    <ion-item>Cash Withdrawl<span>$20.00</span></ion-item>
+    <ion-item>Tithe<span>$150.00</span></ion-item>
+    <ion-item>Insurance<span>$40.00</span></ion-item>
+    <ion-item>Amazon<span>$150.00</span></ion-item>
+    <ion-item>Car Loan<span>$200.00</span></ion-item>
+    <ion-item>Paypal Credit<span>$150.00</span></ion-item>
+    <ion-item>Given to Mom<span>$200.00</span></ion-item>
+  </ion-list>
+
+  <ion-list class="projActual">
+
+    <ion-list-header>
+      Totals
+    </ion-list-header>
+
+    <ion-item>Spent<span>$1,100.54</span></ion-item>
+    <ion-item>Saving<span>$800.26</span></ion-item>
+    <ion-item>% Saving<span>23%</span></ion-item>
+    <ion-item><b>Ending Cash<span>$25,672.25</span></b></ion-item>
+
+  </ion-list>
+
+  <div class="footer-container">
+    <p color="light" class="small-text">Follow me on Twitter @chrissgaona</p>
+    <p color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
+  </div>
+
   <ion-fab right bottom (click)="openModal({charNum: 1})">
-    <button ion-fab mini><ion-icon name="add"></ion-icon></button>
+    <button ion-fab><ion-icon name="add"></ion-icon></button>
   </ion-fab>
 </ion-content>
