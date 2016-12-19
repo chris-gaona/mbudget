@@ -4,7 +4,7 @@ import { MyApp } from './app.component';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
-import { TabsPage } from '../pages/tabs/tabs';
+// import { TabsPage } from '../pages/tabs/tabs';
 import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
 
@@ -14,7 +14,7 @@ import { ModalContentPage } from '../pages/modals/modalContent';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage,
+    // TabsPage,
     PopoverPage,
     ModalContentPage
   ],
@@ -27,7 +27,7 @@ import { ModalContentPage } from '../pages/modals/modalContent';
     AboutPage,
     ContactPage,
     HomePage,
-    TabsPage,
+    // TabsPage,
     PopoverPage,
     ModalContentPage
   ],

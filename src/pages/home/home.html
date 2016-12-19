@@ -1,24 +1,62 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons start>
-      <button ion-button icon-only color="royal" (click)="presentPopover($event)">
+      <button ion-button icon-only color="dark" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>Budget Tracker</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only color="royal" (click)="openModal({charNum: 0})">
+      <button ion-button icon-only color="dark" (click)="openModal({charNum: 0})">
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content #popoverContent padding>
+<ion-content padding id="main-container">
   <!--<h2>Budget Tracker</h2>-->
-  <p>
-    <!--A simple budget tracker built with <ion-icon name="heart"></ion-icon>-->
+
+  <ion-card>
+
+    <ion-card-content id="health-snapshot" no-padding padding-horizontal>
+      Health Snapshot
+      <ion-icon name="checkmark-circle" id="health-icon"></ion-icon>
+    </ion-card-content>
+
+  </ion-card>
+
+  <p no-margin margin-vertical margin-left id="last-updated">
+    Last Updated - 1 day ago
   </p>
+
+  <ion-card>
+
+    <ion-card-content no-padding padding-horizontal id="total-dollars">
+      <ion-icon name="cash" item-left class="header-icon" color="light"></ion-icon>
+      <p class="header-dollars" color="light"><span>Total: </span>$27,652</p>
+      <div class="clearfix"></div>
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card>
+
+    <ion-card-content no-padding padding-horizontal id="total-income">
+      <ion-icon name="log-in" item-left class="header-icon" color="light"></ion-icon>
+      <p class="header-dollars" color="light"><span>Income: </span>$1,875</p>
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card>
+
+    <ion-card-content no-padding padding-horizontal id="total-expense">
+      <ion-icon name="log-out" item-left class="header-icon" color="light"></ion-icon>
+      <p class="header-dollars" color="light"><span>Expense: </span>$1,100</p>
+    </ion-card-content>
+
+  </ion-card>
 
   <ion-fab right bottom (click)="openModal({charNum: 1})">
     <button ion-fab mini><ion-icon name="add"></ion-icon></button>

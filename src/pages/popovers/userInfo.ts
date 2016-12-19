@@ -19,8 +19,13 @@ import { Component } from '@angular/core';
         <p>Enjoy today!</p>
       </ion-item>
       <ion-item>
-        <button ion-button round full>Logout</button>
+        <button ion-button block padding-vertical>Logout</button>
       </ion-item>
+      
+      <!--<ion-item>-->
+        <!--<button ion-button block padding-vertical>Login</button>-->
+        <!--<button ion-button block padding-vertical color="light" margin-top>Register</button>-->
+      <!--</ion-item>-->
     </ion-list>
   `
 })

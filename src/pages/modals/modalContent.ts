@@ -7,9 +7,9 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      I love change!
+      {{editing ? "Making some changes!" : "Let's track your pay!"}}
     </ion-title>
-    <ion-buttons start>
+    <ion-buttons end>
       <button ion-button (click)="dismiss()">
         <span ion-text color="primary" showWhen="ios">Cancel</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
@@ -17,35 +17,38 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <p ion-text padding no-margin class="sub-text">Please be careful while editing...I take no responsibility for your mistakes.</p>
+<ion-content id="modal-container">
+  <p ion-text padding no-margin class="sub-text">Please be careful while editing. I take no responsibility for your mistakes.</p>
   <ion-list>
-
+  
     <ion-item>
-      <ion-label><ion-icon name="calendar"></ion-icon> Current period start?</ion-label>
+      <ion-label stacked>When does the current period start?</ion-label>
       <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="event.month"></ion-datetime>
     </ion-item>
-  
+
     <ion-item>
-      <ion-label floating><ion-icon name="logo-usd"></ion-icon> What's your current total cash?</ion-label>
+      <ion-label stacked>What's your current total cash?</ion-label>
       <ion-input type="number"></ion-input>
     </ion-item>
   
     <ion-item>
-      <ion-label floating><ion-icon name="logo-usd"></ion-icon> What's your current income?</ion-label>
+      <ion-label stacked>What's your current income?</ion-label>
       <ion-input type="number"></ion-input>
     </ion-item>
+    
+    <ion-item>
+      <ion-buttons left>
+        <button ion-button color="royal" margin-left>
+          Update
+        </button>
+        <button ion-button color="danger" icon-only margin-left>
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-item>
+  
   </ion-list>
-  <ion-fab left bottom>
-    <button ion-button round color="royal">
-      Update
-    </button>
-  </ion-fab>
-  <ion-fab right bottom>
-    <button ion-button round color="danger" icon-only>
-      <ion-icon name="trash"></ion-icon>
-    </button>
-  </ion-fab>
+  
 </ion-content>
 `
 })

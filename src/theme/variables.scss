@@ -11,9 +11,77 @@ $font-path: "../assets/fonts";
 // the Sass variables found in Ionic's source scss files.
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
+.clearfix {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
 .sub-text {
   color: #8e9093;
   font-size: 1.2rem;
+}
+
+#main-container {
+  background-color: #eee;
+}
+
+#modal-container {
+  background-color: #eee;
+}
+
+.toolbar-background {
+  background-color: #fff !important;
+}
+
+#last-updated {
+  font-size: 1.2rem;
+  color: #9a9a9a;
+}
+
+#health-snapshot {
+  position: relative;
+  top: 20px;
+}
+
+#health-icon {
+  color: #2ec95c;
+  float: right;
+  position: relative;
+  top: -18px;
+  font-size: 3em;
+}
+
+.header-dollars {
+  font-size: 2rem !important;
+  float: right;
+  position: relative;
+  top: 7px;
+
+  span {
+    font-size: 1.5rem;
+  }
+}
+
+.header-icon {
+  font-size: 3rem !important;
+}
+
+#total-dollars {
+  background-color: #666;
+}
+
+#total-income {
+  background-color: #826bbd;
+}
+
+#total-expense {
+  background-color: #688dcc;
 }
 
 
@@ -26,11 +94,11 @@ $font-path: "../assets/fonts";
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #387ef5,
+  primary:    #688dcc,
   secondary:  #32db64,
-  danger:     #f53d3d,
+  danger:     #cb0435,
   light:      #f4f4f4,
-  dark:       #222
+  dark:       #666
 );
 
 
