@@ -6,95 +6,10 @@ import { Keyboard } from 'ionic-native';
 
 
 @Component({
-  template: `
-<ion-header>
-  <ion-toolbar (tap)="tapEvent($event)">
-    <ion-title>
-      {{editing ? "Making some changes!" : "Let's track your pay!"}}
-    </ion-title>
-    <ion-buttons end>
-      <button ion-button (click)="dismiss()">
-        <span ion-text color="primary" showWhen="ios">Cancel</span>
-        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-<ion-content id="modal-container">
-  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)">Please be careful while editing. I take no responsibility for your mistakes.</p>
-  <ion-list>
-  
-    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
-      When does the current period start?
-    </ion-list-header>
-  
-    <ion-item>
-      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="month" class="input-field-date"></ion-datetime>
-    </ion-item>
-    
-    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
-      What is your current cash?
-    </ion-list-header>
-    
-    <ion-item>
-      <input currencyMask type="text" [(ngModel)]="cash" class="input-field">
-    </ion-item>
-    
-    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
-      What is your current income?
-    </ion-list-header>
-    
-    <ion-item>
-      <input currencyMask type="text" [(ngModel)]="income" class="input-field">
-    </ion-item>
-    
-    <ion-item>
-      <ion-buttons left>
-        <button ion-button color="royal" margin-left>
-          Update
-        </button>
-        <button ion-button color="danger" icon-only margin-left>
-          <ion-icon name="trash"></ion-icon>
-        </button>
-      </ion-buttons>
-    </ion-item>
-  
-  </ion-list>
-  
-  <div class="dog-container" (tap)="tapEvent($event)">
-    <div class="dog">
-      <div class="ears"></div>
-  
-      <div class="dog-body">
-        <div class="eyes"></div>
-        <div class="beard">
-          <div class="mouth">
-            <div class="tongue"></div>
-          </div>
-        </div>
-        <div class="belt">
-          <div class="locket"></div>
-          <div class="dot dot1"></div>
-          <div class="dot dot2"></div>
-          <div class="dot dot3"></div>
-          <div class="dot dot4"></div>
-          <div class="tag"></div>
-        </div>
-        <div class="stomach">
-        </div>
-        <div class="legs">
-          <div class="left"></div>
-          <div class="right"></div>
-        </div>
-      </div>
-      <div class="tail">
-      </div>
-    </div>
-  </div>
-  
-</ion-content>
-`
+  selector: 'modal-content',
+  templateUrl: 'modalContent.html'
 })
+
 export class ModalContentPage {
   character;
 

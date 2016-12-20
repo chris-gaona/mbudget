@@ -1,3 +1,64 @@
 page-home {
+  #main-container {
+    background-color: #eee;
+  }
 
+  .toolbar-background {
+    background-color: #fff !important;
+  }
+
+  .select-field {
+    font-size: 1.5rem;
+  }
+
+  .small-text {
+    font-size: 1.2rem;
+  }
+
+  #health-snapshot {
+    position: relative;
+    top: 20px;
+  }
+
+  #health-icon {
+    color: #2ec95c;
+    float: right;
+    position: relative;
+    top: -18px;
+    font-size: 3em;
+  }
+
+  .header-dollars {
+    font-size: 2rem !important;
+    float: right;
+    position: relative;
+    top: 7px;
+
+    span {
+      font-size: 1.5rem;
+    }
+  }
+
+  .header-icon {
+    font-size: 3rem !important;
+  }
+
+  #total-dollars {
+    background-color: #666;
+  }
+
+  #total-income {
+    background-color: #688dcc;
+  }
+
+  #total-expense {
+    background-color: #826bbd;
+  }
+
+  .projActual {
+
+    span {
+      float: right;
+    }
+  }
 }

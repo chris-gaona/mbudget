@@ -1,8 +1,7 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { AboutPage } from '../pages/about/about';
-import { EditPage } from '../pages/contact/edit';
+import { EditPage } from '../pages/edit/edit';
 import { HomePage } from '../pages/home/home';
 // import { TabsPage } from '../pages/tabs/tabs';
 import { PopoverPage } from '../pages/popovers/userInfo';
@@ -13,7 +12,6 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
     EditPage,
     HomePage,
     // TabsPage,
@@ -27,7 +25,6 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
     EditPage,
     HomePage,
     // TabsPage,

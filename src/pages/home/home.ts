@@ -4,7 +4,7 @@ import { ModalController, NavController, PopoverController, AlertController } fr
 
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
-import { EditPage } from '../contact/edit';
+import { EditPage } from '../edit/edit';
 
 @Component({
   selector: 'page-home',
