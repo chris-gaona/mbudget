@@ -2,10 +2,13 @@ import { Component } from '@angular/core';
 
 import { Platform, NavParams, ViewController } from 'ionic-angular';
 
+import { Keyboard } from 'ionic-native';
+
+
 @Component({
   template: `
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar (tap)="tapEvent($event)">
     <ion-title>
       {{editing ? "Making some changes!" : "Let's track your pay!"}}
     </ion-title>
@@ -18,22 +21,31 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
   </ion-toolbar>
 </ion-header>
 <ion-content id="modal-container">
-  <p ion-text padding no-margin class="sub-text">Please be careful while editing. I take no responsibility for your mistakes.</p>
+  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)">Please be careful while editing. I take no responsibility for your mistakes.</p>
   <ion-list>
   
-    <ion-item>
-      <ion-label stacked>When does the current period start?</ion-label>
-      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="event.month"></ion-datetime>
-    </ion-item>
-
-    <ion-item>
-      <ion-label stacked>What's your current total cash?</ion-label>
-      <ion-input type="number"></ion-input>
-    </ion-item>
+    <ion-list-header class="input-header" (tap)="tapEvent($event)">
+      When does the current period start?
+    </ion-list-header>
   
     <ion-item>
-      <ion-label stacked>What's your current income?</ion-label>
-      <ion-input type="number"></ion-input>
+      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="month" class="input-field-date"></ion-datetime>
+    </ion-item>
+    
+    <ion-list-header class="input-header" (tap)="tapEvent($event)">
+      What is your current cash?
+    </ion-list-header>
+    
+    <ion-item>
+      <input currencyMask type="text" [(ngModel)]="cash" class="input-field">
+    </ion-item>
+    
+    <ion-list-header class="input-header" (tap)="tapEvent($event)">
+      What is your current income?
+    </ion-list-header>
+    
+    <ion-item>
+      <input currencyMask type="text" [(ngModel)]="income" class="input-field">
     </ion-item>
     
     <ion-item>
@@ -49,7 +61,7 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
   
   </ion-list>
   
-  <div class="dog-container">
+  <div class="dog-container" (tap)="tapEvent($event)">
     <div class="dog">
       <div class="ears"></div>
   
@@ -86,11 +98,11 @@ import { Platform, NavParams, ViewController } from 'ionic-angular';
 export class ModalContentPage {
   character;
 
-  public event = {
-    month: '1990-02-19',
-    timeStarts: '07:43',
-    timeEnds: '1990-02-20'
-  };
+  month: string = '2016-12-19';
+  cash: number = 25652.23;
+  income: number = 1876.32;
+  tap: number = 0;
+
 
   constructor(
     public platform: Platform,
@@ -134,5 +146,10 @@ export class ModalContentPage {
 
   dismiss() {
     this.viewCtrl.dismiss();
+  }
+
+  tapEvent(e) {
+    console.log('tap', this.tap++);
+    Keyboard.close();
   }
 }

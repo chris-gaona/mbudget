@@ -22,10 +22,43 @@ $font-path: "../assets/fonts";
   }
 }
 
+hr {
+  background: #ccc !important;
+  height: 3px !important;
+  width: 100px !important;
+  margin-top: 20px !important;
+}
+
+#select-container {
+
+}
+
+.select-field {
+  font-size: 1.4rem;
+}
+
 .sub-text {
   background-color: #688dcc;
   color: #fff;
   font-size: 1.2rem;
+}
+
+.input-header {
+  background: #fff !important;
+}
+
+.input-label {
+  font-size: 1.3rem !important;
+}
+
+.input-field-date {
+  font-size: 2.2rem !important;
+}
+
+.input-field {
+  font-size: 2.2rem !important;
+  border: none;
+  width: 100%;
 }
 
 #main-container {

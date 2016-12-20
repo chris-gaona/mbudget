@@ -11,6 +11,8 @@ import { ModalContentPage } from '../modals/modalContent';
 })
 export class HomePage {
 
+  period = 'Nov21';
+
   constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController) {
 
   }

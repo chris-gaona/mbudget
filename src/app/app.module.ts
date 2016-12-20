@@ -7,6 +7,8 @@ import { HomePage } from '../pages/home/home';
 // import { TabsPage } from '../pages/tabs/tabs';
 import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import { ModalContentPage } from '../pages/modals/modalContent';
     ModalContentPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    CurrencyMaskModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

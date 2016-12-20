@@ -19,12 +19,25 @@
 
   <ion-card>
 
-    <ion-card-content id="health-snapshot" no-padding padding-horizontal>
+    <ion-card-content id="health-snapshot" no-padding padding-horizontal margin-bottom>
       Health Snapshot
       <ion-icon name="checkmark-circle" id="health-icon"></ion-icon>
     </ion-card-content>
 
   </ion-card>
+
+  <hr>
+
+  <ion-list no-margin margin-top margit gin-horizontal id="select-container">
+    <ion-item>
+      <ion-label class="select-field">Period</ion-label>
+      <ion-select [(ngModel)]="period" class="select-field">
+        <ion-option value="Oct24">Oct 24, 2016</ion-option>
+        <ion-option value="Nov7">Nov 7, 2016</ion-option>
+        <ion-option value="Nov21">Nov 21, 2016</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
 
   <p no-margin margin-vertical margin-left class="small-text" color="light">
     Last Updated - 1 day ago
