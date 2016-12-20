@@ -24,7 +24,7 @@ import { Keyboard } from 'ionic-native';
   <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)">Please be careful while editing. I take no responsibility for your mistakes.</p>
   <ion-list>
   
-    <ion-list-header class="input-header" (tap)="tapEvent($event)">
+    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
       When does the current period start?
     </ion-list-header>
   
@@ -32,7 +32,7 @@ import { Keyboard } from 'ionic-native';
       <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="month" class="input-field-date"></ion-datetime>
     </ion-item>
     
-    <ion-list-header class="input-header" (tap)="tapEvent($event)">
+    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
       What is your current cash?
     </ion-list-header>
     
@@ -40,7 +40,7 @@ import { Keyboard } from 'ionic-native';
       <input currencyMask type="text" [(ngModel)]="cash" class="input-field">
     </ion-item>
     
-    <ion-list-header class="input-header" (tap)="tapEvent($event)">
+    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
       What is your current income?
     </ion-list-header>
     
@@ -101,7 +101,6 @@ export class ModalContentPage {
   month: string = '2016-12-19';
   cash: number = 25652.23;
   income: number = 1876.32;
-  tap: number = 0;
 
 
   constructor(
@@ -149,7 +148,6 @@ export class ModalContentPage {
   }
 
   tapEvent(e) {
-    console.log('tap', this.tap++);
     Keyboard.close();
   }
 }

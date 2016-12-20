@@ -26,9 +26,7 @@
 
   </ion-card>
 
-  <hr>
-
-  <ion-list no-margin margin-top margit gin-horizontal id="select-container">
+  <ion-list no-margin margin-top margin-horizontal id="select-container">
     <ion-item>
       <ion-label class="select-field">Period</ion-label>
       <ion-select [(ngModel)]="period" class="select-field">
@@ -90,19 +88,17 @@
       Projection
     </ion-list-header>
 
-    <ion-item>Gas<span>$0.00</span></ion-item>
-    <ion-item>Verizon<span>$25.00</span></ion-item>
-    <ion-item>Food<span>$115.86</span></ion-item>
-    <ion-item>Credit Card<span>$50.00</span></ion-item>
-    <ion-item>Miscellaneous<span>$125.65</span></ion-item>
-    <ion-item>Cash Withdrawl<span>$20.00</span></ion-item>
-    <ion-item>Tithe<span>$150.00</span></ion-item>
-    <ion-item>Insurance<span>$40.00</span></ion-item>
-    <ion-item>Amazon<span>$150.00</span></ion-item>
-    <ion-item>Car Loan<span>$200.00</span></ion-item>
-    <ion-item>Paypal Credit<span>$150.00</span></ion-item>
-    <ion-item>Given to Mom<span>$200.00</span></ion-item>
+    <ion-item-sliding *ngFor="let item of projections">
+      <ion-item (click)="goToContactPage()">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
+      <ion-item-options side="right">
+        <button ion-button color="danger" (click)="showConfirm()">
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
   </ion-list>
+
 
   <ion-list class="projActual">
 
@@ -118,7 +114,12 @@
   </ion-list>
 
   <div class="footer-container">
-    <p color="light" class="small-text">Follow me on Twitter @chrissgaona</p>
+    <p color="light" class="small-text">
+      <ion-icon name="logo-twitter"></ion-icon>
+      <a href="https://twitter.com/chrissgaona">
+        Follow @chrissgaona
+      </a>
+    </p>
     <p color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
   </div>
 

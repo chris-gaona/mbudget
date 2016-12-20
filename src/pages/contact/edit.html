@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Edit Item
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content id="edit-container">
+  <ion-list>
+    <ion-list-header class="edit-header">
+      Gas
+    </ion-list-header>
+    <ion-grid class="edit-subcontainer">
+      <ion-row *ngFor="let item of items">
+        <ion-col width-50 no-padding>
+          <ion-item no-padding>
+            <ion-icon name="information-circle" item-left class="no-margin"></ion-icon>
+            <ion-input type="text" [(ngModel)]="item.name" class="no-padding"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col width-50 no-padding>
+          <ion-item no-padding>
+            <ion-icon name="logo-usd" item-left class="no-margin"></ion-icon>
+            <ion-input type="text" [(ngModel)]="item.amount" class="no-padding"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-item class="edit-subcontainer">
+      <ion-buttons left>
+        <button ion-button color="lighter" icon-only margin-left>
+          <ion-icon name="add"></ion-icon>
+        </button>
+        <button ion-button margin-left>
+          Save
+        </button>
+        <button ion-button color="danger" icon-only margin-left>
+          <ion-icon name="trash"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-item>
+  </ion-list>
+</ion-content>
