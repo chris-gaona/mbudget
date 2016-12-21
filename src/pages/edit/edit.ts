@@ -4,7 +4,7 @@ import { NavController } from 'ionic-angular';
 
 @Component({
   selector: 'page-edit',
-  templateUrl: 'edit.html'
+  templateUrl: './edit.html'
 })
 export class EditPage {
 

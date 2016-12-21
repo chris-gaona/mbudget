@@ -15,6 +15,20 @@ export class ConfigMock {
   }
 }
 
+export class ViewControllerMock {
+  public _setHeader(): any {
+    return {}
+  }
+
+  public _setIONContent(): any {
+    return {}
+  }
+
+  public _setIONContentRef(): any {
+    return {}
+  }
+}
+
 export class FormMock {
   public register(): any {
     return true;
@@ -53,6 +67,10 @@ export class PlatformMock {
     return new Promise((resolve: Function) => {
       resolve();
     });
+  }
+
+  public registerBackButtonAction(): any {
+    return true;
   }
 }
 

@@ -2,13 +2,15 @@ import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 // import { By } from '@angular/platform-browser';
 // import { DebugElement } from '@angular/core';
 
-import { IonicModule, Config, GestureController, DomController, App, MenuController, NavController, Platform,
-  Keyboard, Form } from 'ionic-angular';
+import {
+  IonicModule, Config, GestureController, DomController, App, MenuController, NavController, Platform, Keyboard,
+  Form
+} from 'ionic-angular';
 
 import { ConfigMock } from '../../mocks';
-import { PopoverPage } from './userInfo';
+import { EditPage } from './edit';
 
-describe('Component: PopoverPage ', () => {
+describe('Component: ModalContentPage', () => {
   let fixture;
   let component;
 
@@ -18,7 +20,7 @@ describe('Component: PopoverPage ', () => {
         IonicModule
       ],
       declarations: [
-        PopoverPage
+        EditPage
       ],
       providers: [
         App, Platform, Form, Keyboard, MenuController, NavController, GestureController, DomController,
@@ -27,7 +29,7 @@ describe('Component: PopoverPage ', () => {
     });
 
     // create component and test fixture
-    fixture = TestBed.createComponent(PopoverPage);
+    fixture = TestBed.createComponent(EditPage);
     // get test component from the fixture
     component = fixture.componentInstance;
   });

@@ -8,7 +8,7 @@ import { EditPage } from '../edit/edit';
 
 @Component({
   selector: 'page-home',
-  templateUrl: 'home.html'
+  templateUrl: './home.html'
 })
 export class HomePage {
 

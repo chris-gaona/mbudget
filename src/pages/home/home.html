@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons start>
-      <button ion-button icon-only color="dark" (click)="presentPopover($event)">
+      <button ion-button icon-only ion-text color="dark" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>BudTrac</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only color="dark" (click)="openModal({charNum: 0})">
+      <button ion-button icon-only ion-text color="dark" (click)="openModal({charNum: 0})">
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
@@ -37,15 +37,15 @@
     </ion-item>
   </ion-list>
 
-  <p no-margin margin-vertical margin-left class="small-text" color="light">
+  <p no-margin margin-vertical margin-left class="small-text" ion-text color="light">
     Last Updated - 1 day ago
   </p>
 
   <ion-card>
 
     <ion-card-content no-padding padding-horizontal id="total-dollars">
-      <ion-icon name="cash" item-left class="header-icon" color="lighter"></ion-icon>
-      <p class="header-dollars" color="lighter"><span>Total: </span>$27,652</p>
+      <ion-icon name="cash" item-left class="header-icon" ion-text color="lighter"></ion-icon>
+      <p class="header-dollars" ion-text color="lighter"><span>Total: </span>$27,652</p>
       <div class="clearfix"></div>
     </ion-card-content>
 
@@ -54,8 +54,8 @@
   <ion-card>
 
     <ion-card-content no-padding padding-horizontal id="total-income">
-      <ion-icon name="log-in" item-left class="header-icon" color="lighter"></ion-icon>
-      <p class="header-dollars" color="lighter"><span>Income: </span>$1,875</p>
+      <ion-icon name="log-in" item-left class="header-icon" ion-text color="lighter"></ion-icon>
+      <p class="header-dollars" ion-text color="lighter"><span>Income: </span>$1,875</p>
     </ion-card-content>
 
   </ion-card>
@@ -63,8 +63,8 @@
   <ion-card margin-bottom>
 
     <ion-card-content no-padding padding-horizontal id="total-expense">
-      <ion-icon name="log-out" item-left class="header-icon" color="lighter"></ion-icon>
-      <p class="header-dollars" color="lighter"><span>Expense: </span>$1,100</p>
+      <ion-icon name="log-out" item-left class="header-icon" ion-text color="lighter"></ion-icon>
+      <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>$1,100</p>
     </ion-card-content>
 
   </ion-card>
@@ -114,13 +114,13 @@
   </ion-list>
 
   <div class="footer-container">
-    <p color="light" class="small-text">
+    <p ion-text color="light" class="small-text">
       <ion-icon name="logo-twitter"></ion-icon>
       <a href="https://twitter.com/chrissgaona">
         Follow @chrissgaona
       </a>
     </p>
-    <p color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
+    <p ion-text color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
   </div>
 
   <ion-fab right bottom (click)="openModal({charNum: 1})">
