@@ -5,12 +5,15 @@ import { ModalController, NavController, PopoverController, AlertController } fr
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'page-home',
   templateUrl: './home.html'
 })
 export class HomePage {
+
+  currentUser: string;
 
   projActual = 'actual';
   period = 'Nov21';
@@ -42,7 +45,7 @@ export class HomePage {
     }
   ];
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController, public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController, public alertCtrl: AlertController, private userService: UserService) {
 
   }
 
@@ -88,6 +91,16 @@ export class HomePage {
       ]
     });
     confirm.present();
+  }
+
+  loggedInUser() {
+    this.userService.getUser()
+      .subscribe(data => {
+        this.currentUser = data;
+      }, err => {
+        // this.handleError(err);
+        console.log(err);
+      });
   }
 
 }

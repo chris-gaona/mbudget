@@ -7,12 +7,31 @@ import { IonicModule, Config, GestureController, DomController, App, MenuControl
 
 import { ConfigMock } from '../../mocks';
 import { PopoverPage } from './userInfo';
+import { UserService } from '../../services/user.service';
+import { AbstractMockObservableService } from '../../services/mock.service';
+
+class MockService extends AbstractMockObservableService {
+  getAllBudgets() {
+    return this;
+  }
+
+  getUser() {
+    return this;
+  }
+
+  updateBudgetById() {
+    return this;
+  }
+}
 
 describe('Component: PopoverPage ', () => {
   let fixture;
   let component;
+  let userService;
 
   beforeEach(() => {
+    userService = new MockService();
+
     TestBed.configureTestingModule({
       imports: [
         IonicModule
@@ -24,6 +43,12 @@ describe('Component: PopoverPage ', () => {
         App, Platform, Form, Keyboard, MenuController, NavController, GestureController, DomController,
         {provide: Config, useClass: ConfigMock}
       ]
+    }).overrideComponent(PopoverPage, {
+      set: {
+        providers: [
+          { provide: UserService, useValue: userService }
+        ]
+      }
     });
 
     // create component and test fixture

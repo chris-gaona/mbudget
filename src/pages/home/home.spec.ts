@@ -9,12 +9,31 @@ import {
 
 import { ConfigMock } from '../../mocks';
 import { HomePage } from './home';
+import { UserService } from '../../services/user.service';
+import { AbstractMockObservableService } from '../../services/mock.service';
 
-describe('Component: ModalContentPage', () => {
+class MockService extends AbstractMockObservableService {
+  getAllBudgets() {
+    return this;
+  }
+
+  getUser() {
+    return this;
+  }
+
+  updateBudgetById() {
+    return this;
+  }
+}
+
+describe('Component: HomePage', () => {
   let fixture;
   let component;
+  let userService;
 
   beforeEach(() => {
+    userService = new MockService();
+
     TestBed.configureTestingModule({
       imports: [
         IonicModule
@@ -27,6 +46,12 @@ describe('Component: ModalContentPage', () => {
         PopoverController, ModalController, AlertController,
         {provide: Config, useClass: ConfigMock}
       ]
+    }).overrideComponent(HomePage, {
+      set: {
+        providers: [
+          { provide: UserService, useValue: userService }
+        ]
+      }
     });
 
     // create component and test fixture
@@ -37,5 +62,14 @@ describe('Component: ModalContentPage', () => {
 
   it('should create an instance', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('#loggedInUser()', () => {
+    it('should get the currently logged in user', async(() => {
+      let user = {username: 'jake123', firstName: 'Jake'};
+      userService.content = user;
+      component.loggedInUser();
+      expect(component.currentUser).toBe(user);
+    }));
   });
 });

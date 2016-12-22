@@ -8,8 +8,7 @@ import {
   Form, ViewController
 } from 'ionic-angular';
 
-import { ConfigMock } from '../../mocks';
-import { ViewControllerMock } from '../../mocks';
+import { ConfigMock, ViewControllerMock } from '../../mocks';
 import { ModalContentPage } from './modalContent';
 
 describe('Component: ModalContentPage', () => {

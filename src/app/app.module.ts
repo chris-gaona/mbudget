@@ -7,6 +7,8 @@ import { HomePage } from '../pages/home/home';
 import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
+import { UserService } from '../services/user.service';
+import { AUTH_PROVIDERS } from 'angular2-jwt';
 
 
 @NgModule({
@@ -31,6 +33,6 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
     PopoverPage,
     ModalContentPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, UserService, AUTH_PROVIDERS]
 })
 export class AppModule {}
