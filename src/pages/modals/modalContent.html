@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar (tap)="tapEvent($event)">
-    <ion-title>
+    <ion-title id="modal-title">
       {{editing ? "Making some changes!" : "Let's track your pay!"}}
     </ion-title>
     <ion-buttons end>
@@ -41,7 +41,7 @@
 
     <ion-item>
       <ion-buttons left>
-        <button ion-button color="royal" margin-left>
+        <button ion-button margin-left>
           Update
         </button>
         <button ion-button color="danger" icon-only margin-left>

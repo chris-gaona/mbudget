@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title>BudTrac</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only ion-text color="dark" (click)="openModal({charNum: 0})">
+      <button ion-button icon-only ion-text color="dark" (click)="openModal()">
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
@@ -30,6 +30,7 @@
     <ion-item>
       <ion-label class="select-field">Period</ion-label>
       <ion-select [(ngModel)]="period" class="select-field">
+        <!--todo change this to a ng for loop-->
         <ion-option value="Oct24">Oct 24, 2016</ion-option>
         <ion-option value="Nov7">Nov 7, 2016</ion-option>
         <ion-option value="Nov21">Nov 21, 2016</ion-option>
@@ -45,8 +46,7 @@
 
     <ion-card-content no-padding padding-horizontal id="total-dollars">
       <ion-icon name="cash" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-      <p class="header-dollars" ion-text color="lighter"><span>Total: </span>$27,652</p>
-      <div class="clearfix"></div>
+      <p class="header-dollars" ion-text color="lighter"><span>Total: </span>$27,652.86</p>
     </ion-card-content>
 
   </ion-card>
@@ -64,7 +64,7 @@
 
     <ion-card-content no-padding padding-horizontal id="total-expense">
       <ion-icon name="log-out" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-      <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>$1,100</p>
+      <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>$1,115.23</p>
     </ion-card-content>
 
   </ion-card>
@@ -88,7 +88,7 @@
       Projection
     </ion-list-header>
 
-    <ion-item-sliding *ngFor="let item of projections">
+    <ion-item-sliding *ngFor="let item of projections" class="projActualItem">
       <ion-item (click)="goToContactPage()">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
       <ion-item-options side="right">
         <button ion-button color="danger" (click)="showConfirm()">
@@ -100,7 +100,7 @@
   </ion-list>
 
 
-  <ion-list class="projActual">
+  <ion-list class="projActual totals-list">
 
     <ion-list-header>
       Totals
@@ -113,7 +113,7 @@
 
   </ion-list>
 
-  <div class="footer-container">
+  <div id="footer-container">
     <p ion-text color="light" class="small-text">
       <ion-icon name="logo-twitter"></ion-icon>
       <a href="https://twitter.com/chrissgaona">
@@ -123,7 +123,7 @@
     <p ion-text color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
   </div>
 
-  <ion-fab right bottom (click)="openModal({charNum: 1})">
+  <ion-fab right bottom (click)="openModal()">
     <button ion-fab><ion-icon name="add"></ion-icon></button>
   </ion-fab>
 </ion-content>

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   template: `
-    <ion-list no-lines no-margin>
+    <ion-list no-lines no-margin class="popover-item">
       <ion-list-header>
         User Info
       </ion-list-header>
