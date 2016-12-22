@@ -12,7 +12,7 @@ import { ModalAuthPage } from '../modals/modalAuth';
       </ion-list-header>
       <ion-item *ngIf="userService.isLoggedIn()">
         <ion-avatar item-left>
-          <img src="https://placeimg.com/100/100/people">
+          <img src="https://placeimg.com/100/100/animals">
         </ion-avatar>
         <h2>Hello, {{currentUser}}</h2>
         <p>Enjoy today!</p>

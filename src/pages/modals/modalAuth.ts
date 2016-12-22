@@ -12,6 +12,7 @@ import { UserService } from '../../services/user.service';
 export class ModalAuthPage {
 
   currentUser: string;
+  loginButtonMain: boolean = true;
 
   constructor(
     public platform: Platform,
