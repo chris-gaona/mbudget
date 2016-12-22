@@ -1,0 +1,53 @@
+<ion-header>
+  <ion-toolbar id="modal-auth-toolbar">
+    <ion-title id="modal-title">
+      Login / Register
+    </ion-title>
+    <!--<ion-buttons end>-->
+      <!--<button ion-button (click)="dismiss()">-->
+        <!--<span ion-text color="primary" showWhen="ios">Cancel</span>-->
+        <!--<ion-icon name="md-close" showWhen="android,windows"></ion-icon>-->
+      <!--</button>-->
+    <!--</ion-buttons>-->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content id="modal-auth-container">
+  <img margin-top src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo">
+  <!--<div id="budtrac-logo">-->
+    <!--<div id="budtrac-logo-circle"></div>-->
+    <!--<div id="budtrac-logo-overlap"></div>-->
+  <!--</div>-->
+
+  <p ion-text color="light" padding>Welcome to the BudTrac app! We're glad you're here. Use this app to easily track your weekly / monthly budgets. And best of all, it's all free!</p>
+
+  <ion-list>
+
+    <ion-item padding-horizontal>
+      <ion-label floating>Username</ion-label>
+      <ion-input type="text" [(ngModel)]="username" (keyup.enter)="login(username, password)"></ion-input>
+    </ion-item>
+
+    <ion-item padding-horizontal>
+      <ion-label floating>Password</ion-label>
+      <ion-input type="password" [(ngModel)]="password" (keyup.enter)="login(username, password)"></ion-input>
+    </ion-item>
+
+    <ion-item padding-top>
+      <ion-buttons left>
+        <button ion-button block (click)="login(username, password)">Login</button>
+      </ion-buttons>
+    </ion-item>
+
+  </ion-list>
+
+  <div id="footer-container">
+    <p ion-text color="light" class="small-text">
+      <ion-icon name="logo-twitter"></ion-icon>
+      <a href="https://twitter.com/chrissgaona">
+        Follow @chrissgaona
+      </a>
+    </p>
+    <p ion-text color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
+  </div>
+</ion-content>

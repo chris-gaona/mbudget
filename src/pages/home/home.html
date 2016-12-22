@@ -5,7 +5,7 @@
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title>BudTrac</ion-title>
+    <ion-title><img margin-top src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo"></ion-title>
     <ion-buttons end>
       <button ion-button icon-only ion-text color="dark" (click)="openModal()">
         <ion-icon name="settings"></ion-icon>
@@ -14,113 +14,117 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding id="main-container">
-  <!--<h2>Budget Tracker</h2>-->
+<!--<modal-auth (userInfo)="userInfo($event)" *ngIf="!userService.isLoggedIn()"></modal-auth>-->
 
-  <ion-card>
+<ion-content padding id="main-container">
+  <h2>BudTrac</h2>
+
+  <div *ngIf="userService.isLoggedIn()">
+    <ion-card>
 
     <ion-card-content id="health-snapshot" no-padding padding-horizontal margin-bottom>
       Health Snapshot
       <ion-icon name="checkmark-circle" id="health-icon"></ion-icon>
     </ion-card-content>
 
-  </ion-card>
+    </ion-card>
 
-  <ion-list no-margin margin-top margin-horizontal id="select-container">
-    <ion-item>
-      <ion-label class="select-field">Period</ion-label>
-      <ion-select [(ngModel)]="period" class="select-field">
-        <!--todo change this to a ng for loop-->
-        <ion-option value="Oct24">Oct 24, 2016</ion-option>
-        <ion-option value="Nov7">Nov 7, 2016</ion-option>
-        <ion-option value="Nov21">Nov 21, 2016</ion-option>
-      </ion-select>
-    </ion-item>
-  </ion-list>
+    <ion-list no-margin margin-top margin-horizontal id="select-container">
+      <ion-item>
+        <ion-label class="select-field">Period</ion-label>
+        <ion-select [(ngModel)]="period" class="select-field">
+          <!--todo change this to a ng for loop-->
+          <ion-option value="Oct24">Oct 24, 2016</ion-option>
+          <ion-option value="Nov7">Nov 7, 2016</ion-option>
+          <ion-option value="Nov21">Nov 21, 2016</ion-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
 
-  <p no-margin margin-vertical margin-left class="small-text" ion-text color="light">
-    Last Updated - 1 day ago
-  </p>
-
-  <ion-card>
-
-    <ion-card-content no-padding padding-horizontal id="total-dollars">
-      <ion-icon name="cash" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-      <p class="header-dollars" ion-text color="lighter"><span>Total: </span>$27,652.86</p>
-    </ion-card-content>
-
-  </ion-card>
-
-  <ion-card>
-
-    <ion-card-content no-padding padding-horizontal id="total-income">
-      <ion-icon name="log-in" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-      <p class="header-dollars" ion-text color="lighter"><span>Income: </span>$1,875</p>
-    </ion-card-content>
-
-  </ion-card>
-
-  <ion-card margin-bottom>
-
-    <ion-card-content no-padding padding-horizontal id="total-expense">
-      <ion-icon name="log-out" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-      <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>$1,115.23</p>
-    </ion-card-content>
-
-  </ion-card>
-
-  <hr>
-
-  <div padding>
-    <ion-segment [(ngModel)]="projActual">
-      <ion-segment-button value="projection">
-        Projection
-      </ion-segment-button>
-      <ion-segment-button value="actual">
-        Actual
-      </ion-segment-button>
-    </ion-segment>
-  </div>
-
-  <ion-list class="projActual">
-
-    <ion-list-header>
-      Projection
-    </ion-list-header>
-
-    <ion-item-sliding *ngFor="let item of projections" class="projActualItem">
-      <ion-item (click)="goToContactPage()">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
-      <ion-item-options side="right">
-        <button ion-button color="danger" (click)="showConfirm()">
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
-
-  </ion-list>
-
-
-  <ion-list class="projActual totals-list">
-
-    <ion-list-header>
-      Totals
-    </ion-list-header>
-
-    <ion-item>Spent<span>$1,100.54</span></ion-item>
-    <ion-item>Saving<span>$800.26</span></ion-item>
-    <ion-item>% Saving<span>23%</span></ion-item>
-    <ion-item><b>Ending Cash<span>$25,672.25</span></b></ion-item>
-
-  </ion-list>
-
-  <div id="footer-container">
-    <p ion-text color="light" class="small-text">
-      <ion-icon name="logo-twitter"></ion-icon>
-      <a href="https://twitter.com/chrissgaona">
-        Follow @chrissgaona
-      </a>
+    <p no-margin margin-vertical margin-left class="small-text" ion-text color="light">
+      Last Updated - 1 day ago
     </p>
-    <p ion-text color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
+
+    <ion-card>
+
+      <ion-card-content no-padding padding-horizontal id="total-dollars">
+        <ion-icon name="cash" item-left class="header-icon" ion-text color="lighter"></ion-icon>
+        <p class="header-dollars" ion-text color="lighter"><span>Total: </span>$27,652.86</p>
+      </ion-card-content>
+
+    </ion-card>
+
+    <ion-card>
+
+      <ion-card-content no-padding padding-horizontal id="total-income">
+        <ion-icon name="log-in" item-left class="header-icon" ion-text color="lighter"></ion-icon>
+        <p class="header-dollars" ion-text color="lighter"><span>Income: </span>$1,875</p>
+      </ion-card-content>
+
+    </ion-card>
+
+    <ion-card margin-bottom>
+
+      <ion-card-content no-padding padding-horizontal id="total-expense">
+        <ion-icon name="log-out" item-left class="header-icon" ion-text color="lighter"></ion-icon>
+        <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>$1,115.23</p>
+      </ion-card-content>
+
+    </ion-card>
+
+    <hr>
+
+    <div padding>
+      <ion-segment [(ngModel)]="projActual">
+        <ion-segment-button value="projection">
+          Projection
+        </ion-segment-button>
+        <ion-segment-button value="actual">
+          Actual
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <ion-list class="projActual">
+
+      <ion-list-header>
+        Projection
+      </ion-list-header>
+
+      <ion-item-sliding *ngFor="let item of projections" class="projActualItem">
+        <ion-item (click)="goToContactPage()">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
+        <ion-item-options side="right">
+          <button ion-button color="danger" (click)="showConfirm()">
+            Delete
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+
+    </ion-list>
+
+
+    <ion-list class="projActual totals-list">
+
+      <ion-list-header>
+        Totals
+      </ion-list-header>
+
+      <ion-item>Spent<span>$1,100.54</span></ion-item>
+      <ion-item>Saving<span>$800.26</span></ion-item>
+      <ion-item>% Saving<span>23%</span></ion-item>
+      <ion-item><b>Ending Cash<span>$25,672.25</span></b></ion-item>
+
+    </ion-list>
+
+    <div id="footer-container">
+      <p ion-text color="light" class="small-text">
+        <ion-icon name="logo-twitter"></ion-icon>
+        <a href="https://twitter.com/chrissgaona">
+          Follow @chrissgaona
+        </a>
+      </p>
+      <p ion-text color="light" class="small-text">Copyright &copy; 2016 Chris Gaona</p>
+    </div>
   </div>
 
   <ion-fab right bottom (click)="openModal()">

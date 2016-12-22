@@ -6,6 +6,7 @@ import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
 import { UserService } from '../../services/user.service';
+import { ModalAuthPage } from '../modals/modalAuth';
 
 @Component({
   selector: 'page-home',
@@ -49,8 +50,19 @@ export class HomePage {
 
   }
 
-  presentPopover(ev) {
+  ngOnInit() {
+    this.checkUserAuth();
+  }
 
+  checkUserAuth () {
+    if (!this.userService.isLoggedIn()) {
+      this.openAuthModal();
+    } else {
+      this.loggedInUser();
+    }
+  }
+
+  presentPopover(ev) {
     let popover = this.popoverCtrl.create(PopoverPage, {
     });
 
@@ -60,8 +72,12 @@ export class HomePage {
   }
 
   openModal() {
-
     let modal = this.modalCtrl.create(ModalContentPage);
+    modal.present();
+  }
+
+  openAuthModal() {
+    let modal = this.modalCtrl.create(ModalAuthPage);
     modal.present();
   }
 
@@ -101,6 +117,14 @@ export class HomePage {
         // this.handleError(err);
         console.log(err);
       });
+  }
+
+  // connection function between header component & this component to change the selected budget
+  // connected through @Output decorator
+  userInfo(user) {
+    // Handle the event & add change to selected budget
+    this.currentUser = user;
+    this.checkUserAuth();
   }
 
 }

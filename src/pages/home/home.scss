@@ -1,6 +1,18 @@
 page-home {
+  img {
+    position: relative;
+    width: 130px;
+    height: auto;
+    z-index: 4;
+  }
+
   #main-container {
     background-color: #eee;
+
+    h2 {
+      text-align: center;
+      color: #666;
+    }
   }
 
   .toolbar-background {

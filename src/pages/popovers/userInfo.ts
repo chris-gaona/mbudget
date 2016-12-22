@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { ModalController, ViewController } from 'ionic-angular';
 
 import { UserService } from '../../services/user.service';
+import { ModalAuthPage } from '../modals/modalAuth';
 
 @Component({
   template: `
@@ -12,11 +14,11 @@ import { UserService } from '../../services/user.service';
         <ion-avatar item-left>
           <img src="https://placeimg.com/100/100/people">
         </ion-avatar>
-        <h2>Hello, Chris</h2>
+        <h2>Hello, {{currentUser}}</h2>
         <p>Enjoy today!</p>
       </ion-item>
       <ion-item *ngIf="userService.isLoggedIn()">
-        <button ion-button block padding-vertical>Logout</button>
+        <button ion-button block padding-vertical (click)="userService.logout(); openAuthModal(); closePopover()">Logout</button>
       </ion-item>
       <ion-item *ngIf="!userService.isLoggedIn()">
         <button ion-button block padding-vertical>Login</button>
@@ -26,23 +28,35 @@ import { UserService } from '../../services/user.service';
   `
 })
 export class PopoverPage {
+
   currentUser: string;
 
-  constructor(private userService: UserService) {
+  constructor(public modalCtrl: ModalController, public viewCtrl: ViewController, private userService: UserService) {
 
   }
 
   ngOnInit() {
+    this.loggedInUser();
+  }
 
+  openAuthModal() {
+    let modal = this.modalCtrl.create(ModalAuthPage);
+    modal.present();
   }
 
   loggedInUser() {
     this.userService.getUser()
       .subscribe(data => {
-        this.currentUser = data;
+        console.log(data);
+        this.currentUser = data.firstName;
       }, err => {
         // this.handleError(err);
         console.log(err);
       });
+  }
+
+  // used to close the popover on command
+  closePopover() {
+    this.viewCtrl.dismiss();
   }
 }

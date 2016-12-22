@@ -22,6 +22,11 @@ $font-path: "../assets/fonts";
   }
 }
 
+.toolbar-md {
+  min-height: auto !important;
+  max-height: 50px !important;
+}
+
 hr {
   background: #ccc !important;
   height: 3px !important;

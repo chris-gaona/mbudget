@@ -11,8 +11,6 @@ import { Keyboard } from 'ionic-native';
 })
 
 export class ModalContentPage {
-  character;
-
   month: string = '2016-12-19';
   cash: number = 25652.23;
   income: number = 1876.32;
