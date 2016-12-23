@@ -27,6 +27,10 @@ export class ViewControllerMock {
   public _setIONContentRef(): any {
     return {}
   }
+
+  public dismiss(): any {
+    return true;
+  }
 }
 
 export class FormMock {

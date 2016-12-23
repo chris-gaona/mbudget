@@ -8,7 +8,7 @@ import {
 } from 'ionic-angular';
 
 import { ConfigMock, ViewControllerMock } from '../../mocks';
-import { PopoverPage } from './userInfo';
+import { ModalAuthPage } from './modalAuth';
 import { UserService } from '../../services/user.service';
 import { AbstractMockObservableService } from '../../services/mock.service';
 
@@ -26,7 +26,7 @@ class MockService extends AbstractMockObservableService {
   }
 }
 
-describe('Component: PopoverPage ', () => {
+describe('Component: ModalAuthPage ', () => {
   let fixture;
   let component;
   let userService;
@@ -39,14 +39,14 @@ describe('Component: PopoverPage ', () => {
         IonicModule
       ],
       declarations: [
-        PopoverPage
+        ModalAuthPage
       ],
       providers: [
         App, Platform, Form, Keyboard, MenuController, NavController, GestureController, DomController, ModalController,
         {provide: ViewController, useClass: ViewControllerMock},
         {provide: Config, useClass: ConfigMock}
       ]
-    }).overrideComponent(PopoverPage, {
+    }).overrideComponent(ModalAuthPage, {
       set: {
         providers: [
           { provide: UserService, useValue: userService }
@@ -55,7 +55,7 @@ describe('Component: PopoverPage ', () => {
     });
 
     // create component and test fixture
-    fixture = TestBed.createComponent(PopoverPage);
+    fixture = TestBed.createComponent(ModalAuthPage);
     // get test component from the fixture
     component = fixture.componentInstance;
   });
@@ -69,7 +69,7 @@ describe('Component: PopoverPage ', () => {
       let user = {username: 'jake123', firstName: 'Jake'};
       userService.content = user;
       component.loggedInUser();
-      expect(component.currentUser).toBe(user.firstName);
+      expect(component.currentUser).toBe(user);
     }));
   });
 });

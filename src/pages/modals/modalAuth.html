@@ -40,15 +40,17 @@
 
     <ion-item padding-horizontal *ngIf="!loginButtonMain">
       <ion-label floating>Confirm Password</ion-label>
-      <ion-input type="password" [(ngModel)]="confirmPassword" (keyup.enter)="signUp(username, password, confirmPassword, firstName)"></ion-input>
+      <ion-input type="password" [(ngModel)]="confirmPassword" (keyup.enter)="signUp(username, password,confirmPassword, firstName)"></ion-input>
     </ion-item>
 
     <ion-item padding-top>
-      <ion-buttons left>
-        <button ion-button block (click)="login(username, password)" *ngIf="loginButtonMain">Login</button>
-        <button ion-button block color="light" clear *ngIf="loginButtonMain" (click)="loginButtonMain = !loginButtonMain">Register</button>
-        <button ion-button block *ngIf="!loginButtonMain" (click)="signUp(username, password, confirmPassword, firstName)">Register</button>
-        <button ion-button block color="light" clear (click)="loginButtonMain = !loginButtonMain" *ngIf="!loginButtonMain">Login</button>
+      <ion-buttons>
+        <button ion-button block class="logRegBottom" (click)="login(username, password)" *ngIf="loginButtonMain">Login</button>
+        <hr *ngIf="loginButtonMain">
+        <button ion-button block class="logRegTop" color="lighter" *ngIf="loginButtonMain" (click)="loginButtonMain = !loginButtonMain">Register</button>
+        <button ion-button block class="logRegBottom" *ngIf="!loginButtonMain" (click)="signUp(username, password, confirmPassword, firstName)">Register</button>
+        <hr *ngIf="!loginButtonMain">
+        <button ion-button block class="logRegTop" color="lighter" (click)="loginButtonMain = !loginButtonMain" *ngIf="!loginButtonMain">Login</button>
       </ion-buttons>
     </ion-item>
 
