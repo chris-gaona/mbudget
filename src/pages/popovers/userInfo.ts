@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController, ViewController } from 'ionic-angular';
+import { ModalController, ViewController, NavParams } from 'ionic-angular';
 
 import { UserService } from '../../services/user.service';
 import { ModalAuthPage } from '../modals/modalAuth';
@@ -14,11 +14,11 @@ import { ModalAuthPage } from '../modals/modalAuth';
         <ion-avatar item-left>
           <img src="https://placeimg.com/100/100/animals">
         </ion-avatar>
-        <h2>Hello, {{currentUser}}</h2>
+        <h2>Hello, {{currentUser.firstName}}</h2>
         <p>Enjoy today!</p>
       </ion-item>
       <ion-item *ngIf="userService.isLoggedIn()">
-        <button ion-button block padding-vertical (click)="userService.logout(); openAuthModal(); closePopover()">Logout</button>
+        <button ion-button block padding-vertical (click)="userService.logout(); closePopover(true)">Logout</button>
       </ion-item>
       <ion-item *ngIf="!userService.isLoggedIn()">
         <button ion-button block padding-vertical>Login</button>
@@ -29,34 +29,18 @@ import { ModalAuthPage } from '../modals/modalAuth';
 })
 export class PopoverPage {
 
-  currentUser: string;
+  currentUser: any;
 
-  constructor(public modalCtrl: ModalController, public viewCtrl: ViewController, private userService: UserService) {
-
+  constructor(public modalCtrl: ModalController, params: NavParams, public viewCtrl: ViewController, private userService: UserService) {
+    this.currentUser = params.get('userInfo');
   }
 
   ngOnInit() {
-    this.loggedInUser();
-  }
 
-  openAuthModal() {
-    let modal = this.modalCtrl.create(ModalAuthPage);
-    modal.present();
-  }
-
-  loggedInUser() {
-    this.userService.getUser()
-      .subscribe(data => {
-        console.log(data);
-        this.currentUser = data.firstName;
-      }, err => {
-        // this.handleError(err);
-        console.log(err);
-      });
   }
 
   // used to close the popover on command
-  closePopover() {
-    this.viewCtrl.dismiss();
+  closePopover(data: boolean) {
+    this.viewCtrl.dismiss(data);
   }
 }

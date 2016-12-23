@@ -63,13 +63,4 @@ describe('Component: PopoverPage ', () => {
   it('should create an instance', () => {
     expect(component).toBeTruthy();
   });
-
-  describe('#loggedInUser()', () => {
-    it('should get the currently logged in user', async(() => {
-      let user = {username: 'jake123', firstName: 'Jake'};
-      userService.content = user;
-      component.loggedInUser();
-      expect(component.currentUser).toBe(user.firstName);
-    }));
-  });
 });

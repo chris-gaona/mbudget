@@ -22,8 +22,8 @@ export class ModalAuthPage {
 
   }
 
-  dismiss() {
-    this.viewCtrl.dismiss();
+  dismiss(data) {
+    this.viewCtrl.dismiss(data);
   }
 
   loggedInUser() {
@@ -31,7 +31,7 @@ export class ModalAuthPage {
       .subscribe(data => {
         if (data) {
           this.currentUser = data;
-          this.dismiss();
+          this.dismiss(this.currentUser);
         }
       }, err => {
         // this.handleError(err);

@@ -7,6 +7,8 @@ import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
 import { UserService } from '../../services/user.service';
 import { ModalAuthPage } from '../modals/modalAuth';
+import { BudgetService } from '../../services/budget.service';
+import { Budget } from '../../models/budget';
 
 @Component({
   selector: 'page-home',
@@ -14,7 +16,10 @@ import { ModalAuthPage } from '../modals/modalAuth';
 })
 export class HomePage {
 
+  budgets: Budget[];
+  selectedBudget: Budget;
   currentUser: string;
+  visibleBudgets: boolean;
 
   projActual = 'actual';
   period = 'Nov21';
@@ -46,7 +51,7 @@ export class HomePage {
     }
   ];
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController, public alertCtrl: AlertController, private userService: UserService) {
+  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController, public alertCtrl: AlertController, private userService: UserService, private budgetService: BudgetService) {
 
   }
 
@@ -59,11 +64,43 @@ export class HomePage {
       this.openAuthModal();
     } else {
       this.loggedInUser();
+      this.getAllBudgets();
     }
   }
 
+  getAllBudgets() {
+    // retrieves all budgets from budgetService
+    this.budgetService.getAllBudgets()
+      .subscribe(data => {
+        console.log('data', data);
+        if (data.length === 0) {
+          this.visibleBudgets = false;
+        } else {
+          this.budgets = data;
+          this.visibleBudgets = true;
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (i === (this.budgets.length - 1)) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+            }
+          }
+        }
+      }, err => {
+        // this.handleError(err);
+        console.log(err);
+      });
+  }
+
   presentPopover(ev) {
-    let popover = this.popoverCtrl.create(PopoverPage, {
+    let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
+
+    popover.onDidDismiss(data => {
+      if (data === true) {
+        this.checkUserAuth();
+        console.log(data);
+      }
     });
 
     popover.present({
@@ -78,6 +115,10 @@ export class HomePage {
 
   openAuthModal() {
     let modal = this.modalCtrl.create(ModalAuthPage);
+    modal.onDidDismiss(data => {
+      this.checkUserAuth();
+      console.log(data);
+    });
     modal.present();
   }
 
@@ -117,14 +158,6 @@ export class HomePage {
         // this.handleError(err);
         console.log(err);
       });
-  }
-
-  // connection function between header component & this component to change the selected budget
-  // connected through @Output decorator
-  userInfo(user) {
-    // Handle the event & add change to selected budget
-    this.currentUser = user;
-    this.checkUserAuth();
   }
 
 }
