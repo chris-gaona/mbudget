@@ -1,28 +1,56 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Edit Item
+    <ion-title text-capitalize>
+      Edit - {{item.item}}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content id="edit-container">
+
   <ion-list>
-    <ion-list-header class="edit-header">
-      Gas
+
+    <p class="edit-header" padding no-margin>
+      Let's do some edits!
+    </p>
+
+    <ion-list-header>
+      Projection
     </ion-list-header>
+
+    <ion-item no-padding class="projection-name">
+      <ion-icon name="information-circle" item-left class="no-margin" color="primary"></ion-icon>
+      <ion-input text-capitalize ion-text color="primary" type="text" [(ngModel)]="item.item" class="no-padding"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-range min="0" max="1000" step="5" pin="true" [(ngModel)]="item.projection" color="dark">
+        <ion-icon range-left small name="logo-usd" color="primary"></ion-icon>
+        <ion-icon range-right name="logo-usd" color="primary"></ion-icon>
+      </ion-range>
+    </ion-item>
+
+    <ion-item no-padding padding-bottom class="projection-amount">
+      <ion-icon name="logo-usd" item-left class="no-margin" color="primary"></ion-icon>
+      <ion-input id="projection-input" ion-text color="primary" type="number" [(ngModel)]="item.projection" class="no-padding"></ion-input>
+    </ion-item>
+
+    <ion-list-header>
+      Actual
+    </ion-list-header>
+
     <ion-grid class="edit-subcontainer">
-      <ion-row *ngFor="let item of items">
+      <ion-row *ngFor="let actual of item.actual">
         <ion-col width-50 no-padding>
           <ion-item no-padding>
             <ion-icon name="information-circle" item-left class="no-margin"></ion-icon>
-            <ion-input type="text" [(ngModel)]="item.name" class="no-padding"></ion-input>
+            <ion-input text-capitalize type="text" [(ngModel)]="actual.name" class="no-padding"></ion-input>
           </ion-item>
         </ion-col>
         <ion-col width-50 no-padding>
           <ion-item no-padding>
             <ion-icon name="logo-usd" item-left class="no-margin"></ion-icon>
-            <ion-input type="text" [(ngModel)]="item.amount" class="no-padding"></ion-input>
+            <ion-input type="number" [(ngModel)]="actual.amount" class="no-padding"></ion-input>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -30,16 +58,20 @@
 
     <ion-item class="edit-subcontainer">
       <ion-buttons left>
-        <button ion-button color="lighter" icon-only margin-left>
+        <button ion-button color="lighter" icon-only margin-left (click)="addActualItem(item.actual)">
           <ion-icon name="add"></ion-icon>
         </button>
-        <button ion-button margin-left>
+        <button ion-button margin-left (click)="saveAll(); goBack()">
           Save
         </button>
-        <button ion-button color="danger" icon-only margin-left>
+
+        <!--todo: finish the delete functionality-->
+        <button ion-button color="danger" icon-only margin-left (click)="showCheckbox()">
           <ion-icon name="trash"></ion-icon>
         </button>
       </ion-buttons>
     </ion-item>
+
   </ion-list>
+
 </ion-content>

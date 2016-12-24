@@ -22,9 +22,17 @@ $font-path: "../assets/fonts";
   }
 }
 
+.scroll-content {
+  margin-top: 50px;
+}
+
 .toolbar-md {
   min-height: auto !important;
   max-height: 50px !important;
+}
+
+.nav-decor {
+  background-color: #eee !important;
 }
 
 hr {

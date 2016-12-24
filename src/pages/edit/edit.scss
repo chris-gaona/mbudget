@@ -11,4 +11,19 @@ page-edit {
   .edit-subcontainer {
     background-color: #fff;
   }
+
+  .projection-name {
+    font-size: 3rem;
+  }
+
+  .projection-amount {
+    font-size: 5.5rem;
+  }
+
+  #projection-input {
+
+    input {
+      text-align: center;
+    }
+  }
 }

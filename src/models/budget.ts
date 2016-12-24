@@ -1,5 +1,7 @@
 export class Budget {
   _id: any;
+  updatedAt: any;
+  createdAt: any;
   start_period: any = new Date();
   existing_cash: number = 0;
   current_income: number = 0;
@@ -11,6 +13,7 @@ export class Budget {
 }
 
 export class BudgetItems {
+  _id: any;
   editing: boolean = false;
   item: string = '';
   projection: number = 0;
@@ -22,6 +25,7 @@ export class BudgetItems {
 }
 
 export class ActualItems {
+  _id: any;
   name: string = '';
   amount: number = 0;
   expense: boolean = true;

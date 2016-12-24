@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-navbar>
     <ion-buttons start>
       <button ion-button icon-only ion-text color="dark" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
@@ -11,12 +11,13 @@
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 
 <!--<modal-auth (userInfo)="userInfo($event)" *ngIf="!userService.isLoggedIn()"></modal-auth>-->
 
-<ion-content padding id="main-container">
+<ion-content padding id="main-container" *ngIf="budgets">
+
   <h2>BudTrac</h2>
 
   <div *ngIf="userService.isLoggedIn()">
@@ -32,24 +33,24 @@
     <ion-list no-margin margin-top margin-horizontal id="select-container">
       <ion-item>
         <ion-label class="select-field">Period</ion-label>
-        <ion-select [(ngModel)]="period" class="select-field">
+        <ion-select [(ngModel)]="selectedBudget" class="select-field">
           <!--todo change this to a ng for loop-->
-          <ion-option value="Oct24">Oct 24, 2016</ion-option>
-          <ion-option value="Nov7">Nov 7, 2016</ion-option>
-          <ion-option value="Nov21">Nov 21, 2016</ion-option>
+          <ion-option *ngFor="let budget of budgets" [value]="budget">{{budget.start_period | date}}</ion-option>
+          <!--<ion-option value="Nov7">Nov 7, 2016</ion-option>-->
+          <!--<ion-option value="Nov21">Nov 21, 2016</ion-option>-->
         </ion-select>
       </ion-item>
     </ion-list>
 
     <p no-margin margin-vertical margin-left class="small-text" ion-text color="light">
-      Last Updated - 1 day ago
+      Last Updated - {{parseDate(selectedBudget.updatedAt)}}
     </p>
 
     <ion-card>
 
       <ion-card-content no-padding padding-horizontal id="total-dollars">
         <ion-icon name="cash" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-        <p class="header-dollars" ion-text color="lighter"><span>Total: </span>$27,652.86</p>
+        <p class="header-dollars" ion-text color="lighter"><span>Total: </span>{{selectedBudget.existing_cash | currency:'USD':true}}</p>
       </ion-card-content>
 
     </ion-card>
@@ -58,7 +59,7 @@
 
       <ion-card-content no-padding padding-horizontal id="total-income">
         <ion-icon name="log-in" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-        <p class="header-dollars" ion-text color="lighter"><span>Income: </span>$1,875</p>
+        <p class="header-dollars" ion-text color="lighter"><span>Income: </span>{{selectedBudget.current_income | currency:'USD':true}}</p>
       </ion-card-content>
 
     </ion-card>
@@ -67,7 +68,7 @@
 
       <ion-card-content no-padding padding-horizontal id="total-expense">
         <ion-icon name="log-out" item-left class="header-icon" ion-text color="lighter"></ion-icon>
-        <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>$1,115.23</p>
+        <p class="header-dollars" ion-text color="lighter"><span>Expense: </span>{{getTotalSpent(selectedBudget.budget_items, 'actual').totalSpent | currency:'USD':true}}</p>
       </ion-card-content>
 
     </ion-card>
@@ -76,29 +77,49 @@
 
     <div padding>
       <ion-segment [(ngModel)]="projActual">
-        <ion-segment-button value="projection">
+        <ion-segment-button value="projection" (click)="projActual = 'projection'">
           Projection
         </ion-segment-button>
-        <ion-segment-button value="actual">
+        <ion-segment-button value="actual" (click)="projActual = 'actual'">
           Actual
         </ion-segment-button>
       </ion-segment>
     </div>
 
-    <ion-list class="projActual">
+    <ion-list class="projActual" *ngIf="projActual === 'projection'">
 
       <ion-list-header>
         Projection
       </ion-list-header>
 
-      <ion-item-sliding *ngFor="let item of projections" class="projActualItem">
-        <ion-item (click)="goToContactPage()">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
+      <ion-item-sliding *ngFor="let item of selectedBudget.budget_items" class="projActualItem">
+        <ion-item text-capitalize (click)="goToEditPage(selectedBudget._id, selectedBudget, item)">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
         <ion-item-options side="right">
           <button ion-button color="danger" (click)="showConfirm()">
             Delete
           </button>
         </ion-item-options>
       </ion-item-sliding>
+
+    </ion-list>
+
+    <ion-list class="projActual" *ngIf="projActual === 'actual'">
+
+      <ion-list-header>
+        Actual
+      </ion-list-header>
+
+      <ion-item-group *ngFor="let item of selectedBudget.budget_items">
+        <ion-item-divider color="lighter" text-capitalize>{{item.item}}<span item-right ion-text color="light" class="small-text">{{item.projection | currency:'USD':true}}</span></ion-item-divider>
+        <ion-item-sliding *ngFor="let actual of item.actual" class="projActualItem">
+          <ion-item text-capitalize (click)="goToEditPage(selectedBudget._id, selectedBudget, item)">{{actual.name}}<span>{{actual.amount | currency:'USD':true}}</span></ion-item>
+          <ion-item-options side="right">
+            <button ion-button color="danger" (click)="showConfirm()">
+              Delete
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-item-group>
 
     </ion-list>
 
