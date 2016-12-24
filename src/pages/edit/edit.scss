@@ -18,12 +18,23 @@ page-edit {
 
   .projection-amount {
     font-size: 5.5rem;
+
+    .item-inner {
+      border: none !important;
+    }
   }
 
   #projection-input {
 
     input {
       text-align: center;
+    }
+  }
+
+  #projection-range {
+
+    .item-inner {
+      border: none;
     }
   }
 }

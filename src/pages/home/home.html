@@ -124,7 +124,7 @@
     </ion-list>
 
 
-    <ion-list class="projActual totals-list">
+    <ion-list class="projActual totals-list" *ngIf="projActual === 'projection'">
 
       <ion-list-header>
         Totals
@@ -134,6 +134,19 @@
       <ion-item>Saving<span>$800.26</span></ion-item>
       <ion-item>% Saving<span>23%</span></ion-item>
       <ion-item><b>Ending Cash<span>$25,672.25</span></b></ion-item>
+
+    </ion-list>
+
+    <ion-list class="projActual totals-list" *ngIf="projActual === 'actual'">
+
+      <ion-list-header>
+        Totals
+      </ion-list-header>
+
+      <ion-item>Spent<span>$1,122.54</span></ion-item>
+      <ion-item>Saving<span>$961.26</span></ion-item>
+      <ion-item>% Saving<span>18%</span></ion-item>
+      <ion-item><b>Ending Cash<span>$24,323.25</span></b></ion-item>
 
     </ion-list>
 

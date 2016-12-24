@@ -75,11 +75,46 @@ export class EditPage {
       text: 'Yes, delete',
       handler: data => {
         console.log('Checkbox data:', data);
-        // this.testCheckboxOpen = false;
-        // this.testCheckboxResult = data;
+
+        for (let i = 0; i < data.length; i++) {
+          if (data[i] === this.item.item) {
+            console.log('projection item');
+            this.deleteBudgetItem(data[i]);
+          } else {
+            console.log('actual item', data[i]);
+            this.deleteActual(this.item, data[i]);
+          }
+        }
       }
     });
     alert.present();
+  }
+
+  // delete specific actual item
+  // pass in the specific budget_item & the actual item within that budget_item
+  deleteActual(budget, actual) {
+    // loop through the actual array
+    for (let i = 0; i < budget.actual.length; i++) {
+      // if a match to the actual passed in
+      if (budget.actual[i].name + ' $' + budget.actual[i].amount === actual) {
+        // remove it
+        budget.actual.splice(i, 1);
+      }
+    }
+    console.log(budget);
+  }
+
+  // delete specific budget item
+  deleteBudgetItem(budgetItem) {
+    let budget = this.budget.budget_items;
+    // loop through budget_items
+    for (let i = 0; i < budget.length; i++) {
+      // if a match to the budget passed in
+      if (budget[i] === budgetItem) {
+        // remove it
+        budget.splice(i, 1);
+      }
+    }
   }
 
 }
