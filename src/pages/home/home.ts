@@ -8,7 +8,7 @@ import { EditPage } from '../edit/edit';
 import { UserService } from '../../services/user.service';
 import { ModalAuthPage } from '../modals/modalAuth';
 import { BudgetService } from '../../services/budget.service';
-import { Budget } from '../../models/budget';
+import { Budget, BudgetItems } from '../../models/budget';
 
 @Component({
   selector: 'page-home',
@@ -47,6 +47,16 @@ export class HomePage {
       this.loggedInUser();
       this.getAllBudgets();
     }
+  }
+
+  loggedInUser() {
+    this.userService.getUser()
+      .subscribe(data => {
+        this.currentUser = data;
+      }, err => {
+        // this.handleError(err);
+        console.log(err);
+      });
   }
 
   getAllBudgets(editedBudget?) {
@@ -372,14 +382,26 @@ export class HomePage {
       });
   }
 
-  loggedInUser() {
-    this.userService.getUser()
-      .subscribe(data => {
-        this.currentUser = data;
-      }, err => {
-        // this.handleError(err);
-        console.log(err);
-      });
+  // add new budget item to budget_items array in specific budget
+  addBudgetItem() {
+    // create a new budget item using defined types
+    let newBudgetItem = new BudgetItems();
+    let item;
+    // // make new budget item editable to start with
+    // newBudgetItem.editing = true;
+    // add the new budget item to the array
+    this.selectedBudget.budget_items.push(newBudgetItem);
+
+    // loop through each budget entry
+    for (let i = 0; i < this.selectedBudget.budget_items.length; i++) {
+      // find the latest created budget entry in the array
+      if (i === (this.selectedBudget.budget_items.length - 1)) {
+        // make that one the selected budget on load
+        item = this.selectedBudget.budget_items[i];
+      }
+    }
+
+    this.goToEditPage(this.selectedBudget._id, this.selectedBudget, item);
   }
 
   // calculates total spent for entire budget
