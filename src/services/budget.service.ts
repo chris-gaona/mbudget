@@ -11,7 +11,7 @@ import 'rxjs/add/operator/catch';
 
 import { environment } from '../environments/environment';
 
-let baseURL = 'http://localhost:3001/api/budgets';
+let baseURL = '/api/budgets';
 
 // if (environment.production) {
 //   baseURL = '/api/budgets';

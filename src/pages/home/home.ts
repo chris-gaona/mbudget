@@ -40,6 +40,16 @@ export class HomePage {
     this.checkUserAuth();
   }
 
+  doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
+    this.getAllBudgets();
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      refresher.complete();
+    }, 2000);
+  }
+
   showToast(message:string, position: string) {
     let toast = this.toastCtrl.create({
       message: message,
@@ -372,7 +382,7 @@ export class HomePage {
     // passes budget_items array to saveAll function on budgetService
     this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
       .subscribe(data => {
-        this.showToast('Everything saved!', 'top');
+        this.showToast('Everything saved!', 'bottom');
         console.log('Everything saved!');
       }, err => {
         // this.handleError(err);

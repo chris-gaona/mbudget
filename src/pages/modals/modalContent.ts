@@ -110,7 +110,7 @@ export class ModalContentPage {
 
         // this.hasValidationErrors = false;
 
-        this.showToast('Budget created!', 'top');
+        this.showToast('Budget created!', 'bottom');
         console.log('Budget created!');
         this.removeModal(data);
       }, err => {
@@ -214,7 +214,7 @@ export class ModalContentPage {
       .subscribe(data => {
         this.dismiss(budget);
 
-        this.showToast('Budget updated!', 'top');
+        this.showToast('Budget updated!', 'bottom');
       }, err => {
         // this.handleError(err);
         console.error(err);
@@ -241,7 +241,7 @@ export class ModalContentPage {
 
         this.dismiss(this.selectedBudget);
 
-        this.showToast('Budget deleted!', 'top');
+        this.showToast('Budget deleted!', 'bottom');
       }, err => {
         // this.handleError(err);
         console.error(err);

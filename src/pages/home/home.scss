@@ -1,4 +1,12 @@
 page-home {
+  .refresher-refreshing-text {
+    font-size: 1.2rem;
+  }
+
+  .refresher-pulling-text {
+    font-size: 1.2rem;
+  }
+
   img {
     position: relative;
     width: 130px;
@@ -8,11 +16,14 @@ page-home {
 
   #main-container {
     background-color: #eee;
+  }
+
+  #sub-container {
+    background-color: #eee;
 
     h2 {
       text-align: center;
       color: #666;
-      //margin-top: 40px;
     }
   }
 
