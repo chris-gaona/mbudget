@@ -28,6 +28,7 @@ export class HomePage {
   endingCash: number;
   projectionObject: Object = {};
   actualObject: Object = {};
+  edited: boolean = false;
 
   projActual:string = 'actual';
 
@@ -48,7 +49,7 @@ export class HomePage {
     }
   }
 
-  getAllBudgets() {
+  getAllBudgets(editedBudget?) {
     // retrieves all budgets from budgetService
     this.budgetService.getAllBudgets()
       .subscribe(data => {
@@ -58,12 +59,22 @@ export class HomePage {
         } else {
           this.budgets = data;
           this.visibleBudgets = true;
-          // loop through each budget entry
-          for (let i = 0; i < this.budgets.length; i++) {
-            // find the latest created budget entry in the array
-            if (i === (this.budgets.length - 1)) {
-              // make that one the selected budget on load
-              this.selectedBudget = this.budgets[i];
+
+          if (editedBudget) {
+
+            for (let i = 0; i < this.budgets.length; i++) {
+              if (this.budgets[i]._id === editedBudget._id) {
+                this.selectedBudget = this.budgets[i];
+              }
+            }
+          } else {
+            // loop through each budget entry
+            for (let i = 0; i < this.budgets.length; i++) {
+              // find the latest created budget entry in the array
+              if (i === (this.budgets.length - 1)) {
+                // make that one the selected budget on load
+                this.selectedBudget = this.budgets[i];
+              }
             }
           }
         }
@@ -71,6 +82,142 @@ export class HomePage {
         // this.handleError(err);
         console.log(err);
       });
+  }
+
+  // creates empty budget
+  createEmptyBudget() {
+    let newBudget = new Budget();
+    this.convertDate(newBudget, newBudget.start_period);
+    let previousBudget = this.obtainPreviousBudget('pre');
+
+    newBudget.existing_cash = (previousBudget.existing_cash + previousBudget.current_income) - previousBudget.total_spent;
+    newBudget.current_income = previousBudget.current_income;
+    // make this new budget the shown one in the modal for editing
+    this.selectedBudget = newBudget;
+    this.budgets.push(this.selectedBudget);
+
+
+
+    let modal = this.modalCtrl.create(ModalContentPage, {
+      editing: false,
+      selectedBudget: this.selectedBudget
+    });
+
+    modal.onDidDismiss(data => {
+      let updatedBudget;
+
+      if (data) {
+        if (data.remove && data.remove === true) {
+          let newIndex = 0;
+
+          this.budgets.filter((item, i) => {
+            if (item._id === this.selectedBudget._id) {
+              this.budgets.splice(i, 1);
+              newIndex = i - 1;
+            }
+          });
+
+          if (this.budgets.length > 0) {
+            updatedBudget = this.budgets[newIndex];
+          }
+        } else {
+          updatedBudget = data;
+        }
+        this.getAllBudgets(updatedBudget);
+      }
+    });
+
+    modal.present();
+  }
+
+  // converts date string to 2016-10-29
+  convertDate(budget, date) {
+    date = new Date(date);
+    let dateString;
+
+    if ((date.getMonth() + 1) < 10 && date.getDate() < 10) {
+      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-0' + date.getDate();
+
+    } else if ((date.getMonth() + 1) < 10 && date.getDate() >= 10) {
+      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-' + date.getDate();
+
+    } else if ((date.getMonth() + 1) >= 10 && date.getDate() < 10) {
+      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-0' + date.getDate();
+
+    } else {
+      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+    // converts new date to proper string to be handled by date type input
+    return budget.start_period = dateString;
+  }
+
+  // get the projection or budget items from last period
+  obtainPreviousBudget(string) {
+    let budgetItems;
+    let prevBudget;
+
+    // loop through each budget item
+    for (let i = 0; i < this.budgets.length; i++) {
+      // find the budget that was created last week
+      if (string === 'post') {
+        if (i === (this.budgets.length - 2)) {
+          // assign the last budget to shownBudget variable
+          budgetItems = this.budgets[i];
+        }
+      } else if (string === 'pre') {
+        if (i === (this.budgets.length - 1)) {
+          // assign the last budget to shownBudget variable
+          budgetItems = this.budgets[i];
+        }
+      }
+    }
+
+    // use a hack to make a deep copy of an array
+    prevBudget = JSON.parse(JSON.stringify(budgetItems));
+
+    prevBudget.total_spent = this.getActualTotals(prevBudget.budget_items);
+
+    // loop through to remove all the actual values
+    for (let i = 0; i < prevBudget.budget_items.length; i++) {
+      prevBudget.budget_items[i].actual = [];
+    }
+
+    // return the new budget_items array to use in the new budget
+    return prevBudget;
+  }
+
+  getActualTotals(budgetItems) {
+    // initialize totalSpent to 0
+    this.totalSpent = 0;
+    // initialize totals variable to empty array
+    this.totals = [];
+    // initialize mergeTotals to 0
+    this.mergeTotals = 0;
+
+    // loop through each item in budget_items
+    for (let i = 0; i < budgetItems.length; i++) {
+      let item = budgetItems[i];
+      // for each budget_item, loop through the actual array
+      for (let j = 0; j < item.actual.length; j++) {
+        if (item.actual[j].expense === true) {
+          // add amount to totalSpent
+          this.totalSpent += +item.actual[j].amount;
+        } else {
+          // subtract amount to totalSpent
+          this.totalSpent -= +item.actual[j].amount;
+        }
+      }
+    }
+
+    // push totalSpent total to totals array
+    this.totals.push(this.totalSpent);
+
+    // loop through the totals array
+    for (let i = 0; i < this.totals.length; i++) {
+      // merge the total together
+      this.mergeTotals += +this.totals[i];
+    }
+    return this.mergeTotals;
   }
 
   presentPopover(ev) {
@@ -87,16 +234,29 @@ export class HomePage {
     });
   }
 
-  openModal() {
-    let modal = this.modalCtrl.create(ModalContentPage);
+  openModalEdit() {
+    let modal = this.modalCtrl.create(ModalContentPage, {
+      editing: true,
+      selectedBudget: this.selectedBudget,
+      budgets: this.budgets
+    });
+    modal.onDidDismiss(data => {
+      if (data) {
+        this.edited = true;
+        this.getAllBudgets(data);
+      }
+    });
     modal.present();
+  }
+
+  openModalNew() {
+    this.createEmptyBudget();
   }
 
   openAuthModal() {
     let modal = this.modalCtrl.create(ModalAuthPage);
     modal.onDidDismiss(data => {
       this.checkUserAuth();
-      console.log(data);
     });
     modal.present();
   }
@@ -113,24 +273,103 @@ export class HomePage {
 
   showConfirm() {
     let confirm = this.alertCtrl.create({
-      title: 'Use this lightsaber?',
-      message: 'Do you agree to use this lightsaber to do good across the intergalactic galaxy?',
+      title: 'Are you sure?',
+      message: 'This will delete the item permanently.',
       buttons: [
         {
-          text: 'Disagree',
+          text: 'Nope',
           handler: () => {
-            console.log('Disagree clicked');
+            console.log('Nope clicked');
           }
         },
         {
-          text: 'Agree',
+          text: 'Yup',
           handler: () => {
-            console.log('Agree clicked');
+            console.log('Yup clicked');
+            this.deleteBudget(this.selectedBudget);
           }
         }
       ]
     });
     confirm.present();
+  }
+
+  deleteBudget(budget) {
+    this.budgetService.deleteBudgetById(budget._id)
+      .subscribe(data => {
+        let newIndex = 0;
+
+        this.budgets.filter((item, i) => {
+          if (item._id === budget._id) {
+            this.budgets.splice(i, 1);
+            newIndex = i - 1;
+          }
+        });
+
+        if (this.budgets.length > 0) {
+          this.selectedBudget = this.budgets[newIndex];
+        }
+
+        // this.hasValidationErrors = false;
+
+        // this.toastr.success('Budget Deleted', 'Success!');
+        //todo: add toaster here
+      }, err => {
+        // this.handleError(err);
+        console.error(err);
+      });
+  }
+
+  showConfirmation(budget, actual) {
+    let confirm = this.alertCtrl.create({
+      title: 'Are you sure?',
+      message: 'This will delete the item permanently.',
+      buttons: [
+        {
+          text: 'Nope',
+          handler: () => {
+            console.log('Nope clicked');
+          }
+        },
+        {
+          text: 'Yup',
+          handler: () => {
+            console.log('Yup clicked');
+            this.deleteActual(budget, actual);
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  // delete specific actual item
+  // pass in the specific budget_item & the actual item within that budget_item
+  deleteActual(budget, actual) {
+    // loop through the actual array
+    for (let i = 0; i < budget.actual.length; i++) {
+      // if a match to the actual passed in
+      if (budget.actual[i] === actual) {
+        // remove it
+        budget.actual.splice(i, 1);
+        this.saveAll();
+      }
+    }
+    console.log(budget);
+  }
+
+  // save all edits
+  saveAll() {
+    // passes budget_items array to saveAll function on budgetService
+    this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
+      .subscribe(data => {
+        // todo: do something with data returned here
+        // todo: add toaster here
+        console.log('Everything saved!');
+      }, err => {
+        // this.handleError(err);
+        console.log(err);
+      });
   }
 
   loggedInUser() {

@@ -35,6 +35,7 @@ export class EditPage {
     // passes budget_items array to saveAll function on budgetService
     this.budgetService.updateBudgetById(this._id, this.budget)
       .subscribe(data => {
+        this.goBack();
         // todo: do something with data returned here
         // todo: add toaster here
         console.log('Everything saved!');

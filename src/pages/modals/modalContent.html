@@ -4,15 +4,27 @@
       {{editing ? "Making some changes!" : "Let's track your pay!"}}
     </ion-title>
     <ion-buttons end>
-      <button ion-button (click)="dismiss()">
+
+      <button ion-button (click)="dismiss(selectedBudget)" *ngIf="editing">
         <span ion-text color="primary" showWhen="ios">Cancel</span>
         <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
       </button>
+
+      <button ion-button (click)="setToPrevBudget()" *ngIf="!editing">
+        <span ion-text color="primary" showWhen="ios">Cancel</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content id="modal-container">
-  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)">Please be careful while editing. I take no responsibility for your mistakes.</p>
+  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)" *ngIf="editing">
+    Please be careful while editing. I take no responsibility for your mistakes.
+  </p>
+  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)" *ngIf="!editing">
+    I've done my best to populate the following fields for you. Your welcome!
+  </p>
   <ion-list>
 
     <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
@@ -20,7 +32,7 @@
     </ion-list-header>
 
     <ion-item>
-      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="month" class="input-field-date"></ion-datetime>
+      <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="selectedBudget.start_period" class="input-field-date"></ion-datetime>
     </ion-item>
 
     <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
@@ -28,7 +40,7 @@
     </ion-list-header>
 
     <ion-item>
-      <input currencyMask type="text" [(ngModel)]="cash" class="input-field">
+      <input currencyMask type="text" [(ngModel)]="selectedBudget.existing_cash" class="input-field">
     </ion-item>
 
     <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
@@ -36,15 +48,18 @@
     </ion-list-header>
 
     <ion-item>
-      <input currencyMask type="text" [(ngModel)]="income" class="input-field">
+      <input currencyMask type="text" [(ngModel)]="selectedBudget.current_income" class="input-field">
     </ion-item>
 
     <ion-item>
       <ion-buttons left>
-        <button ion-button margin-left>
+        <button ion-button margin-left (click)="addUpdate(selectedBudget)" *ngIf="editing">
           Update
         </button>
-        <button ion-button color="danger" icon-only margin-left>
+        <button ion-button margin-left (click)="createBudget(selectedBudget)" *ngIf="!editing">
+          Create
+        </button>
+        <button ion-button color="danger" icon-only margin-left *ngIf="editing" (click)="showConfirm()">
           <ion-icon name="trash"></ion-icon>
         </button>
       </ion-buttons>
