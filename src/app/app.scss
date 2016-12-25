@@ -14,3 +14,51 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.clearfix {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.scroll-content {
+  margin-top: 50px;
+}
+
+.toolbar-md {
+  min-height: auto !important;
+  max-height: 50px !important;
+}
+
+.nav-decor {
+  background-color: #eee !important;
+}
+
+hr {
+  background: #ccc !important;
+  height: 3px !important;
+  width: 100px !important;
+  margin-top: 20px !important;
+}
+
+.sub-text {
+  background-color: #688dcc;
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.no-margin {
+  margin: 0 8px 0 8px !important;
+}
+
+.no-padding {
+
+  input {
+    padding: 0 !important;
+  }
+}

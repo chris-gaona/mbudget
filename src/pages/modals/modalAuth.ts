@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
-import { Platform, ViewController } from 'ionic-angular';
+import { Platform, ViewController, ToastController } from 'ionic-angular';
 import { UserService } from '../../services/user.service';
 
 
@@ -17,9 +17,20 @@ export class ModalAuthPage {
   constructor(
     public platform: Platform,
     public viewCtrl: ViewController,
+    public toastCtrl: ToastController,
     private userService: UserService
   ) {
 
+  }
+
+  showToast(message:string, position: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: position
+    });
+
+    toast.present(toast);
   }
 
   dismiss(data) {
@@ -44,8 +55,8 @@ export class ModalAuthPage {
       if (result) {
         this.userService.isLoggedIn();
         this.loggedInUser();
-        // this.getAllBudgets();
-        // todo: add toaster here
+
+        this.showToast('Successfully logged in!', 'bottom');
       }
     }, err => {
       // this.handleError(err);
@@ -58,8 +69,8 @@ export class ModalAuthPage {
       if (result) {
         this.userService.isLoggedIn();
         this.loggedInUser();
-        // this.getAllBudgets();
-        //todo: add toaster here
+
+        this.showToast('Consider yourself registered!', 'bottom');
       }
     }, err => {
       // this.handleError(err);

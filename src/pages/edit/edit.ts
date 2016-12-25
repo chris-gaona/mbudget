@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController, NavParams, AlertController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
 import { BudgetService } from '../../services/budget.service';
 
@@ -14,11 +14,25 @@ export class EditPage {
   budget: Budget;
   item: BudgetItems;
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, private navParams: NavParams, private budgetService: BudgetService) {
+  constructor(public navCtrl: NavController,
+              public alertCtrl: AlertController,
+              public toastCtrl: ToastController,
+              private navParams: NavParams,
+              private budgetService: BudgetService) {
     console.log(navParams.get('budgetItem'));
     this._id = navParams.get('_id');
     this.budget = navParams.get('budget');
     this.item = navParams.get('budgetItem');
+  }
+
+  showToast(message:string, position: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: position
+    });
+
+    toast.present(toast);
   }
 
   // add new actual item to actual array under specific budget_items
@@ -37,7 +51,8 @@ export class EditPage {
       .subscribe(data => {
         this.goBack();
         // todo: do something with data returned here
-        // todo: add toaster here
+
+        this.showToast('Everything saved!', 'bottom');
         console.log('Everything saved!');
       }, err => {
         // this.handleError(err);
@@ -75,14 +90,11 @@ export class EditPage {
     alert.addButton({
       text: 'Yes, delete',
       handler: data => {
-        console.log('Checkbox data:', data);
 
         for (let i = 0; i < data.length; i++) {
           if (data[i] === this.item.item) {
-            console.log('projection item');
             this.deleteBudgetItem(data[i]);
           } else {
-            console.log('actual item', data[i]);
             this.deleteActual(this.item, data[i]);
           }
         }

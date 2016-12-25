@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { Platform, ViewController, NavParams, AlertController } from 'ionic-angular';
+import { Platform, ViewController, NavParams, AlertController, ToastController } from 'ionic-angular';
 
 import { Keyboard } from 'ionic-native';
 
@@ -27,12 +27,23 @@ export class ModalContentPage {
     public platform: Platform,
     public viewCtrl: ViewController,
     params: NavParams,
+    public toastCtrl: ToastController,
     private budgetService: BudgetService,
     public alertCtrl: AlertController
   ) {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
     this.budgets = params.get('budgets');
+  }
+
+  showToast(message:string, position: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: position
+    });
+
+    toast.present(toast);
   }
 
   dismiss(data) {
@@ -95,8 +106,7 @@ export class ModalContentPage {
 
         // this.hasValidationErrors = false;
 
-        // this.toastr.success('Budget Created', 'Success!');
-        //todo: add toaster here
+        this.showToast('Budget created!', 'bottom');
         console.log('Budget created!');
         this.removeModal(data);
       }, err => {
@@ -166,16 +176,8 @@ export class ModalContentPage {
     this.budgetService.updateBudgetById(budget._id, budget)
       .subscribe(data => {
         this.dismiss(budget);
-        // let budgetID = budget._id;
-        // this.editableBudget = this.budgets.filter(item => item._id === budgetID).pop();
-        // Object.assign(data, editableBudget);
-        // was trying to assign chosenBudget to data...don't do that!
-        // Needed to find correct budget in this.budgets and make that chosenBudget
-        // this.updateBudget(this.editableBudget);
-        // this.editingBudget = false;
-        // this.hasValidationErrors = false;
-        // this.toastr.success('Budget Updated', 'Success!');
-        //todo: add toaster here
+
+        this.showToast('Budget updated!', 'bottom');
       }, err => {
         // this.handleError(err);
         console.error(err);
@@ -202,8 +204,7 @@ export class ModalContentPage {
 
         this.dismiss(this.selectedBudget);
 
-        // this.toastr.success('Budget Deleted', 'Success!');
-        //todo: add toaster here
+        this.showToast('Budget deleted!', 'bottom');
       }, err => {
         // this.handleError(err);
         console.error(err);

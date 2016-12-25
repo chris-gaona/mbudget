@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { ModalController, NavController, PopoverController, AlertController } from 'ionic-angular';
+import { ModalController, NavController, PopoverController, AlertController, ToastController } from 'ionic-angular';
 
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
@@ -32,12 +32,22 @@ export class HomePage {
 
   projActual:string = 'actual';
 
-  constructor(public navCtrl: NavController, public popoverCtrl: PopoverController, public modalCtrl: ModalController, public alertCtrl: AlertController, private userService: UserService, private budgetService: BudgetService) {
+  constructor(public navCtrl: NavController, public toastCtrl: ToastController, public popoverCtrl: PopoverController, public modalCtrl: ModalController, public alertCtrl: AlertController, private userService: UserService, private budgetService: BudgetService) {
 
   }
 
   ngOnInit() {
     this.checkUserAuth();
+  }
+
+  showToast(message:string, position: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: position
+    });
+
+    toast.present(toast);
   }
 
   checkUserAuth () {
@@ -361,8 +371,7 @@ export class HomePage {
     // passes budget_items array to saveAll function on budgetService
     this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
       .subscribe(data => {
-        // todo: do something with data returned here
-        // todo: add toaster here
+        this.showToast('Everything saved!', 'bottom');
         console.log('Everything saved!');
       }, err => {
         // this.handleError(err);
