@@ -281,7 +281,7 @@ export class HomePage {
     });
   }
 
-  showConfirm() {
+  showConfirm(budgetItem) {
     let confirm = this.alertCtrl.create({
       title: 'Are you sure?',
       message: 'This will delete the item permanently.',
@@ -296,7 +296,7 @@ export class HomePage {
           text: 'Yup',
           handler: () => {
             console.log('Yup clicked');
-            this.deleteBudget(this.selectedBudget);
+            this.deleteBudgetItem(budgetItem);
           }
         }
       ]
@@ -304,30 +304,18 @@ export class HomePage {
     confirm.present();
   }
 
-  deleteBudget(budget) {
-    this.budgetService.deleteBudgetById(budget._id)
-      .subscribe(data => {
-        let newIndex = 0;
-
-        this.budgets.filter((item, i) => {
-          if (item._id === budget._id) {
-            this.budgets.splice(i, 1);
-            newIndex = i - 1;
-          }
-        });
-
-        if (this.budgets.length > 0) {
-          this.selectedBudget = this.budgets[newIndex];
-        }
-
-        // this.hasValidationErrors = false;
-
-        // this.toastr.success('Budget Deleted', 'Success!');
-        //todo: add toaster here
-      }, err => {
-        // this.handleError(err);
-        console.error(err);
-      });
+  // delete specific budget item
+  deleteBudgetItem(budgetItem) {
+    let budget = this.selectedBudget.budget_items;
+    // loop through budget_items
+    for (let i = 0; i < budget.length; i++) {
+      // if a match to the budget passed in
+      if (budget[i] === budgetItem) {
+        // remove it
+        budget.splice(i, 1);
+        this.saveAll();
+      }
+    }
   }
 
   showConfirmation(budget, actual) {

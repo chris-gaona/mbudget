@@ -94,7 +94,7 @@
       <ion-item-sliding *ngFor="let item of selectedBudget.budget_items" class="projActualItem" margin-bottom>
         <ion-item text-capitalize (click)="goToEditPage(selectedBudget._id, selectedBudget, item)">{{item.item}}<span>{{item.projection | currency:'USD':true}}</span></ion-item>
         <ion-item-options side="right">
-          <button ion-button color="danger" (click)="showConfirm()">
+          <button ion-button color="danger" (click)="showConfirm(item)">
             Delete
           </button>
         </ion-item-options>
