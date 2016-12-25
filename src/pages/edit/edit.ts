@@ -52,7 +52,7 @@ export class EditPage {
         this.goBack();
         // todo: do something with data returned here
 
-        this.showToast('Everything saved!', 'bottom');
+        this.showToast('Everything saved!', 'top');
         console.log('Everything saved!');
       }, err => {
         // this.handleError(err);

@@ -120,7 +120,8 @@ export class HomePage {
 
     let modal = this.modalCtrl.create(ModalContentPage, {
       editing: false,
-      selectedBudget: this.selectedBudget
+      selectedBudget: this.selectedBudget,
+      budgets: this.budgets
     });
 
     modal.onDidDismiss(data => {
@@ -371,7 +372,7 @@ export class HomePage {
     // passes budget_items array to saveAll function on budgetService
     this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
       .subscribe(data => {
-        this.showToast('Everything saved!', 'bottom');
+        this.showToast('Everything saved!', 'top');
         console.log('Everything saved!');
       }, err => {
         // this.handleError(err);

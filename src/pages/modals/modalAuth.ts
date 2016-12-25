@@ -56,7 +56,7 @@ export class ModalAuthPage {
         this.userService.isLoggedIn();
         this.loggedInUser();
 
-        this.showToast('Successfully logged in!', 'bottom');
+        this.showToast('Successfully logged in!', 'top');
       }
     }, err => {
       // this.handleError(err);
@@ -70,7 +70,7 @@ export class ModalAuthPage {
         this.userService.isLoggedIn();
         this.loggedInUser();
 
-        this.showToast('Consider yourself registered!', 'bottom');
+        this.showToast('Consider yourself registered!', 'top');
       }
     }, err => {
       // this.handleError(err);

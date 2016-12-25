@@ -21,7 +21,10 @@ export class ModalContentPage {
   selectedBudget: Budget;
   budgets: Budget[];
   editing: boolean;
-  reuseProjection: boolean = false;
+  reuseProjection: boolean = true;
+  totalSpent: number;
+  totals: any;
+  mergeTotals: number;
 
   constructor(
     public platform: Platform,
@@ -88,6 +91,7 @@ export class ModalContentPage {
   // connection function between header component & this component to create new budget
   // connected through @Output decorator
   createBudget(budget) {
+    console.log('budgets', this.budgets);
     // converts the date string from 2016-10-30 to 10/30/2016
     let startDate = budget.start_period.split('-');
     let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
@@ -99,14 +103,14 @@ export class ModalContentPage {
         // console.log('created budget', data);
         if (this.reuseProjection === false) {
         } else {
-          // this.reuseProjections(budget);
+          this.reuseProjections(data);
         }
 
         this.reuseProjection = false;
 
         // this.hasValidationErrors = false;
 
-        this.showToast('Budget created!', 'bottom');
+        this.showToast('Budget created!', 'top');
         console.log('Budget created!');
         this.removeModal(data);
       }, err => {
@@ -115,61 +119,94 @@ export class ModalContentPage {
       });
   }
 
-  // // reuse projections from last budget
-  // reuseProjections(budget) {
-  //   let prevProjection;
-  //
-  //   // get the budget items
-  //   prevProjection = this.obtainPreviousBudget('post');
-  //
-  //   budget.budget_items = prevProjection.budget_items;
-  //
-  //   // update the new budget with last period's budget items
-  //   this.budgetService.updateBudgetById(budget._id, budget)
-  //     .subscribe(data => {
-  //       // console.log(data);
-  //       let budgetID = budget._id;
-  //       this.editableBudget = this.budgets.filter(item => item._id === budgetID).pop();
-  //     }, err => {
-  //       // this.handleError(err);
-  //       console.error(err);
-  //     });
-  // }
-  //
-  // // get the projection or budget items from last period
-  // obtainPreviousBudget(string) {
-  //   let budgetItems;
-  //   let prevBudget;
-  //
-  //   // loop through each budget item
-  //   for (let i = 0; i < this.budgets.length; i++) {
-  //     // find the budget that was created last week
-  //     if (string === 'post') {
-  //       if (i === (this.budgets.length - 2)) {
-  //         // assign the last budget to shownBudget variable
-  //         budgetItems = this.budgets[i];
-  //       }
-  //     } else if (string === 'pre') {
-  //       if (i === (this.budgets.length - 1)) {
-  //         // assign the last budget to shownBudget variable
-  //         budgetItems = this.budgets[i];
-  //       }
-  //     }
-  //   }
-  //
-  //   // use a hack to make a deep copy of an array
-  //   prevBudget = JSON.parse(JSON.stringify(budgetItems));
-  //
-  //   prevBudget.total_spent = this.getActualTotals(prevBudget.budget_items);
-  //
-  //   // loop through to remove all the actual values
-  //   for (let i = 0; i < prevBudget.budget_items.length; i++) {
-  //     prevBudget.budget_items[i].actual = [];
-  //   }
-  //
-  //   // return the new budget_items array to use in the new budget
-  //   return prevBudget;
-  // }
+  // reuse projections from last budget
+  reuseProjections(budget) {
+    console.log('budget', budget);
+    let prevProjection;
+
+    // get the budget items
+    prevProjection = this.obtainPreviousBudget('post');
+
+    budget.budget_items = prevProjection.budget_items;
+
+    // update the new budget with last period's budget items
+    this.budgetService.updateBudgetById(budget._id, budget)
+      .subscribe(data => {
+        console.log('data', data);
+      }, err => {
+        // this.handleError(err);
+        console.error(err);
+      });
+  }
+
+  // get the projection or budget items from last period
+  obtainPreviousBudget(string) {
+    let budgetItems;
+    let prevBudget;
+
+    // loop through each budget item
+    for (let i = 0; i < this.budgets.length; i++) {
+      // find the budget that was created last week
+      if (string === 'post') {
+        if (i === (this.budgets.length - 2)) {
+          // assign the last budget to shownBudget variable
+          budgetItems = this.budgets[i];
+        }
+      } else if (string === 'pre') {
+        if (i === (this.budgets.length - 1)) {
+          // assign the last budget to shownBudget variable
+          budgetItems = this.budgets[i];
+        }
+      }
+    }
+
+    // use a hack to make a deep copy of an array
+    prevBudget = JSON.parse(JSON.stringify(budgetItems));
+
+    prevBudget.total_spent = this.getActualTotals(prevBudget.budget_items);
+
+    // loop through to remove all the actual values
+    for (let i = 0; i < prevBudget.budget_items.length; i++) {
+      prevBudget.budget_items[i].actual = [];
+    }
+
+    // return the new budget_items array to use in the new budget
+    return prevBudget;
+  }
+
+  getActualTotals(budgetItems) {
+    // initialize totalSpent to 0
+    this.totalSpent = 0;
+    // initialize totals variable to empty array
+    this.totals = [];
+    // initialize mergeTotals to 0
+    this.mergeTotals = 0;
+
+    // loop through each item in budget_items
+    for (let i = 0; i < budgetItems.length; i++) {
+      let item = budgetItems[i];
+      // for each budget_item, loop through the actual array
+      for (let j = 0; j < item.actual.length; j++) {
+        if (item.actual[j].expense === true) {
+          // add amount to totalSpent
+          this.totalSpent += +item.actual[j].amount;
+        } else {
+          // subtract amount to totalSpent
+          this.totalSpent -= +item.actual[j].amount;
+        }
+      }
+    }
+
+    // push totalSpent total to totals array
+    this.totals.push(this.totalSpent);
+
+    // loop through the totals array
+    for (let i = 0; i < this.totals.length; i++) {
+      // merge the total together
+      this.mergeTotals += +this.totals[i];
+    }
+    return this.mergeTotals;
+  }
 
   addUpdate(budget) {
     // update the new budget with last period's budget items
@@ -177,7 +214,7 @@ export class ModalContentPage {
       .subscribe(data => {
         this.dismiss(budget);
 
-        this.showToast('Budget updated!', 'bottom');
+        this.showToast('Budget updated!', 'top');
       }, err => {
         // this.handleError(err);
         console.error(err);
@@ -204,7 +241,7 @@ export class ModalContentPage {
 
         this.dismiss(this.selectedBudget);
 
-        this.showToast('Budget deleted!', 'bottom');
+        this.showToast('Budget deleted!', 'top');
       }, err => {
         // this.handleError(err);
         console.error(err);

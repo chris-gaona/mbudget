@@ -51,6 +51,11 @@
       <input currencyMask type="text" [(ngModel)]="selectedBudget.current_income" class="input-field">
     </ion-item>
 
+    <ion-item *ngIf="!editing" id="checkbox">
+      <ion-label>Use last period's projections?</ion-label>
+      <ion-checkbox color="primary" [(ngModel)]="reuseProjection"></ion-checkbox>
+    </ion-item>
+
     <ion-item>
       <ion-buttons left>
         <button ion-button margin-left (click)="addUpdate(selectedBudget)" *ngIf="editing">
