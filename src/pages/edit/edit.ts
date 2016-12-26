@@ -15,6 +15,7 @@ export class EditPage {
   item: BudgetItems;
   validationErrors: any;
   hasValidationErrors: boolean = false;
+  totalActual: number;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -130,6 +131,24 @@ export class EditPage {
         budget.splice(i, 1);
       }
     }
+  }
+
+  // calculates the sub total for each budget_item
+  getActualTotal(budget) {
+    // initialize totalActual to 0
+    this.totalActual = 0;
+    // loop through each actual item in the array
+    for (let i = 0; i < budget.actual.length; i++) {
+      if (budget.actual[i].expense === true) {
+        // add each amount to the total
+        this.totalActual += +budget.actual[i].amount;
+      } else {
+        // subtract each amount to the total
+        this.totalActual -= +budget.actual[i].amount;
+      }
+    }
+    // return the total calculated
+    return this.totalActual;
   }
 
   private handleError(error: any) {

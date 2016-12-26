@@ -20,6 +20,7 @@ export class HomePage {
   selectedBudget: Budget;
   currentUser: string;
   visibleBudgets: boolean;
+  totalActual: number;
   totalSpent: number;
   totals: any;
   mergeTotals: number;
@@ -491,6 +492,28 @@ export class HomePage {
 
       return this.projectionObject;
     }
+  }
+
+  // calculates the sub total for each budget_item
+  getActualTotal(budget) {
+    // initialize totalActual to 0
+    this.totalActual = 0;
+    // loop through each actual item in the array
+    for (let i = 0; i < budget.actual.length; i++) {
+      if (budget.actual[i].expense === true) {
+        // add each amount to the total
+        this.totalActual += +budget.actual[i].amount;
+      } else {
+        // subtract each amount to the total
+        this.totalActual -= +budget.actual[i].amount;
+      }
+    }
+    // return the total calculated
+    return this.totalActual;
+  }
+
+  toggleAddSubtract(actual) {
+    actual.expense = !actual.expense;
   }
 
   parseDate(date: string) {

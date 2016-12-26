@@ -6,7 +6,7 @@
   "proxies": [
     {
       "path": "/",
-      "proxyUrl": "https://still-forest-99171.herokuapp.com"
+      "proxyUrl": "http://localhost:3001"
     }
   ]
 }

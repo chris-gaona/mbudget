@@ -39,6 +39,14 @@
       Actual
     </ion-list-header>
 
+    <ion-item *ngIf="item.projection - getActualTotal(item) > 0">
+      You have <b ion-text>{{item.projection - getActualTotal(item) | currency:'USD':true}}</b> left for this budget item.
+    </ion-item>
+
+    <ion-item *ngIf="item.projection - getActualTotal(item) < 0">
+      Uh oh...you're <b ion-text color="danger">{{item.projection - getActualTotal(item) | currency:'USD':true}}</b> over budget.
+    </ion-item>
+
     <ion-grid class="edit-subcontainer">
       <ion-row *ngFor="let actual of item.actual">
         <ion-col width-50 no-padding>
