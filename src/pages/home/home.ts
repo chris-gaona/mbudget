@@ -514,6 +514,7 @@ export class HomePage {
 
   toggleAddSubtract(actual) {
     actual.expense = !actual.expense;
+    this.saveAll();
   }
 
   parseDate(date: string) {

@@ -151,6 +151,10 @@ export class EditPage {
     return this.totalActual;
   }
 
+  toggleAddSubtract(actual) {
+    actual.expense = !actual.expense;
+  }
+
   private handleError(error: any) {
     // if the error has status 400 meaning there are form issues
     if (error.status === 400) {
