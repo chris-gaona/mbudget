@@ -23,6 +23,13 @@
 
   <ion-list>
 
+    <ion-item *ngIf="hasValidationErrors" class="validation-errors">
+      <h5>{{validationErrors.message}}:</h5>
+      <ul>
+        <li>{{validationErrors.errors.property[0].message}}</li>
+      </ul>
+    </ion-item>
+
     <ion-item padding-horizontal *ngIf="!loginButtonMain">
       <ion-label floating>First Name</ion-label>
       <ion-input type="text" [(ngModel)]="firstName" (keyup.enter)="signUp(username, password, confirmPassword, firstName)"></ion-input>

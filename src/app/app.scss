@@ -64,5 +64,26 @@ hr {
 }
 
 .toast-container {
-  background-color: #2ec95c;
+  background-color: #826bbd;
+}
+
+.toast-message {
+  color: #fff;
+}
+
+.validation-errors {
+  color: #d9534f;
+
+  h5 {
+    font-weight: bold;
+  }
+
+  .item-inner {
+    border-bottom: none !important;
+  }
+
+  ul li {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
 }

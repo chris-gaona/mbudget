@@ -89,4 +89,28 @@ page-home {
   #add-new-button {
     font-size: 1.2rem;
   }
+
+  .warning {
+    color: #EAE117;
+  }
+
+  #warning-icon {
+    color: #EAE117;
+    float: right;
+    position: relative;
+    top: -18px;
+    font-size: 3em;
+  }
+
+  .danger {
+    color: #d9534f;
+  }
+
+  #danger-icon {
+    color: #d9534f;
+    float: right;
+    position: relative;
+    top: -18px;
+    font-size: 3em;
+  }
 }

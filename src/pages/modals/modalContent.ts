@@ -25,6 +25,8 @@ export class ModalContentPage {
   totalSpent: number;
   totals: any;
   mergeTotals: number;
+  validationErrors: any;
+  hasValidationErrors: boolean = false;
 
   constructor(
     public platform: Platform,
@@ -100,7 +102,6 @@ export class ModalContentPage {
 
     this.budgetService.addBudget(budget)
       .subscribe(data => {
-        // console.log('created budget', data);
         if (this.reuseProjection === false) {
         } else {
           this.reuseProjections(data);
@@ -108,13 +109,13 @@ export class ModalContentPage {
 
         this.reuseProjection = false;
 
-        // this.hasValidationErrors = false;
+        this.hasValidationErrors = false;
 
         this.showToast('Budget created!', 'bottom');
         console.log('Budget created!');
         this.removeModal(data);
       }, err => {
-        // this.handleError(err);
+        this.handleError(err);
         console.error(err);
       });
   }
@@ -134,7 +135,7 @@ export class ModalContentPage {
       .subscribe(data => {
         console.log('data', data);
       }, err => {
-        // this.handleError(err);
+        this.handleError(err);
         console.error(err);
       });
   }
@@ -216,7 +217,7 @@ export class ModalContentPage {
 
         this.showToast('Budget updated!', 'bottom');
       }, err => {
-        // this.handleError(err);
+        this.handleError(err);
         console.error(err);
       });
   }
@@ -243,8 +244,32 @@ export class ModalContentPage {
 
         this.showToast('Budget deleted!', 'bottom');
       }, err => {
-        // this.handleError(err);
+        this.handleError(err);
         console.error(err);
       });
+  }
+
+  private handleError(error: any) {
+    // if the error has status 400 meaning there are form issues
+    if (error.status === 400) {
+      // tell user to fix the form issues
+      this.showToast('Form Errors\nPlease see above.', 'bottom');
+      console.log('response', error);
+      this.hasValidationErrors = true;
+      this.validationErrors = error;
+    } else {
+      // else display the message to the user
+      let message = error && error.statusText;
+
+      if (message) {
+        this.showToast('Uh oh!\n' + message, 'bottom');
+      } else {
+        message = 'Message not available.';
+        this.showToast('Unexpected Error!!\n' + message, 'bottom');
+      }
+
+      // log the entire response to the console
+      console.error(error);
+    }
   }
 }

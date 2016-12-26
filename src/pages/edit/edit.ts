@@ -13,6 +13,8 @@ export class EditPage {
   _id: any;
   budget: Budget;
   item: BudgetItems;
+  validationErrors: any;
+  hasValidationErrors: boolean = false;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -55,7 +57,7 @@ export class EditPage {
         this.showToast('Everything saved!', 'bottom');
         console.log('Everything saved!');
       }, err => {
-        // this.handleError(err);
+        this.handleError(err);
         console.log(err);
       });
   }
@@ -127,6 +129,30 @@ export class EditPage {
         // remove it
         budget.splice(i, 1);
       }
+    }
+  }
+
+  private handleError(error: any) {
+    // if the error has status 400 meaning there are form issues
+    if (error.status === 400) {
+      // tell user to fix the form issues
+      this.showToast('Form Errors\nPlease see above.', 'bottom');
+      console.log('response', error);
+      this.hasValidationErrors = true;
+      this.validationErrors = error;
+    } else {
+      // else display the message to the user
+      let message = error && error.statusText;
+
+      if (message) {
+        this.showToast('Uh oh!\n' + message, 'bottom');
+      } else {
+        message = 'Message not available.';
+        this.showToast('Unexpected Error!!\n' + message, 'bottom');
+      }
+
+      // log the entire response to the console
+      console.error(error);
     }
   }
 
