@@ -27,6 +27,7 @@ export class ModalContentPage {
   mergeTotals: number;
   validationErrors: any;
   hasValidationErrors: boolean = false;
+  loading: boolean = false;
 
   constructor(
     public platform: Platform,

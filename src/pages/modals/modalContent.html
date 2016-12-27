@@ -58,11 +58,13 @@
 
     <ion-item>
       <ion-buttons left>
-        <button ion-button margin-left (click)="addUpdate(selectedBudget)" *ngIf="editing">
-          Update
+        <button ion-button (click)="addUpdate(selectedBudget); loading = true" *ngIf="editing" [disabled]="loading" [class.loading]="loading">
+          {{loading ? 'Loading...' : 'Update'}}
+          <span id="loading-spinner" *ngIf="loading"></span>
         </button>
-        <button ion-button margin-left (click)="createBudget(selectedBudget)" *ngIf="!editing">
-          Create
+        <button ion-button (click)="createBudget(selectedBudget); loading = true" *ngIf="!editing" [disabled]="loading" [class.loading]="loading">
+          {{loading ? 'Loading...' : 'Create'}}
+          <span id="loading-spinner" *ngIf="loading"></span>
         </button>
         <button ion-button color="danger" icon-only margin-left *ngIf="editing" (click)="showConfirm()">
           <ion-icon name="trash"></ion-icon>

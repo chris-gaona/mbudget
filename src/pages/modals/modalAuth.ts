@@ -15,6 +15,7 @@ export class ModalAuthPage {
   loginButtonMain: boolean = true;
   validationErrors: any;
   hasValidationErrors: boolean = false;
+  loading: boolean = false;
 
   constructor(
     public platform: Platform,
@@ -45,6 +46,7 @@ export class ModalAuthPage {
         if (data) {
           this.currentUser = data;
           this.dismiss(this.currentUser);
+          this.loading = false;
         }
       }, err => {
         this.handleError(err);
@@ -81,6 +83,7 @@ export class ModalAuthPage {
   }
 
   private handleError(error: any) {
+    this.loading = false;
     let errorMessage = JSON.parse(error._body);
     // if the error has status 400 meaning there are form issues
     if (error.status === 400) {

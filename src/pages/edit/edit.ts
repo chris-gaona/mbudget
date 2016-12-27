@@ -16,6 +16,7 @@ export class EditPage {
   validationErrors: any;
   hasValidationErrors: boolean = false;
   totalActual: number;
+  loading: boolean = false;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,

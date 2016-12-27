@@ -70,8 +70,9 @@
         <button ion-button color="lighter" icon-only margin-left (click)="addActualItem(item.actual)">
           <ion-icon name="add"></ion-icon>
         </button>
-        <button ion-button margin-left (click)="saveAll()">
-          Save
+        <button ion-button margin-left (click)="saveAll(); loading = true" [disabled]="loading" [class.loading]="loading">
+          {{loading ? 'Loading...' : 'Save'}}
+          <span id="loading-spinner" *ngIf="loading"></span>
         </button>
 
         <button ion-button color="danger" icon-only margin-left (click)="showCheckbox()">

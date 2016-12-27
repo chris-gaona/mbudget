@@ -52,12 +52,12 @@
 
     <ion-item padding-top>
       <ion-buttons>
-        <button ion-button block class="logRegBottom" (click)="login(username, password)" *ngIf="loginButtonMain">Login</button>
+        <button ion-button block class="logRegBottom" [disabled]="loading" [class.loading]="loading" (click)="login(username, password); loading = true" *ngIf="loginButtonMain">{{loading ? 'Loading...' : 'Login'}}<span id="loading-spinner" *ngIf="loading"></span></button>
         <hr *ngIf="loginButtonMain">
-        <button ion-button block class="logRegTop" color="lighter" *ngIf="loginButtonMain" (click)="loginButtonMain = !loginButtonMain">Register</button>
-        <button ion-button block class="logRegBottom" *ngIf="!loginButtonMain" (click)="signUp(username, password, confirmPassword, firstName)">Register</button>
+        <button ion-button block class="logRegTop" color="lighter" *ngIf="loginButtonMain" (click)="loginButtonMain = !loginButtonMain; hasValidationErrors = false">Register</button>
+        <button ion-button block class="logRegBottom" [disabled]="loading" [class.loading]="loading" *ngIf="!loginButtonMain" (click)="signUp(username, password, confirmPassword, firstName); loading = true">{{loading ? 'Loading...' : 'Register'}}<span id="loading-spinner" *ngIf="loading"></span></button>
         <hr *ngIf="!loginButtonMain">
-        <button ion-button block class="logRegTop" color="lighter" (click)="loginButtonMain = !loginButtonMain" *ngIf="!loginButtonMain">Login</button>
+        <button ion-button block class="logRegTop" color="lighter" (click)="loginButtonMain = !loginButtonMain; hasValidationErrors = false" *ngIf="!loginButtonMain">Login</button>
       </ion-buttons>
     </ion-item>
 
