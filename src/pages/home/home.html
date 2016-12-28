@@ -24,6 +24,8 @@
     </ion-refresher-content>
   </ion-refresher>
 
+  <div *ngIf="!budgets" id="main-loader"></div>
+
   <div padding *ngIf="budgets" id="sub-container">
 
     <div id="title-container" no-margin no-padding>

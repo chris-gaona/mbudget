@@ -126,4 +126,53 @@ page-home {
     top: -18px;
     font-size: 3em;
   }
+
+  #main-loader {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    position: fixed;
+    top: 50%;
+    right: 50%;
+    margin-right: -30px;
+    margin-top: -30px;
+    z-index:99;
+
+    &:before,&:after{
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+      border: 3px solid transparent;
+      border-top-color: #fff;
+    }
+
+    &:before{
+      z-index: 100;
+      animation: spin .6s linear infinite;
+    }
+
+    &:after{
+      border: 3px solid #666;
+    }
+  }
+
+  @keyframes spin{
+    0%{
+      -webkit-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+
+    100%{
+      -webkit-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
+      -o-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
 }
