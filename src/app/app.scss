@@ -26,14 +26,32 @@
   }
 }
 
+#home {
+
+  div {
+    color: #fff !important;
+  }
+}
+
+.back-button {
+  color: #fff !important;
+}
+
+#header {
+
+  div {
+    background-color: #688dcc !important;
+  }
+}
+
 .scroll-content {
   margin-top: 50px;
 }
 
-.toolbar-md {
-  min-height: auto !important;
-  max-height: 50px !important;
-}
+//.toolbar-md {
+//  min-height: auto !important;
+//  max-height: 50px !important;
+//}
 
 .nav-decor {
   background-color: #eee !important;
@@ -47,7 +65,7 @@ hr {
 }
 
 .sub-text {
-  background-color: #688dcc;
+  background-color: #666;
   color: #fff;
   font-size: 1.2rem;
 }

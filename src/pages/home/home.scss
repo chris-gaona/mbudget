@@ -1,4 +1,13 @@
 page-home {
+
+  #title-container {
+    position: relative;
+    top: 0;
+    left: 50%;
+    width: 145px;
+    margin-left: -70px;
+  }
+
   .refresher-refreshing-text {
     font-size: 1.2rem;
   }
@@ -7,10 +16,19 @@ page-home {
     font-size: 1.2rem;
   }
 
+  h2.title {
+    position: relative;
+    top: -5px;
+    display: inline-block;
+    text-align: center;
+  }
+
   img {
     position: relative;
-    width: 130px;
+    //width: 130px;
+    width: 40px;
     height: auto;
+    top: 5px;
     z-index: 4;
   }
 
@@ -20,11 +38,6 @@ page-home {
 
   #sub-container {
     background-color: #eee;
-
-    h2 {
-      text-align: center;
-      color: #666;
-    }
   }
 
   .toolbar-background {

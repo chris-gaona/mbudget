@@ -1,26 +1,20 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar id="header">
     <ion-buttons start>
-      <button ion-button icon-only ion-text color="dark" (click)="presentPopover($event)">
+      <button ion-button icon-only ion-text color="white" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title><img margin-top src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo"></ion-title>
+    <ion-title id="home">Home</ion-title>
     <ion-buttons end>
-      <button ion-button icon-only ion-text color="dark" (click)="openModalEdit()">
+      <button ion-button icon-only ion-text color="white" (click)="openModalEdit()">
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<!--<modal-auth (userInfo)="userInfo($event)" *ngIf="!userService.isLoggedIn()"></modal-auth>-->
-
 <ion-content id="main-container">
-
-  <!--<ion-refresher (ionRefresh)="doRefresh($event)" id="refresher">-->
-    <!--<ion-refresher-content></ion-refresher-content>-->
-  <!--</ion-refresher>-->
 
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content
@@ -32,7 +26,17 @@
 
   <div padding *ngIf="budgets" id="sub-container">
 
-    <h2>BudTrac</h2>
+    <div id="title-container" no-margin no-padding>
+      <h2 ion-text color="dark" class="title" no-margin no-padding>
+        Bud
+      </h2>
+      <img src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo">
+      <h2 ion-text color="dark" class="title" no-margin no-padding>
+        Trac
+      </h2>
+    </div>
+
+    <!--<h2>BudTrac</h2>-->
 
     <div *ngIf="userService.isLoggedIn()">
       <ion-card>

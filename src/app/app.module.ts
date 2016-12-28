@@ -24,7 +24,13 @@ import { BudgetService } from '../services/budget.service';
     ModalAuthPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      platforms: {
+        ios: {
+          statusbarPadding: true
+        }
+      }
+    }),
     CurrencyMaskModule
   ],
   bootstrap: [IonicApp],
