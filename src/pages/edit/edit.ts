@@ -29,11 +29,12 @@ export class EditPage {
     this.item = navParams.get('budgetItem');
   }
 
-  showToast(message:string, position: string) {
+  showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
       message: message,
-      duration: 2000,
-      position: position
+      duration: 3000,
+      position: position,
+      cssClass: color
     });
 
     toast.present(toast);
@@ -56,7 +57,7 @@ export class EditPage {
         this.goBack();
         // todo: do something with data returned here
 
-        this.showToast('Everything saved!', 'bottom');
+        this.showToast('Everything saved!', 'bottom', 'toaster-green');
         console.log('Everything saved!');
       }, err => {
         this.handleError(err);
@@ -160,7 +161,7 @@ export class EditPage {
     // if the error has status 400 meaning there are form issues
     if (error.status === 400) {
       // tell user to fix the form issues
-      this.showToast('Form Errors\nPlease see above.', 'bottom');
+      this.showToast('Form Errors\nPlease see above.', 'bottom', 'toaster-red');
       console.log('response', error);
       this.hasValidationErrors = true;
       this.validationErrors = error;
@@ -169,10 +170,10 @@ export class EditPage {
       let message = error && error.statusText;
 
       if (message) {
-        this.showToast('Uh oh!\n' + message, 'bottom');
+        this.showToast('Uh oh! ' + message, 'bottom', 'toaster-red');
       } else {
         message = 'Message not available.';
-        this.showToast('Unexpected Error!!\n' + message, 'bottom');
+        this.showToast('Unexpected Error! ' + message, 'bottom', 'toaster-red');
       }
 
       // log the entire response to the console

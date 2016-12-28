@@ -26,11 +26,12 @@ export class ModalAuthPage {
 
   }
 
-  showToast(message:string, position: string) {
+  showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
       message: message,
-      duration: 2000,
-      position: position
+      duration: 3000,
+      position: position,
+      cssClass: color
     });
 
     toast.present(toast);
@@ -60,7 +61,7 @@ export class ModalAuthPage {
         this.userService.isLoggedIn();
         this.loggedInUser();
 
-        this.showToast('Successfully logged in!', 'bottom');
+        this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
       }
     }, err => {
       this.handleError(err);
@@ -74,7 +75,7 @@ export class ModalAuthPage {
         this.userService.isLoggedIn();
         this.loggedInUser();
 
-        this.showToast('Consider yourself registered!', 'bottom');
+        this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
       }
     }, err => {
       this.handleError(err);
@@ -88,7 +89,7 @@ export class ModalAuthPage {
     // if the error has status 400 meaning there are form issues
     if (error.status === 400) {
       // tell user to fix the form issues
-      this.showToast('Form Errors', 'bottom');
+      this.showToast('Form Errors', 'bottom', 'toaster-red');
       console.log('response', errorMessage);
       this.hasValidationErrors = true;
       this.validationErrors = errorMessage;
@@ -97,10 +98,10 @@ export class ModalAuthPage {
       let message = error && error.statusText;
 
       if (message) {
-        this.showToast('Uh oh! ' + message, 'bottom');
+        this.showToast('Uh oh! ' + message, 'bottom', 'toaster-red');
       } else {
         message = 'Message not available.';
-        this.showToast('Unexpected Error! ' + message, 'bottom');
+        this.showToast('Unexpected Error! ' + message, 'bottom', 'toaster-red');
       }
 
       // log the entire response to the console

@@ -81,8 +81,18 @@ hr {
   }
 }
 
-.toast-container {
-  background-color: #2ec95c;
+.toaster-green {
+
+  div {
+    background-color: #2ec95c;
+  }
+}
+
+.toaster-red {
+
+  div {
+    background-color: #d9534f;
+  }
 }
 
 //.toast-message {

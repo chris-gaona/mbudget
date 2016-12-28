@@ -32,22 +32,22 @@
 
     <ion-item padding-horizontal *ngIf="!loginButtonMain">
       <ion-label floating>First Name</ion-label>
-      <ion-input type="text" [(ngModel)]="firstName" (keyup.enter)="signUp(username, password, confirmPassword, firstName)"></ion-input>
+      <ion-input type="text" [(ngModel)]="firstName" (keyup.enter)="signUp(username, password, confirmPassword, firstName); loading = true"></ion-input>
     </ion-item>
 
     <ion-item padding-horizontal>
       <ion-label floating>Username</ion-label>
-      <ion-input type="text" [(ngModel)]="username" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName)"></ion-input>
+      <ion-input type="text" [(ngModel)]="username" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true"></ion-input>
     </ion-item>
 
     <ion-item padding-horizontal>
       <ion-label floating>Password</ion-label>
-      <ion-input type="password" [(ngModel)]="password" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName)"></ion-input>
+      <ion-input type="password" [(ngModel)]="password" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true"></ion-input>
     </ion-item>
 
     <ion-item padding-horizontal *ngIf="!loginButtonMain">
       <ion-label floating>Confirm Password</ion-label>
-      <ion-input type="password" [(ngModel)]="confirmPassword" (keyup.enter)="signUp(username, password,confirmPassword, firstName)"></ion-input>
+      <ion-input type="password" [(ngModel)]="confirmPassword" (keyup.enter)="signUp(username, password,confirmPassword, firstName); loading = true"></ion-input>
     </ion-item>
 
     <ion-item padding-top>
