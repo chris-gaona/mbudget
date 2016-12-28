@@ -5,7 +5,7 @@ import { tokenNotExpired } from 'angular2-jwt';
 import { Observable } from 'rxjs';
 // import { environment } from '../environments/environment';
 
-let baseURL = '/';
+let baseURL = 'https://still-forest-99171.herokuapp.com/';
 
 // if (environment.production) {
 //   baseURL = '/';
