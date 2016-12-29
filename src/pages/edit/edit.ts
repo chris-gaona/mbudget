@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
 import { BudgetService } from '../../services/budget.service';
+import { NetworkService } from '../../services/network.service';
 
 @Component({
   selector: 'page-edit',
@@ -22,8 +23,8 @@ export class EditPage {
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
               private navParams: NavParams,
-              private budgetService: BudgetService) {
-    console.log(navParams.get('budgetItem'));
+              private budgetService: BudgetService,
+              private networkService: NetworkService) {
     this._id = navParams.get('_id');
     this.budget = navParams.get('budget');
     this.item = navParams.get('budgetItem');
@@ -51,18 +52,22 @@ export class EditPage {
 
   // save all edits
   saveAll() {
-    // passes budget_items array to saveAll function on budgetService
-    this.budgetService.updateBudgetById(this._id, this.budget)
-      .subscribe(data => {
-        this.goBack();
-        // todo: do something with data returned here
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      // passes budget_items array to saveAll function on budgetService
+      this.budgetService.updateBudgetById(this._id, this.budget)
+        .subscribe(data => {
+          this.goBack();
+          // todo: do something with data returned here
 
-        this.showToast('Everything saved!', 'bottom', 'toaster-green');
-        console.log('Everything saved!');
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
+          this.showToast('Everything saved!', 'bottom', 'toaster-green');
+          console.log('Everything saved!');
+        }, err => {
+          this.handleError(err);
+          console.log(err);
+        });
+    }
   }
 
   goBack() {

@@ -11,6 +11,7 @@ import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { UserService } from '../services/user.service';
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { BudgetService } from '../services/budget.service';
+import { NetworkService } from '../services/network.service';
 
 
 @NgModule({
@@ -43,6 +44,6 @@ import { BudgetService } from '../services/budget.service';
     ModalContentPage,
     ModalAuthPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, UserService, BudgetService, AUTH_PROVIDERS]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, UserService, BudgetService, AUTH_PROVIDERS, NetworkService]
 })
 export class AppModule {}

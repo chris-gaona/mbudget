@@ -7,6 +7,7 @@ import { Keyboard } from 'ionic-native';
 import { Budget } from '../../models/budget';
 
 import { BudgetService } from '../../services/budget.service';
+import { NetworkService } from '../../services/network.service';
 
 
 @Component({
@@ -35,7 +36,8 @@ export class ModalContentPage {
     params: NavParams,
     public toastCtrl: ToastController,
     private budgetService: BudgetService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    private networkService: NetworkService
   ) {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
@@ -95,51 +97,57 @@ export class ModalContentPage {
   // connection function between header component & this component to create new budget
   // connected through @Output decorator
   createBudget(budget) {
-    console.log('budgets', this.budgets);
-    // converts the date string from 2016-10-30 to 10/30/2016
-    let startDate = budget.start_period.split('-');
-    let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
-    let newDate = new Date(newDateString);
-    budget.start_period = newDate;
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      // converts the date string from 2016-10-30 to 10/30/2016
+      let startDate = budget.start_period.split('-');
+      let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
+      let newDate = new Date(newDateString);
+      budget.start_period = newDate;
 
-    this.budgetService.addBudget(budget)
-      .subscribe(data => {
-        if (this.reuseProjection === false) {
-        } else {
-          this.reuseProjections(data);
-        }
+      this.budgetService.addBudget(budget)
+        .subscribe(data => {
+          if (this.reuseProjection === false) {
+          } else {
+            this.reuseProjections(data);
+          }
 
-        this.reuseProjection = false;
+          this.reuseProjection = false;
 
-        this.hasValidationErrors = false;
+          this.hasValidationErrors = false;
 
-        this.showToast('Budget created!', 'bottom', 'toaster-green');
-        console.log('Budget created!');
-        this.removeModal(data);
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+          this.showToast('Budget created!', 'bottom', 'toaster-green');
+          console.log('Budget created!');
+          this.removeModal(data);
+        }, err => {
+          this.handleError(err);
+          console.error(err);
+        });
+    }
   }
 
   // reuse projections from last budget
   reuseProjections(budget) {
-    console.log('budget', budget);
-    let prevProjection;
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      let prevProjection;
 
-    // get the budget items
-    prevProjection = this.obtainPreviousBudget('post');
+      // get the budget items
+      prevProjection = this.obtainPreviousBudget('post');
 
-    budget.budget_items = prevProjection.budget_items;
+      budget.budget_items = prevProjection.budget_items;
 
-    // update the new budget with last period's budget items
-    this.budgetService.updateBudgetById(budget._id, budget)
-      .subscribe(data => {
-        console.log('data', data);
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+      // update the new budget with last period's budget items
+      this.budgetService.updateBudgetById(budget._id, budget)
+        .subscribe(data => {
+          console.log('data', data);
+        }, err => {
+          this.handleError(err);
+          console.error(err);
+        });
+    }
   }
 
   // get the projection or budget items from last period
@@ -212,43 +220,51 @@ export class ModalContentPage {
   }
 
   addUpdate(budget) {
-    // update the new budget with last period's budget items
-    this.budgetService.updateBudgetById(budget._id, budget)
-      .subscribe(data => {
-        this.dismiss(budget);
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      // update the new budget with last period's budget items
+      this.budgetService.updateBudgetById(budget._id, budget)
+        .subscribe(data => {
+          this.dismiss(budget);
 
-        this.showToast('Budget updated!', 'bottom', 'toaster-green');
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+          this.showToast('Budget updated!', 'bottom', 'toaster-green');
+        }, err => {
+          this.handleError(err);
+          console.error(err);
+        });
+    }
   }
 
   deleteBudget(budget) {
-    this.budgetService.deleteBudgetById(budget._id)
-      .subscribe(data => {
-        let newIndex = 0;
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      this.budgetService.deleteBudgetById(budget._id)
+        .subscribe(data => {
+          let newIndex = 0;
 
-        this.budgets.filter((item, i) => {
-          if (item._id === budget._id) {
-            this.budgets.splice(i, 1);
-            newIndex = i - 1;
+          this.budgets.filter((item, i) => {
+            if (item._id === budget._id) {
+              this.budgets.splice(i, 1);
+              newIndex = i - 1;
+            }
+          });
+
+          if (this.budgets.length > 0) {
+            this.selectedBudget = this.budgets[newIndex];
           }
+
+          // this.hasValidationErrors = false;
+
+          this.dismiss(this.selectedBudget);
+
+          this.showToast('Budget deleted!', 'bottom', 'toaster-green');
+        }, err => {
+          this.handleError(err);
+          console.error(err);
         });
-
-        if (this.budgets.length > 0) {
-          this.selectedBudget = this.budgets[newIndex];
-        }
-
-        // this.hasValidationErrors = false;
-
-        this.dismiss(this.selectedBudget);
-
-        this.showToast('Budget deleted!', 'bottom', 'toaster-green');
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+    }
   }
 
   private handleError(error: any) {

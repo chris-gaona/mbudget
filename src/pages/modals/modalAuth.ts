@@ -2,6 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 
 import { Platform, ViewController, ToastController } from 'ionic-angular';
 import { UserService } from '../../services/user.service';
+import { NetworkService } from '../../services/network.service';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class ModalAuthPage {
     public platform: Platform,
     public viewCtrl: ViewController,
     public toastCtrl: ToastController,
-    private userService: UserService
+    private userService: UserService,
+    private networkService: NetworkService
   ) {
 
   }
@@ -42,45 +44,57 @@ export class ModalAuthPage {
   }
 
   loggedInUser() {
-    this.userService.getUser()
-      .subscribe(data => {
-        if (data) {
-          this.currentUser = data;
-          this.dismiss(this.currentUser);
-          this.loading = false;
-        }
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      this.userService.getUser()
+        .subscribe(data => {
+          if (data) {
+            this.currentUser = data;
+            this.dismiss(this.currentUser);
+            this.loading = false;
+          }
+        }, err => {
+          this.handleError(err);
+          console.log(err);
+        });
+    }
   }
 
   login(username, password) {
-    this.userService.login(username, password).subscribe((result) => {
-      if (result) {
-        this.userService.isLoggedIn();
-        this.loggedInUser();
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      this.userService.login(username, password).subscribe((result) => {
+        if (result) {
+          this.userService.isLoggedIn();
+          this.loggedInUser();
 
-        this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
-      }
-    }, err => {
-      this.handleError(err);
-      console.error(err);
-    });
+          this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
+        }
+      }, err => {
+        this.handleError(err);
+        console.error(err);
+      });
+    }
   }
 
   signUp(username, password, confirmPassword, firstName) {
-    this.userService.register(username, password, confirmPassword, firstName).subscribe((result) => {
-      if (result) {
-        this.userService.isLoggedIn();
-        this.loggedInUser();
+    if (this.networkService.noConnection()) {
+      this.networkService.showNetworkAlert();
+    } else {
+      this.userService.register(username, password, confirmPassword, firstName).subscribe((result) => {
+        if (result) {
+          this.userService.isLoggedIn();
+          this.loggedInUser();
 
-        this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
-      }
-    }, err => {
-      this.handleError(err);
-      console.error(err);
-    });
+          this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
+        }
+      }, err => {
+        this.handleError(err);
+        console.error(err);
+      });
+    }
   }
 
   private handleError(error: any) {
