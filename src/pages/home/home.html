@@ -71,7 +71,7 @@
         </ion-item>
       </ion-list>
 
-      <p no-margin margin-vertical margin-left class="small-text" ion-text color="light">
+      <p no-margin margin-vertical margin-left class="small-text" ion-text color="light" *ngIf="selectedBudget.updatedAt">
         Last Updated - {{parseDate(selectedBudget.updatedAt)}}
       </p>
 

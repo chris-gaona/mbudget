@@ -10,7 +10,13 @@ export class NetworkService {
   }
 
   noConnection() {
-    return (Network.connection === 'none');
+    let disconnectSubscription = Network.onDisconnect().subscribe(() => {
+      console.log('network was disconnected :-(');
+      return true;
+    });
+
+    // stop disconnect watch
+    disconnectSubscription.unsubscribe();
   }
 
 

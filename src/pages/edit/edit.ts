@@ -96,9 +96,9 @@ export class EditPage {
       });
     }
 
-    alert.addButton('Wait, cancel');
+    alert.addButton('Cancel');
     alert.addButton({
-      text: 'Yes, delete',
+      text: 'Delete',
       handler: data => {
 
         for (let i = 0; i < data.length; i++) {
