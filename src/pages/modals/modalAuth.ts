@@ -2,7 +2,6 @@ import { Component, Output, EventEmitter } from '@angular/core';
 
 import { Platform, ViewController, ToastController } from 'ionic-angular';
 import { UserService } from '../../services/user.service';
-import { NetworkService } from '../../services/network.service';
 
 
 @Component({
@@ -22,8 +21,7 @@ export class ModalAuthPage {
     public platform: Platform,
     public viewCtrl: ViewController,
     public toastCtrl: ToastController,
-    private userService: UserService,
-    private networkService: NetworkService
+    private userService: UserService
   ) {
 
   }
@@ -44,57 +42,45 @@ export class ModalAuthPage {
   }
 
   loggedInUser() {
-    if (this.networkService.noConnection()) {
-      this.networkService.showNetworkAlert();
-    } else {
-      this.userService.getUser()
-        .subscribe(data => {
-          if (data) {
-            this.currentUser = data;
-            this.dismiss(this.currentUser);
-            this.loading = false;
-          }
-        }, err => {
-          this.handleError(err);
-          console.log(err);
-        });
-    }
+    this.userService.getUser()
+      .subscribe(data => {
+        if (data) {
+          this.currentUser = data;
+          this.dismiss(this.currentUser);
+          this.loading = false;
+        }
+      }, err => {
+        this.handleError(err);
+        console.log(err);
+      });
   }
 
   login(username, password) {
-    if (this.networkService.noConnection()) {
-      this.networkService.showNetworkAlert();
-    } else {
-      this.userService.login(username, password).subscribe((result) => {
-        if (result) {
-          this.userService.isLoggedIn();
-          this.loggedInUser();
+    this.userService.login(username, password).subscribe((result) => {
+      if (result) {
+        this.userService.isLoggedIn();
+        this.loggedInUser();
 
-          this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
-        }
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
-    }
+        this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
+      }
+    }, err => {
+      this.handleError(err);
+      console.error(err);
+    });
   }
 
   signUp(username, password, confirmPassword, firstName) {
-    if (this.networkService.noConnection()) {
-      this.networkService.showNetworkAlert();
-    } else {
-      this.userService.register(username, password, confirmPassword, firstName).subscribe((result) => {
-        if (result) {
-          this.userService.isLoggedIn();
-          this.loggedInUser();
+    this.userService.register(username, password, confirmPassword, firstName).subscribe((result) => {
+      if (result) {
+        this.userService.isLoggedIn();
+        this.loggedInUser();
 
-          this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
-        }
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
-    }
+        this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
+      }
+    }, err => {
+      this.handleError(err);
+      console.error(err);
+    });
   }
 
   private handleError(error: any) {
@@ -114,7 +100,7 @@ export class ModalAuthPage {
       if (message) {
         this.showToast('Uh oh! ' + message, 'bottom', 'toaster-red');
       } else {
-        message = 'Message not available.';
+        message = 'Please try again.';
         this.showToast('Unexpected Error! ' + message, 'bottom', 'toaster-red');
       }
 

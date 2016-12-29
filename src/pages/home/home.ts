@@ -9,7 +9,6 @@ import { UserService } from '../../services/user.service';
 import { ModalAuthPage } from '../modals/modalAuth';
 import { BudgetService } from '../../services/budget.service';
 import { Budget, BudgetItems } from '../../models/budget';
-import { NetworkService } from '../../services/network.service';
 
 @Component({
   selector: 'page-home',
@@ -42,8 +41,7 @@ export class HomePage {
               public modalCtrl: ModalController,
               public alertCtrl: AlertController,
               private userService: UserService,
-              private budgetService: BudgetService,
-              private networkService: NetworkService) {
+              private budgetService: BudgetService) {
 
   }
 
@@ -82,56 +80,48 @@ export class HomePage {
   }
 
   loggedInUser() {
-    if (this.networkService.noConnection()) {
-      this.networkService.showNetworkAlert();
-    } else {
-      this.userService.getUser()
-        .subscribe(data => {
-          this.currentUser = data;
-        }, err => {
-          this.handleError(err);
-          console.log(err);
-        });
-    }
+    this.userService.getUser()
+      .subscribe(data => {
+        this.currentUser = data;
+      }, err => {
+        this.handleError(err);
+        console.log(err);
+      });
   }
 
   getAllBudgets(editedBudget?) {
-    if (this.networkService.noConnection()) {
-      this.networkService.showNetworkAlert();
-    } else {
-      // retrieves all budgets from budgetService
-      this.budgetService.getAllBudgets()
-        .subscribe(data => {
-          console.log('data', data);
-          if (data.length === 0) {
-            this.visibleBudgets = false;
-          } else {
-            this.budgets = data;
-            this.visibleBudgets = true;
+    // retrieves all budgets from budgetService
+    this.budgetService.getAllBudgets()
+      .subscribe(data => {
+        console.log('data', data);
+        if (data.length === 0) {
+          this.visibleBudgets = false;
+        } else {
+          this.budgets = data;
+          this.visibleBudgets = true;
 
-            if (editedBudget) {
+          if (editedBudget) {
 
-              for (let i = 0; i < this.budgets.length; i++) {
-                if (this.budgets[i]._id === editedBudget._id) {
-                  this.selectedBudget = this.budgets[i];
-                }
+            for (let i = 0; i < this.budgets.length; i++) {
+              if (this.budgets[i]._id === editedBudget._id) {
+                this.selectedBudget = this.budgets[i];
               }
-            } else {
-              // loop through each budget entry
-              for (let i = 0; i < this.budgets.length; i++) {
-                // find the latest created budget entry in the array
-                if (i === (this.budgets.length - 1)) {
-                  // make that one the selected budget on load
-                  this.selectedBudget = this.budgets[i];
-                }
+            }
+          } else {
+            // loop through each budget entry
+            for (let i = 0; i < this.budgets.length; i++) {
+              // find the latest created budget entry in the array
+              if (i === (this.budgets.length - 1)) {
+                // make that one the selected budget on load
+                this.selectedBudget = this.budgets[i];
               }
             }
           }
-        }, err => {
-          this.handleError(err);
-          console.log(err);
-        });
-    }
+        }
+      }, err => {
+        this.handleError(err);
+        console.log(err);
+      });
   }
 
   // creates empty budget
@@ -399,19 +389,15 @@ export class HomePage {
 
   // save all edits
   saveAll() {
-    if (this.networkService.noConnection()) {
-      this.networkService.showNetworkAlert();
-    } else {
-      // passes budget_items array to saveAll function on budgetService
-      this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
-        .subscribe(data => {
-          this.showToast('Everything saved!', 'bottom', 'toaster-green');
-          console.log('Everything saved!');
-        }, err => {
-          this.handleError(err);
-          console.log(err);
-        });
-    }
+    // passes budget_items array to saveAll function on budgetService
+    this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
+      .subscribe(data => {
+        this.showToast('Everything saved!', 'bottom', 'toaster-green');
+        console.log('Everything saved!');
+      }, err => {
+        this.handleError(err);
+        console.log(err);
+      });
   }
 
   // add new budget item to budget_items array in specific budget
@@ -594,7 +580,7 @@ export class HomePage {
       if (message) {
         this.showToast('Uh oh! ' + message, 'bottom', 'toaster-red');
       } else {
-        message = 'Message not available.';
+        message = 'Please try again.';
         this.showToast('Unexpected Error! ' + message, 'bottom', 'toaster-red');
       }
 

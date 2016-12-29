@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { ModalController, ViewController, NavParams } from 'ionic-angular';
 
 import { UserService } from '../../services/user.service';
-import { ModalAuthPage } from '../modals/modalAuth';
 
 @Component({
   template: `
@@ -31,7 +30,7 @@ export class PopoverPage {
 
   currentUser: any;
 
-  constructor(public modalCtrl: ModalController, params: NavParams, public viewCtrl: ViewController, private userService: UserService) {
+  constructor(params: NavParams, public viewCtrl: ViewController, private userService: UserService) {
     this.currentUser = params.get('userInfo');
   }
 
