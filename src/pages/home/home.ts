@@ -9,6 +9,7 @@ import { UserService } from '../../services/user.service';
 import { ModalAuthPage } from '../modals/modalAuth';
 import { BudgetService } from '../../services/budget.service';
 import { Budget, BudgetItems } from '../../models/budget';
+import { NetworkService } from '../../services/network.service';
 
 @Component({
   selector: 'page-home',
@@ -33,7 +34,7 @@ export class HomePage {
   validationErrors: any;
   hasValidationErrors: boolean = false;
 
-  projActual:string = 'actual';
+  projActual: string = 'actual';
 
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
@@ -41,7 +42,9 @@ export class HomePage {
               public modalCtrl: ModalController,
               public alertCtrl: AlertController,
               private userService: UserService,
-              private budgetService: BudgetService) {
+              private budgetService: BudgetService,
+              private networkService: NetworkService
+  ) {
 
   }
 

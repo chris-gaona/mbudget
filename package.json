@@ -54,7 +54,9 @@
     "cordova-plugin-console",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
+    "cordova-plugin-diagnostic",
+    "cordova-plugin-network-information"
   ],
   "cordovaPlatforms": [
     "ios",

@@ -1,12 +1,12 @@
 <ion-header>
   <ion-navbar id="header">
-    <ion-buttons start>
+    <ion-buttons start *ngIf="budgets && networkService.wifiConnected">
       <button ion-button icon-only ion-text color="white" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title id="home">Home</ion-title>
-    <ion-buttons end>
+    <ion-buttons end *ngIf="budgets && networkService.wifiConnected">
       <button ion-button icon-only ion-text color="white" (click)="openModalEdit()">
         <ion-icon name="settings"></ion-icon>
       </button>
@@ -24,9 +24,14 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <div *ngIf="!budgets" id="main-loader"></div>
+  <div *ngIf="!networkService.wifiConnected" id="no-wifi" text-center>
+    <ion-icon name="cloud" color="dark"></ion-icon>
+    <p no-margin ion-text color="dark">Offline</p>
+  </div>
 
-  <div padding *ngIf="budgets" id="sub-container">
+  <div *ngIf="!budgets && networkService.wifiConnected" id="main-loader"></div>
+
+  <div padding *ngIf="budgets && networkService.wifiConnected" id="sub-container">
 
     <div id="title-container" no-margin no-padding>
       <h2 ion-text color="dark" class="title" no-margin no-padding>
@@ -210,7 +215,7 @@
 
   </div>
 
-    <ion-fab right bottom (click)="openModalNew()">
+    <ion-fab right bottom (click)="openModalNew()" *ngIf="budgets && networkService.wifiConnected">
       <button ion-fab><ion-icon name="add"></ion-icon></button>
     </ion-fab>
 

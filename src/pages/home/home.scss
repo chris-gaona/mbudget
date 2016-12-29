@@ -175,4 +175,20 @@ page-home {
       transform: rotate(360deg);
     }
   }
+
+  #no-wifi {
+    position: absolute;
+    top: 50%;
+    height: 120px;
+    width: 100%;
+    margin-top: -80px;
+
+    ion-icon {
+      font-size: 5em;
+    }
+
+    p {
+      font-size: 2rem;
+    }
+  }
 }

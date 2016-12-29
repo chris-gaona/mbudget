@@ -40,7 +40,7 @@
     </ion-list-header>
 
     <ion-item>
-      <input currencyMask type="text" [(ngModel)]="selectedBudget.existing_cash" class="input-field">
+      <input currencyMask type="text" [(ngModel)]="selectedBudget.existing_cash" class="input-field" name="current_cash">
     </ion-item>
 
     <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
@@ -48,7 +48,7 @@
     </ion-list-header>
 
     <ion-item>
-      <input currencyMask type="text" [(ngModel)]="selectedBudget.current_income" class="input-field">
+      <input currencyMask type="text" [(ngModel)]="selectedBudget.current_income" class="input-field" name="current_income">
     </ion-item>
 
     <ion-item *ngIf="!editing" id="checkbox">
