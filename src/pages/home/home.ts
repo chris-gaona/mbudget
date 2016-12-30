@@ -10,6 +10,7 @@ import { ModalAuthPage } from '../modals/modalAuth';
 import { BudgetService } from '../../services/budget.service';
 import { Budget, BudgetItems } from '../../models/budget';
 import { NetworkService } from '../../services/network.service';
+import 'chart.js';
 
 @Component({
   selector: 'page-home',
@@ -592,4 +593,43 @@ export class HomePage {
     }
   }
 
+
+  // CHARTS
+  // lineChart
+  lineChartData:Array<any> = [
+    {data: [65, 59, 80, 81, 56], label: 'Saving-%'}
+  ];
+  lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May'];
+  lineChartType:string = 'line';
+  pieChartType:string = 'pie';
+  lineOptions: any = {
+    legend: {
+      display: false
+    }
+  };
+
+  // Pie
+  pieChartLabels:string[] = ['', ''];
+  pieChartData:number[] = [300, 500];
+  pieOptions: any = {
+    legend: {
+      display: false
+    },
+    tooltips: {
+      bodyFontSize: 10
+    }
+  };
+
+  randomizeType():void {
+    this.lineChartType = this.lineChartType === 'line' ? 'bar' : 'line';
+    this.pieChartType = this.pieChartType === 'doughnut' ? 'pie' : 'doughnut';
+  }
+
+  chartClicked(e:any):void {
+    console.log(e);
+  }
+
+  chartHovered(e:any):void {
+    console.log(e);
+  }
 }

@@ -12,6 +12,7 @@ import { UserService } from '../services/user.service';
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { BudgetService } from '../services/budget.service';
 import { NetworkService } from '../services/network.service';
+import { ChartsModule } from 'ng2-charts';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { NetworkService } from '../services/network.service';
         }
       }
     }),
-    CurrencyMaskModule
+    CurrencyMaskModule,
+    ChartsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

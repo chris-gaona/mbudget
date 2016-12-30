@@ -52,9 +52,17 @@ page-home {
     font-size: 1.2rem;
   }
 
+  .full-width {
+    width: 100% !important;
+  }
+
   #health-snapshot {
     position: relative;
     top: 20px;
+  }
+
+  #health-hr {
+    margin-top: 39px;
   }
 
   #health-icon {
@@ -189,6 +197,42 @@ page-home {
 
     p {
       font-size: 2rem;
+    }
+  }
+
+  #chart-container {
+    position: relative;
+    min-height: 120px;
+    margin-bottom: 10px;
+  }
+
+  #pie-chart {
+    position: relative;
+    left: 5px;
+    float: left;
+    display: block;
+    width: 25%;
+    height: auto;
+    margin-top: 20px;
+
+    span {
+      display: block;
+      font-size: 10px;
+    }
+  }
+
+  #line-chart {
+    position: relative;
+    left: 5px;
+    float: left;
+    display: block;
+    width: 70%;
+    height: auto;
+    margin-top: 20px;
+
+    span {
+      display: block;
+      font-size: 10px;
     }
   }
 }
