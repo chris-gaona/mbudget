@@ -21,7 +21,7 @@ export class HomePage {
   budgets: Budget[];
   selectedBudget: Budget;
   currentUser: string;
-  visibleBudgets: boolean;
+  visibleBudgets: boolean = true;
   totalActual: number;
   totalSpent: number;
   mergeTotals: number;
@@ -34,6 +34,8 @@ export class HomePage {
   edited: boolean = false;
   validationErrors: any;
   hasValidationErrors: boolean = false;
+
+  loading: boolean = false;
 
   averageSaving: number;
 
@@ -148,6 +150,28 @@ export class HomePage {
   }
 
   // creates empty budget
+  createFirstBudget() {
+    let newBudget = new Budget();
+    newBudget.existing_cash = 1;
+    newBudget.current_income = 1;
+
+    this.budgetService.addBudget(newBudget)
+      .subscribe(data => {
+        this.getAllBudgets();
+        this.selectedBudget = data;
+        this.visibleBudgets = true;
+        this.loading = false;
+
+        console.log('First Budget', this.budgets);
+
+        this.showToast('First budget created!', 'bottom', 'toaster-green');
+      }, err => {
+        this.handleError(err);
+        console.log(err);
+      });
+  }
+
+  // creates empty budget
   createEmptyBudget() {
     let newBudget = new Budget();
     this.convertDate(newBudget, newBudget.start_period);
@@ -158,7 +182,6 @@ export class HomePage {
     // make this new budget the shown one in the modal for editing
     this.selectedBudget = newBudget;
     this.budgets.push(this.selectedBudget);
-
 
 
     let modal = this.modalCtrl.create(ModalContentPage, {
@@ -600,44 +623,7 @@ export class HomePage {
   }
 
 
-  // // CHARTS
-  // // lineChart
-  // lineChartData:Array<any> = [
-  //   {data: [65, 59, 80, 81, 56], label: 'Saving-%'}
-  // ];
-  // lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May'];
-  // lineChartType:string = 'line';
-  // pieChartType:string = 'pie';
-  // lineOptions: any = {
-  //   legend: {
-  //     display: false
-  //   }
-  // };
-  //
-  // // Pie
-  // pieChartLabels:string[] = ['', ''];
-  // pieChartData:number[] = [300, 500];
-  // pieOptions: any = {
-  //   legend: {
-  //     display: false
-  //   },
-  //   tooltips: {
-  //     bodyFontSize: 10
-  //   }
-  // };
-  //
-  // randomizeType():void {
-  //   this.lineChartType = this.lineChartType === 'line' ? 'bar' : 'line';
-  //   this.pieChartType = this.pieChartType === 'doughnut' ? 'pie' : 'doughnut';
-  // }
-  //
-  // chartClicked(e:any):void {
-  //   console.log(e);
-  // }
-  //
-  // chartHovered(e:any):void {
-  //   console.log(e);
-  // }
+
 
 
   max: number = 100;
