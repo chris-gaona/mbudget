@@ -53,8 +53,8 @@
     <preference name="BackupWebStorage" value="none" />
     <preference name="SplashMaintainAspectRatio" value="true" />
     <preference name="SplashScreen" value="screen" />
-    <preference name="FadeSplashScreenDuration" value="800" />
-    <preference name="SplashScreenDelay" value="800" />
+    <preference name="FadeSplashScreenDuration" value="600" />
+    <preference name="SplashScreenDelay" value="600" />
     <preference name="AutoHideSplashScreen" value="false" />
     <preference name="ShowSplashScreenSpinner" value="false" />
     <feature name="StatusBar">

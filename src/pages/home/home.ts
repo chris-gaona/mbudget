@@ -557,8 +557,6 @@ export class HomePage {
     // timeline section or direct messages section
     if (diff <= 1) { return 'just now'; }
 
-    if (diff < 60) { return diff + ' seconds ago'; }
-
     if (diff <= 90) { return 'one minute ago'; }
 
     if (diff <= 3540) { return Math.round(diff / 60) + ' minutes ago'; }
