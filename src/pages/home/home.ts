@@ -24,16 +24,18 @@ export class HomePage {
   visibleBudgets: boolean;
   totalActual: number;
   totalSpent: number;
-  totals: any;
   mergeTotals: number;
   totalSaving: number;
+  totals: any;
   percSaving: number;
   endingCash: number;
-  projectionObject: Object = {};
-  actualObject: Object = {};
+  projectionObject: any = {};
+  actualObject: any = {};
   edited: boolean = false;
   validationErrors: any;
   hasValidationErrors: boolean = false;
+
+  averageSaving: number;
 
   projActual: string = 'actual';
 
@@ -118,6 +120,7 @@ export class HomePage {
               if (i === (this.budgets.length - 1)) {
                 // make that one the selected budget on load
                 this.selectedBudget = this.budgets[i];
+                this.averageSaving = this.getAverageSaving(this.budgets);
               }
             }
           }
@@ -126,6 +129,22 @@ export class HomePage {
         this.handleError(err);
         console.log(err);
       });
+  }
+
+  getAverageSaving(budgets) {
+    // add up all period savings and divide by number of them
+    let totalNumber = 0;
+    let savings = 0;
+    let average;
+
+    for (let i = 0; i < budgets.length; i++) {
+      totalNumber++;
+      savings += +this.getTotalSpent(budgets[i].budget_items, 'actual').percSaving;
+    }
+
+    average = savings / totalNumber;
+
+    return average;
   }
 
   // creates empty budget
@@ -430,8 +449,6 @@ export class HomePage {
   getTotalSpent(budget, type) {
     // initialize totalSpent to 0
     this.totalSpent = 0;
-    // initialize totals variable to empty array
-    this.totals = [];
     // initialize mergeTotals to 0
     this.mergeTotals = 0;
 
@@ -451,26 +468,17 @@ export class HomePage {
         }
       }
 
-      // push totalSpent total to totals array
-      this.totals.push(this.totalSpent);
-
-      // loop through the totals array
-      for (let i = 0; i < this.totals.length; i++) {
-        // merge the total together
-        this.mergeTotals += +this.totals[i];
-      }
-
       // total saving
-      this.totalSaving = this.selectedBudget.current_income - this.mergeTotals;
+      this.totalSaving = this.selectedBudget.current_income - this.totalSpent;
 
       // percentage saving
       this.percSaving = this.totalSaving / this.selectedBudget.current_income;
 
       // ending cash amount
-      this.endingCash = this.selectedBudget.existing_cash + this.selectedBudget.current_income - this.mergeTotals;
+      this.endingCash = this.selectedBudget.existing_cash + this.selectedBudget.current_income - this.totalSpent;
 
       this.actualObject = Object.assign({}, {
-        totalSpent: this.mergeTotals,
+        totalSpent: this.totalSpent,
         totalSaving: this.totalSaving,
         percSaving: this.percSaving,
         endingCash: this.endingCash
@@ -594,42 +602,66 @@ export class HomePage {
   }
 
 
-  // CHARTS
-  // lineChart
-  lineChartData:Array<any> = [
-    {data: [65, 59, 80, 81, 56], label: 'Saving-%'}
-  ];
-  lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May'];
-  lineChartType:string = 'line';
-  pieChartType:string = 'pie';
-  lineOptions: any = {
-    legend: {
-      display: false
-    }
-  };
+  // // CHARTS
+  // // lineChart
+  // lineChartData:Array<any> = [
+  //   {data: [65, 59, 80, 81, 56], label: 'Saving-%'}
+  // ];
+  // lineChartLabels:Array<any> = ['January', 'February', 'March', 'April', 'May'];
+  // lineChartType:string = 'line';
+  // pieChartType:string = 'pie';
+  // lineOptions: any = {
+  //   legend: {
+  //     display: false
+  //   }
+  // };
+  //
+  // // Pie
+  // pieChartLabels:string[] = ['', ''];
+  // pieChartData:number[] = [300, 500];
+  // pieOptions: any = {
+  //   legend: {
+  //     display: false
+  //   },
+  //   tooltips: {
+  //     bodyFontSize: 10
+  //   }
+  // };
+  //
+  // randomizeType():void {
+  //   this.lineChartType = this.lineChartType === 'line' ? 'bar' : 'line';
+  //   this.pieChartType = this.pieChartType === 'doughnut' ? 'pie' : 'doughnut';
+  // }
+  //
+  // chartClicked(e:any):void {
+  //   console.log(e);
+  // }
+  //
+  // chartHovered(e:any):void {
+  //   console.log(e);
+  // }
 
-  // Pie
-  pieChartLabels:string[] = ['', ''];
-  pieChartData:number[] = [300, 500];
-  pieOptions: any = {
-    legend: {
-      display: false
-    },
-    tooltips: {
-      bodyFontSize: 10
-    }
-  };
 
-  randomizeType():void {
-    this.lineChartType = this.lineChartType === 'line' ? 'bar' : 'line';
-    this.pieChartType = this.pieChartType === 'doughnut' ? 'pie' : 'doughnut';
-  }
+  max: number = 100;
+  currentAverage: number = 21;
+  radius: number = 95;
+  semicircle: boolean = true;
+  color: string = '#688dcc';
+  colorAverage: string = '#826bbd';
 
-  chartClicked(e:any):void {
-    console.log(e);
-  }
 
-  chartHovered(e:any):void {
-    console.log(e);
+  getOverlayStyle() {
+    let isSemi = this.semicircle;
+    let transform = (isSemi ? '' : 'translateY(-50%) ') + 'translateX(-50%)';
+
+    return {
+      'top': isSemi ? 'auto' : '50%',
+      'bottom': isSemi ? '5%' : 'auto',
+      'left': '50%',
+      'transform': transform,
+      '-moz-transform': transform,
+      '-webkit-transform': transform,
+      'font-size': this.radius / 3.5 + 'px'
+    };
   }
 }

@@ -1,13 +1,23 @@
 <ion-header>
   <ion-navbar id="header">
     <ion-buttons start *ngIf="budgets && networkService.wifiConnected">
-      <button ion-button icon-only ion-text color="white" (click)="presentPopover($event)">
+      <button ion-button icon-only ion-text color="dark" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-title id="home">Home</ion-title>
+    <ion-title>
+      <div id="title-container" no-margin no-padding>
+        <h2 ion-text color="dark" class="title" no-margin no-padding>
+          Bud
+        </h2>
+        <img src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo">
+        <h2 ion-text color="dark" class="title" no-margin no-padding>
+          Trac
+        </h2>
+      </div>
+    </ion-title>
     <ion-buttons end *ngIf="budgets && networkService.wifiConnected">
-      <button ion-button icon-only ion-text color="white" (click)="openModalEdit()">
+      <button ion-button icon-only ion-text color="dark" (click)="openModalEdit()">
         <ion-icon name="settings"></ion-icon>
       </button>
     </ion-buttons>
@@ -33,20 +43,10 @@
 
   <div padding *ngIf="budgets && networkService.wifiConnected" id="sub-container">
 
-    <div id="title-container" no-margin no-padding>
-      <h2 ion-text color="dark" class="title" no-margin no-padding>
-        Bud
-      </h2>
-      <img src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo">
-      <h2 ion-text color="dark" class="title" no-margin no-padding>
-        Trac
-      </h2>
-    </div>
-
     <!--<h2>BudTrac</h2>-->
 
     <div *ngIf="userService.isLoggedIn()">
-      <ion-card no-margin margin-vertical class="full-width">
+      <ion-card no-margin margin-bottom class="full-width">
 
         <ion-card-content id="health-snapshot" no-padding padding-horizontal margin-bottom *ngIf="(getTotalSpent(selectedBudget.budget_items, 'actual').totalSaving / selectedBudget.current_income) > .1">
           Health Snapshot
@@ -65,33 +65,50 @@
 
         <hr id="health-hr">
 
-        <div id="chart-container">
-          <div id="pie-chart">
-            <span ion-text text-center>Expense(%) vs Saving(%)</span>
-            <canvas baseChart
-                    [data]="pieChartData"
-                    [labels]="pieChartLabels"
-                    [chartType]="pieChartType"
-                    [options]="pieOptions"
-                    (chartHover)="chartHovered($event)"
-                    (chartClick)="chartClicked($event)"></canvas>
-            <span ion-text color="light" text-center>Current Period</span>
-            <div class="clearfix"></div>
-          </div>
+        <!--<div id="chart-container">-->
+          <!--<div id="pie-chart">-->
+            <!--<span ion-text text-center>Expense(%) vs Saving(%)</span>-->
+            <!--<span ion-text color="light" text-center>Current Period</span>-->
+            <!--<canvas baseChart-->
+                    <!--[data]="pieChartData"-->
+                    <!--[labels]="pieChartLabels"-->
+                    <!--[chartType]="pieChartType"-->
+                    <!--[options]="pieOptions"-->
+                    <!--(chartHover)="chartHovered($event)"-->
+                    <!--(chartClick)="chartClicked($event)"></canvas>-->
+            <!--<div class="clearfix"></div>-->
+          <!--</div>-->
 
-          <div id="line-chart">
-            <span ion-text text-center>Saving(%)</span>
-            <span ion-text text-center color="light">Last 5 periods</span>
-            <canvas baseChart
-                    [datasets]="lineChartData"
-                    [labels]="lineChartLabels"
-                    [chartType]="lineChartType"
-                    [options]="lineOptions"
-                    (chartHover)="chartHovered($event)"
-                    (chartClick)="chartClicked($event)"></canvas>
-            <div class="clearfix"></div>
-          </div>
-          <div class="clearfix"></div>
+          <!--<div id="line-chart">-->
+            <!--<span ion-text text-center>Saving(%)</span>-->
+            <!--<span ion-text text-center color="light">Last 5 periods</span>-->
+            <!--<canvas baseChart-->
+                    <!--[datasets]="lineChartData"-->
+                    <!--[labels]="lineChartLabels"-->
+                    <!--[chartType]="lineChartType"-->
+                    <!--[options]="lineOptions"-->
+                    <!--(chartHover)="chartHovered($event)"-->
+                    <!--(chartClick)="chartClicked($event)"></canvas>-->
+            <!--<div class="clearfix"></div>-->
+          <!--</div>-->
+          <!--<div class="clearfix"></div>-->
+        <!--</div>-->
+
+
+        <ion-item id="saving-overview">
+          <ion-icon name="arrow-dropright-circle" color="primary" item-left></ion-icon>
+          <span ion-text color="light">Saving Overview</span>
+          <ion-badge item-right id="badge">See More</ion-badge>
+        </ion-item>
+
+        <div class="progress-wrapper">
+          <div class="current" [ngStyle]="getOverlayStyle()"><p ion-text text-center>Current</p>{{getTotalSpent(selectedBudget.budget_items, 'actual').percSaving | percent:'1.0-0'}}</div>
+          <round-progress [current]="getTotalSpent(selectedBudget.budget_items, 'actual').percSaving" [max]="1" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : color" [responsive]="true"></round-progress>
+        </div>
+
+        <div class="progress-wrapper" id="second-progress" margin-bottom>
+          <div class="current" [ngStyle]="getOverlayStyle()"><p ion-text text-center>Overall</p>{{ averageSaving | percent:'1.0-0'}}</div>
+          <round-progress [current]="averageSaving" [max]="1" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : colorAverage" [responsive]="true"></round-progress>
         </div>
 
       </ion-card>

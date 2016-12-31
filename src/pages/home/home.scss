@@ -235,4 +235,52 @@ page-home {
       font-size: 10px;
     }
   }
+
+  .progress-wrapper{
+    position: relative;
+    width: 40%;
+    margin: 10px 4.5%;
+    font-size: 40px;
+    display: inline-block;
+
+    p {
+      font-size: 1rem;
+    }
+  }
+
+  .current{
+    position: absolute;
+    color: #bbb;
+    font-weight: 100;
+    line-height: 1;
+  }
+
+  round-progress {
+    margin: auto;
+  }
+
+  #second-progress {
+    top: 2px;
+  }
+
+  #badge {
+    padding: 8px !important;
+
+    &:before {
+      content: 'Coming Soon';
+      position: absolute;
+      top: 0;
+      right: 5px;
+      background: #f4f4f4;
+      color: #666;
+      border-radius: 5px;
+      padding: 4px;
+      //transform: rotate(25deg);
+      font-size: .8rem;
+    }
+  }
+
+  #saving-overview {
+    font-size: 1.5rem;
+  }
 }
