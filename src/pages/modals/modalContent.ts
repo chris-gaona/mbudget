@@ -53,8 +53,13 @@ export class ModalContentPage {
     toast.present(toast);
   }
 
-  dismiss(data) {
-    this.viewCtrl.dismiss(data);
+  dismiss(data?) {
+    if (data) {
+      this.viewCtrl.dismiss(data);
+    } else {
+      this.viewCtrl.dismiss();
+    }
+
   }
 
   removeModal(data?) {
@@ -236,11 +241,10 @@ export class ModalContentPage {
 
         if (this.budgets.length > 0) {
           this.selectedBudget = this.budgets[newIndex];
+          this.dismiss(this.selectedBudget);
+        } else {
+          this.dismiss('no budgets');
         }
-
-        // this.hasValidationErrors = false;
-
-        this.dismiss(this.selectedBudget);
 
         this.showToast('Budget deleted!', 'bottom', 'toaster-green');
       }, err => {

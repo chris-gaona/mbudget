@@ -7,7 +7,6 @@ import { HomePage } from '../pages/home/home';
 import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
 import { ModalAuthPage } from '../pages/modals/modalAuth';
-import { CurrencyMaskModule } from 'ng2-currency-mask';
 import { UserService } from '../services/user.service';
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { BudgetService } from '../services/budget.service';
@@ -34,7 +33,6 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar/dist/round-pr
         }
       }
     }),
-    CurrencyMaskModule,
     ChartsModule,
     RoundProgressModule
   ],

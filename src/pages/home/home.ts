@@ -103,6 +103,7 @@ export class HomePage {
       .subscribe(data => {
         console.log('data', data);
         if (data.length === 0) {
+          this.budgets = null;
           this.visibleBudgets = false;
         } else {
           this.budgets = data;
@@ -161,6 +162,8 @@ export class HomePage {
         this.selectedBudget = data;
         this.visibleBudgets = true;
         this.loading = false;
+
+        this.openModalEdit();
 
         console.log('First Budget', this.budgets);
 
@@ -322,6 +325,7 @@ export class HomePage {
   }
 
   openModalEdit() {
+    console.log('budgets', this.budgets);
     let modal = this.modalCtrl.create(ModalContentPage, {
       editing: true,
       selectedBudget: this.selectedBudget,
@@ -329,8 +333,13 @@ export class HomePage {
     });
     modal.onDidDismiss(data => {
       if (data) {
-        this.edited = true;
-        this.getAllBudgets(data);
+        if (data === 'no budgets') {
+          this.visibleBudgets = false;
+          this.getAllBudgets();
+        } else {
+          this.edited = true;
+          this.getAllBudgets(data);
+        }
       }
     });
     modal.present();

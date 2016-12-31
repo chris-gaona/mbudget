@@ -25,13 +25,16 @@
   <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)" *ngIf="!editing">
     I've done my best to populate the following fields for you. Your welcome!
   </p>
+
+
+
   <ion-list>
 
     <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
       When does the current period start?
     </ion-list-header>
 
-    <ion-item>
+    <ion-item class="border-bottom">
       <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="selectedBudget.start_period" class="input-field-date"></ion-datetime>
     </ion-item>
 
@@ -39,16 +42,18 @@
       What is your current cash?
     </ion-list-header>
 
-    <ion-item>
-      <input currencyMask type="text" [(ngModel)]="selectedBudget.existing_cash" class="input-field" name="current_cash">
+    <ion-item class="border-bottom">
+      <ion-icon name="logo-usd" item-left></ion-icon>
+      <ion-input type="number" [(ngModel)]="selectedBudget.existing_cash" class="input-field" name="current_cash"></ion-input>
     </ion-item>
 
     <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
       What is your current income?
     </ion-list-header>
 
-    <ion-item>
-      <input currencyMask type="text" [(ngModel)]="selectedBudget.current_income" class="input-field" name="current_income">
+    <ion-item class="border-bottom">
+      <ion-icon name="logo-usd" item-left></ion-icon>
+      <ion-input type="number" [(ngModel)]="selectedBudget.current_income" class="input-field" name="current_income"></ion-input>
     </ion-item>
 
     <ion-item *ngIf="!editing" id="checkbox">
