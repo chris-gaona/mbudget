@@ -66,10 +66,6 @@ export class ModalContentPage {
     this.viewCtrl.dismiss(data);
   }
 
-  tapEvent(e) {
-    Keyboard.close();
-  }
-
   showConfirm() {
     let confirm = this.alertCtrl.create({
       title: 'Are you sure?',

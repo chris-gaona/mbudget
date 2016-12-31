@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar (tap)="tapEvent($event)" id="header">
+  <ion-toolbar id="header">
     <ion-title color="dark">
       {{editing ? "Making some changes!" : "Let's track your pay!"}}
     </ion-title>
@@ -19,10 +19,10 @@
   </ion-toolbar>
 </ion-header>
 <ion-content id="modal-container">
-  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)" *ngIf="editing">
+  <p ion-text padding no-margin class="sub-text" *ngIf="editing">
     Please be careful while editing. I take no responsibility for your mistakes.
   </p>
-  <p ion-text padding no-margin class="sub-text" (tap)="tapEvent($event)" *ngIf="!editing">
+  <p ion-text padding no-margin class="sub-text" *ngIf="!editing">
     I've done my best to populate the following fields for you. Your welcome!
   </p>
 
@@ -30,7 +30,7 @@
 
   <ion-list>
 
-    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
+    <ion-list-header class="input-header" no-margin>
       When does the current period start?
     </ion-list-header>
 
@@ -38,7 +38,7 @@
       <ion-datetime displayFormat="MMM DD YYYY" [(ngModel)]="selectedBudget.start_period" class="input-field-date"></ion-datetime>
     </ion-item>
 
-    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
+    <ion-list-header class="input-header" no-margin>
       What is your current cash?
     </ion-list-header>
 
@@ -47,7 +47,7 @@
       <ion-input type="number" [(ngModel)]="selectedBudget.existing_cash" class="input-field" name="current_cash"></ion-input>
     </ion-item>
 
-    <ion-list-header class="input-header" (tap)="tapEvent($event)" no-margin>
+    <ion-list-header class="input-header" no-margin>
       What is your current income?
     </ion-list-header>
 
@@ -79,7 +79,7 @@
 
   </ion-list>
 
-  <div class="dog-container" (tap)="tapEvent($event)">
+  <div class="dog-container">
     <div class="dog">
       <div class="ears"></div>
 
