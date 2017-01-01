@@ -54,8 +54,13 @@ export class ModalContentPage {
   }
 
   convertNumberToString() {
-    this.existingCashString = '$' + this.selectedBudget.existing_cash.toString();
-    this.currentIncomeString = '$' + this.selectedBudget.current_income.toString();
+    // value.ToString("C");
+    this.existingCashString = '$' + this.selectedBudget.existing_cash.toFixed(2).replace(/./g, function(c, i, a) {
+      return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+    });
+    this.currentIncomeString = '$' + this.selectedBudget.current_income.toFixed(2).replace(/./g, function(c, i, a) {
+      return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+    });
   }
 
   convertStringToNumber() {
