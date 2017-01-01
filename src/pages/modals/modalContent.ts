@@ -8,6 +8,13 @@ import { Budget } from '../../models/budget';
 
 import { BudgetService } from '../../services/budget.service';
 
+import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
+
+// First, you need to create the `numberMask` with your desired configurations
+const numberMask = createNumberMask({
+  allowDecimal: true
+});
+
 
 @Component({
   selector: 'modal-content',
@@ -15,9 +22,6 @@ import { BudgetService } from '../../services/budget.service';
 })
 
 export class ModalContentPage {
-  month: string = '2016-12-19';
-  cash: number = 25652.23;
-  income: number = 1876.32;
   selectedBudget: Budget;
   budgets: Budget[];
   editing: boolean;
@@ -28,6 +32,11 @@ export class ModalContentPage {
   validationErrors: any;
   hasValidationErrors: boolean = false;
   loading: boolean = false;
+
+  existingCashString: string;
+  currentIncomeString: string;
+
+  mask = numberMask;
 
   constructor(
     public platform: Platform,
@@ -40,6 +49,23 @@ export class ModalContentPage {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
     this.budgets = params.get('budgets');
+
+    this.convertNumberToString();
+  }
+
+  convertNumberToString() {
+    this.existingCashString = '$' + this.selectedBudget.existing_cash.toString();
+    this.currentIncomeString = '$' + this.selectedBudget.current_income.toString();
+  }
+
+  convertStringToNumber() {
+    let existingCashSplit = this.existingCashString.split('$');
+    let existingCashString = existingCashSplit[1].replace(/,/g, '');
+    this.selectedBudget.existing_cash = +existingCashString;
+
+    let currentIncomeSplit = this.currentIncomeString.split('$');
+    let currentIncomeString = currentIncomeSplit[1].replace(/,/g, '');
+    this.selectedBudget.current_income = +currentIncomeString;
   }
 
   showToast(message:string, position: string, color: string) {
@@ -101,6 +127,7 @@ export class ModalContentPage {
     let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
     let newDate = new Date(newDateString);
     budget.start_period = newDate;
+    this.convertStringToNumber();
 
     this.budgetService.addBudget(budget)
       .subscribe(data => {
@@ -211,6 +238,7 @@ export class ModalContentPage {
   }
 
   addUpdate(budget) {
+    this.convertStringToNumber();
     // update the new budget with last period's budget items
     this.budgetService.updateBudgetById(budget._id, budget)
       .subscribe(data => {

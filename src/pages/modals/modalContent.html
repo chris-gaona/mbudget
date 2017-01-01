@@ -43,8 +43,7 @@
     </ion-list-header>
 
     <ion-item class="border-bottom">
-      <ion-icon name="logo-usd" item-left></ion-icon>
-      <ion-input type="number" [(ngModel)]="selectedBudget.existing_cash" class="input-field" name="current_cash"></ion-input>
+      <ion-input [textMask]="{mask: mask}" [(ngModel)]="existingCashString" type="text" class="input-field" name="current_cash"></ion-input>
     </ion-item>
 
     <ion-list-header class="input-header" no-margin>
@@ -52,8 +51,7 @@
     </ion-list-header>
 
     <ion-item class="border-bottom">
-      <ion-icon name="logo-usd" item-left></ion-icon>
-      <ion-input type="number" [(ngModel)]="selectedBudget.current_income" class="input-field" name="current_income"></ion-input>
+      <ion-input [textMask]="{mask: mask}" [(ngModel)]="currentIncomeString" type="text" class="input-field" name="current_income"></ion-input>
     </ion-item>
 
     <ion-item *ngIf="!editing" id="checkbox">

@@ -27,6 +27,10 @@ modal-content {
 
   .border-bottom {
     border-bottom: 4px solid #c8c7cc !important;
+
+    .item-inner {
+      border-bottom: none !important;
+    }
   }
 
 

@@ -13,6 +13,8 @@ import { BudgetService } from '../services/budget.service';
 import { NetworkService } from '../services/network.service';
 import { ChartsModule } from 'ng2-charts';
 import { RoundProgressModule } from 'angular-svg-round-progressbar/dist/round-progress';
+import { TextMaskModule } from 'angular2-text-mask';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar/dist/round-pr
       }
     }),
     ChartsModule,
-    RoundProgressModule
+    RoundProgressModule,
+    FormsModule,
+    TextMaskModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

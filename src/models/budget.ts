@@ -3,8 +3,8 @@ export class Budget {
   updatedAt: any;
   createdAt: any;
   start_period: any = new Date();
-  existing_cash: number = 0;
-  current_income: number = 0;
+  existing_cash: any = 0;
+  current_income: any = 0;
   budget_items: any = [new BudgetItems()];
 
   constructor(values: Object = {}) {

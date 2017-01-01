@@ -265,7 +265,7 @@ page-home {
     &:before {
       content: 'Coming Soon';
       position: absolute;
-      top: 2px;
+      top: 5px;
       right: 5px;
       background: #f4f4f4;
       color: #666;
@@ -273,7 +273,7 @@ page-home {
       padding: 4px;
       transform: rotate(6deg);
       font-size: .8rem;
-      box-shadow: 0 2px 1px #666;
+      box-shadow: 0 2px 5px #666;
     }
   }
 
