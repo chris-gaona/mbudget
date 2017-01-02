@@ -6,6 +6,9 @@
       </button>
     </ion-buttons>
     <ion-title>
+      <!--<div id="title-container" no-margin no-padding *ngIf="!scrollTop()">-->
+        <!--Ending Cash $17,892.53-->
+      <!--</div>-->
       <div id="title-container" no-margin no-padding>
         <h2 ion-text color="dark" class="title" no-margin no-padding>
           Bud
@@ -136,12 +139,12 @@
 
         <div class="progress-wrapper">
           <div class="current" [ngStyle]="getOverlayStyle()"><p ion-text text-center>Current</p>{{getTotalSpent(selectedBudget.budget_items, 'actual').percSaving | percent:'1.0-0'}}</div>
-          <round-progress [current]="getTotalSpent(selectedBudget.budget_items, 'actual').percSaving" [max]="1" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : color" [responsive]="true"></round-progress>
+          <round-progress [current]="getTotalSpent(selectedBudget.budget_items, 'actual').percSaving" [max]="1" [duration]="duration" [animationDelay]="animationDelay" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : color" [responsive]="true"></round-progress>
         </div>
 
         <div class="progress-wrapper" id="second-progress" margin-bottom>
           <div class="current" [ngStyle]="getOverlayStyle()"><p ion-text text-center>Overall</p>{{ averageSaving | percent:'1.0-0'}}</div>
-          <round-progress [current]="averageSaving" [max]="1" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : colorAverage" [responsive]="true"></round-progress>
+          <round-progress [current]="averageSaving" [max]="1" [duration]="duration" [animationDelay]="animationDelay" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : colorAverage" [responsive]="true"></round-progress>
         </div>
 
       </ion-card>

@@ -3,7 +3,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { EditPage } from '../pages/edit/edit';
 import { HomePage } from '../pages/home/home';
-// import { TabsPage } from '../pages/tabs/tabs';
 import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
 import { ModalAuthPage } from '../pages/modals/modalAuth';
@@ -22,7 +21,6 @@ import { FormsModule } from '@angular/forms';
     MyApp,
     EditPage,
     HomePage,
-    // TabsPage,
     PopoverPage,
     ModalContentPage,
     ModalAuthPage
@@ -45,7 +43,6 @@ import { FormsModule } from '@angular/forms';
     MyApp,
     EditPage,
     HomePage,
-    // TabsPage,
     PopoverPage,
     ModalContentPage,
     ModalAuthPage

@@ -1,9 +1,8 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, getTestBed, async, inject } from '@angular/core/testing';
+import { TestBed, getTestBed, async } from '@angular/core/testing';
 import {
-  BaseRequestOptions, Response, HttpModule, Http, XHRBackend, ResponseOptions,
-  RequestMethod
+  BaseRequestOptions, Response, HttpModule, Http, XHRBackend, ResponseOptions
 } from '@angular/http';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { UserService } from './user.service';
@@ -108,5 +107,5 @@ describe('User Service', () => {
       });
   }));
 
-  // NO TEST FOR logout() OR FOR isLoggedIn() OR FOR getUser() - NOT NEEDED
+  // NO TEST FOR logout() OR FOR isLoggedIn() OR FOR getUser()
 });

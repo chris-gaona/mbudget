@@ -4,7 +4,7 @@ import {TestBed, async} from '@angular/core/testing';
 
 import {
   IonicModule, Config, GestureController, DomController, App, MenuController, NavController, Platform,
-  Keyboard, Form, ModalController, ViewController
+  Keyboard, Form, ModalController, ViewController, ToastController
 } from 'ionic-angular';
 
 import { ConfigMock, ViewControllerMock } from '../../mocks';
@@ -22,6 +22,14 @@ class MockService extends AbstractMockObservableService {
   }
 
   updateBudgetById() {
+    return this;
+  }
+
+  login() {
+    return this;
+  }
+
+  isLoggedIn() {
     return this;
   }
 }
@@ -42,7 +50,16 @@ describe('Component: ModalAuthPage ', () => {
         ModalAuthPage
       ],
       providers: [
-        App, Platform, Form, Keyboard, MenuController, NavController, GestureController, DomController, ModalController,
+        App,
+        Platform,
+        Form,
+        Keyboard,
+        MenuController,
+        NavController,
+        GestureController,
+        DomController,
+        ModalController,
+        ToastController,
         {provide: ViewController, useClass: ViewControllerMock},
         {provide: Config, useClass: ConfigMock}
       ]
@@ -62,6 +79,9 @@ describe('Component: ModalAuthPage ', () => {
 
   it('should create an instance', () => {
     expect(component).toBeTruthy();
+    expect(component.loginButtonMain).toBe(true);
+    expect(component.hasValidationErrors).toBe(false);
+    expect(component.loading).toBe(false);
   });
 
   describe('#loggedInUser()', () => {
@@ -70,6 +90,27 @@ describe('Component: ModalAuthPage ', () => {
       userService.content = user;
       component.loggedInUser();
       expect(component.currentUser).toBe(user);
+      expect(component.loading).toBe(false);
     }));
   });
+
+  //todo: add unit test for login, signUp, and handlError functions
+
+  // describe('#login(username, password)', () => {
+  //   it('should login an existing user', () => {
+  //     let user = {username: 'jake123', password: 'password'};
+  //     userService.content = user;
+  //     component.login(user.username, user.password);
+  //     expect(component.currentUser).toBe(user);
+  //   });
+  // });
+
+  // describe('#handleError(error)', () => {
+  //   it('should handle errors properly', () => {
+  //     component.loading = true;
+  //     expect(component.hasValidationErrors).toBe(false);
+  //     component.handleError(JSON.stringify({ "_body": { "message": "message", "statusText": "error" }}));
+  //     expect(component.loading).toBe(false);
+  //   });
+  // })
 });

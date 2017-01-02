@@ -16,9 +16,14 @@ export class ConfigMock {
 }
 
 export class ViewControllerMock {
+
   public _setHeader(): any {
     return {}
   }
+
+  public _setNavbar(): any {
+    return {}
+  };
 
   public _setIONContent(): any {
     return {}
@@ -83,5 +88,23 @@ export class MenuMock {
     return new Promise((resolve: Function) => {
       resolve();
     });
+  }
+}
+
+export class MockNavParams{
+  data = {
+  };
+
+  get(param){
+    return this.data[param];
+  }
+}
+
+export class MockAuthParams{
+  data = {
+  };
+
+  get(param){
+    return this.data[param];
   }
 }

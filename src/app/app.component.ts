@@ -5,8 +5,6 @@ import { StatusBar, Splashscreen } from 'ionic-native';
 import { HomePage } from '../pages/home/home';
 import { NetworkService } from '../services/network.service';
 
-// import { TabsPage } from '../pages/tabs/tabs';
-
 
 @Component({
   templateUrl: './app.html'

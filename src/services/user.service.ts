@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 
 let baseURL = '/';
 
+// let baseURL = 'https://still-forest-99171.herokuapp.com/';
+
 // if (environment.production) {
 //   baseURL = '/';
 // } else {
@@ -63,7 +65,6 @@ export class UserService {
     localStorage.removeItem('id_token');
     this.isLoggedIn();
     if (!localStorage.getItem('id_token')) {
-      //todo: add toaster here
     }
   }
 

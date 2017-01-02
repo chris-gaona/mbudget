@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AlertController } from 'ionic-angular';
 import { Network, Diagnostic } from 'ionic-native';
 
+let networkAlert;
 
 @Injectable()
 export class NetworkService {
@@ -11,25 +12,8 @@ export class NetworkService {
   constructor(public alertCtrl: AlertController) {
   }
 
-  noConnection() {
-    Network.onDisconnect().subscribe(() => {
-      console.log('network was disconnected :-(');
-      this.showNetworkAlert();
-      this.wifiConnected = false;
-    });
-
-    Network.onConnect().subscribe(() => {
-      console.log('network connected :D');
-      this.wifiConnected = true;
-    });
-  }
-
-  private showSettings() {
-    Diagnostic.switchToSettings();
-  }
-
   showNetworkAlert() {
-    let networkAlert = this.alertCtrl.create({
+    networkAlert = this.alertCtrl.create({
       title: 'No Internet Connection',
       message: 'Please check your internet connection.',
       buttons: [
@@ -48,5 +32,23 @@ export class NetworkService {
       ]
     });
     networkAlert.present();
+  }
+
+  noConnection() {
+    Network.onDisconnect().subscribe(() => {
+      console.log('network was disconnected :-(');
+      this.showNetworkAlert();
+      this.wifiConnected = false;
+    });
+
+    Network.onConnect().subscribe(() => {
+      console.log('network connected :D');
+      this.wifiConnected = true;
+      networkAlert.dismiss();
+    });
+  }
+
+  private showSettings() {
+    Diagnostic.switchToSettings();
   }
 }

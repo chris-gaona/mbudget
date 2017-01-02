@@ -1,5 +1,5 @@
 export class Budget {
-  _id: any;
+  _id: number;
   updatedAt: any;
   createdAt: any;
   start_period: any = new Date();
@@ -13,7 +13,7 @@ export class Budget {
 }
 
 export class BudgetItems {
-  _id: any;
+  _id: number;
   editing: boolean = false;
   item: string = '';
   projection: number = 0;
@@ -25,7 +25,7 @@ export class BudgetItems {
 }
 
 export class ActualItems {
-  _id: any;
+  _id: number;
   name: string = '';
   amount: number = 0;
   expense: boolean = true;

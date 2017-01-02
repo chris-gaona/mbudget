@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
-import { ModalController, NavController, PopoverController, AlertController, ToastController } from 'ionic-angular';
+import {
+  ModalController, NavController, PopoverController, AlertController, ToastController,
+  Content
+} from 'ionic-angular';
 
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
@@ -17,6 +20,8 @@ import 'chart.js';
   templateUrl: './home.html'
 })
 export class HomePage {
+
+  @ViewChild(Content) content: Content;
 
   budgets: Budget[];
   selectedBudget: Budget;
@@ -632,15 +637,14 @@ export class HomePage {
   }
 
 
-
-
-
   max: number = 100;
   currentAverage: number = 21;
   radius: number = 95;
   semicircle: boolean = true;
   color: string = '#688dcc';
   colorAverage: string = '#826bbd';
+  duration: number = 1000;
+  animationDelay: number = 400;
 
 
   getOverlayStyle() {
