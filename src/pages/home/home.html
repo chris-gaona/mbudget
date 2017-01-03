@@ -109,10 +109,8 @@
 
   <div padding *ngIf="budgets && networkService.wifiConnected" id="sub-container">
 
-    <!--<h2>BudTrac</h2>-->
-
     <div *ngIf="userService.isLoggedIn()">
-      <ion-card no-margin margin-bottom class="full-width">
+      <ion-card no-margin margin-bottom class="full-width" id="ipad-screens-health-snapshot">
 
         <ion-card-content id="health-snapshot" no-padding padding-horizontal margin-bottom *ngIf="(getTotalSpent(selectedBudget.budget_items, 'actual').totalSaving / selectedBudget.current_income) > .1">
           Health Snapshot
@@ -164,7 +162,7 @@
         Last Updated - {{parseDate(selectedBudget.updatedAt)}}
       </p>
 
-      <ion-card no-margin margin-vertical class="full-width">
+      <ion-card no-margin margin-vertical class="full-width highlight-cards">
 
         <ion-card-content no-padding padding-horizontal id="total-dollars">
           <ion-icon name="cash" item-left class="header-icon" ion-text color="lighter"></ion-icon>
@@ -173,7 +171,7 @@
 
       </ion-card>
 
-      <ion-card no-margin margin-vertical class="full-width">
+      <ion-card no-margin margin-vertical class="full-width highlight-cards">
 
         <ion-card-content no-padding padding-horizontal id="total-income">
           <ion-icon name="log-in" item-left class="header-icon" ion-text color="lighter"></ion-icon>
@@ -182,7 +180,7 @@
 
       </ion-card>
 
-      <ion-card no-margin margin-vertical class="full-width">
+      <ion-card no-margin margin-vertical class="full-width highlight-cards">
 
         <ion-card-content no-padding padding-horizontal id="total-expense">
           <ion-icon name="log-out" item-left class="header-icon" ion-text color="lighter"></ion-icon>

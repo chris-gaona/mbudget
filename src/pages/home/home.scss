@@ -2,11 +2,12 @@ page-home {
 
   .toolbar-title {
     position: relative;
-    top: -16px !important;
+    //top: -18px !important;
+    max-height: 40px;
   }
 
   #title-container {
-    top: -100px;
+    top: -150px;
     position: relative;
     left: 50%;
     width: 145px;
@@ -15,7 +16,7 @@ page-home {
   }
 
   #ending-cash-container {
-    top: 100px;
+    top: 150px;
     position: relative;
     text-align: center;
     color: #666;
@@ -28,12 +29,12 @@ page-home {
   }
 
   .visible-title {
-    top: -3px !important;
+    top: -36px !important;
     transition: all 0.3s linear;
   }
 
   .visible-ending-cash {
-    top: 35px !important;
+    top: 0 !important;
     transition: all 0.3s linear;
   }
 
@@ -50,11 +51,14 @@ page-home {
     top: -5px;
     display: inline-block;
     text-align: center;
+
+    @media (max-width: 330px) {
+      font-size: 2.2rem;
+    }
   }
 
   img {
     position: relative;
-    //width: 130px;
     width: 40px;
     height: auto;
     top: 5px;
@@ -394,5 +398,31 @@ page-home {
     animation-iteration-count: infinite;
     animation-name: elastic-pulse;
     animation-delay: 0s;
+  }
+
+  @media (min-width: 768px) {
+    #ipad-screens-health-snapshot {
+      position: relative;
+      width: 50% !important;
+      float: left;
+      margin-right: 2%;
+      min-height: 250px;
+
+      #saving-overview {
+        margin-top: 30px;
+      }
+
+      .progress-wrapper {
+        margin-top: 20px;
+      }
+    }
+
+    #select-container ion-item {
+      width: 48% !important;
+    }
+
+    ion-card.highlight-cards {
+      width: 48% !important;
+    }
   }
 }

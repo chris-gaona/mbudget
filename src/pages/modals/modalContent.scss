@@ -25,8 +25,12 @@ modal-content {
     font-size: 1.3rem;
   }
 
+  .padding-left {
+    padding-left: 35px;
+  }
+
   .border-bottom {
-    border-bottom: 4px solid #c8c7cc !important;
+    border-bottom: 7px solid #eee !important;
 
     .item-inner {
       border-bottom: none !important;
