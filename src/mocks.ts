@@ -13,6 +13,10 @@ export class ConfigMock {
   public getNumber(): number {
     return 1;
   }
+
+  public _haptic(): any {
+    return true;
+  }
 }
 
 export class ViewControllerMock {
@@ -100,11 +104,12 @@ export class MockNavParams{
   }
 }
 
-export class MockAuthParams{
-  data = {
-  };
-
-  get(param){
-    return this.data[param];
+export class ToastControllerMock {
+  public create(): any {
+    return {
+      present:() => {
+        return true;
+      }
+    };
   }
 }

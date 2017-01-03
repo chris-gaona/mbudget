@@ -1,11 +1,40 @@
 page-home {
 
-  #title-container {
+  .toolbar-title {
     position: relative;
-    top: 0;
+    top: -16px !important;
+  }
+
+  #title-container {
+    top: -100px;
+    position: relative;
     left: 50%;
     width: 145px;
     margin-left: -70px;
+    transition: all 0.3s linear;
+  }
+
+  #ending-cash-container {
+    top: 100px;
+    position: relative;
+    text-align: center;
+    color: #666;
+    transition: all 0.3s linear;
+
+    span {
+      font-size: 1.1rem;
+      display: block;
+    }
+  }
+
+  .visible-title {
+    top: -3px !important;
+    transition: all 0.3s linear;
+  }
+
+  .visible-ending-cash {
+    top: 35px !important;
+    transition: all 0.3s linear;
   }
 
   .refresher-refreshing-text {

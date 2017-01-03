@@ -1,8 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import {Component, ViewChild, ChangeDetectorRef} from '@angular/core';
 
 import {
-  ModalController, NavController, PopoverController, AlertController, ToastController,
-  Content
+  ModalController, NavController, PopoverController, AlertController, ToastController, Content, App
 } from 'ionic-angular';
 
 import { PopoverPage } from '../popovers/userInfo';
@@ -46,20 +45,40 @@ export class HomePage {
 
   projActual: string = 'actual';
 
+  visibleTitle: boolean = true;
+
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
               public popoverCtrl: PopoverController,
               public modalCtrl: ModalController,
               public alertCtrl: AlertController,
+              public app: App,
               private userService: UserService,
               private budgetService: BudgetService,
-              private networkService: NetworkService
+              private networkService: NetworkService,
+              private ref: ChangeDetectorRef
   ) {
 
   }
 
   ngOnInit() {
     this.checkUserAuth();
+  }
+
+  ngAfterViewInit() {
+    this.checkScroll();
+  }
+
+  checkScroll() {
+    this.content.ionScroll.subscribe(() => {
+      if (this.content.scrollTop <= 50) {
+        this.visibleTitle = true;
+        this.ref.detectChanges();
+      } else {
+        this.visibleTitle = false;
+        this.ref.detectChanges();
+      }
+    });
   }
 
   doRefresh(refresher) {

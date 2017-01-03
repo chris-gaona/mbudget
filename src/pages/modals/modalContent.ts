@@ -24,6 +24,7 @@ const numberMask = createNumberMask({
 export class ModalContentPage {
   selectedBudget: Budget;
   budgets: Budget[];
+  reuseProjectionsBudget: Budget;
   editing: boolean;
   reuseProjection: boolean = true;
   totalSpent: number;
@@ -49,12 +50,13 @@ export class ModalContentPage {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
     this.budgets = params.get('budgets');
+  }
 
+  ngOnInit() {
     this.convertNumberToString();
   }
 
   convertNumberToString() {
-    // value.ToString("C");
     this.existingCashString = '$' + this.selectedBudget.existing_cash.toFixed(2).replace(/./g, function(c, i, a) {
       return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
     });
@@ -90,11 +92,14 @@ export class ModalContentPage {
     } else {
       this.viewCtrl.dismiss();
     }
-
   }
 
   removeModal(data?) {
-    this.viewCtrl.dismiss(data);
+    if (data) {
+      this.viewCtrl.dismiss(data);
+    } else {
+      this.viewCtrl.dismiss();
+    }
   }
 
   showConfirm() {
@@ -136,6 +141,8 @@ export class ModalContentPage {
 
     this.budgetService.addBudget(budget)
       .subscribe(data => {
+        console.log('data', data);
+
         if (this.reuseProjection === false) {
         } else {
           this.reuseProjections(data);
@@ -167,6 +174,7 @@ export class ModalContentPage {
     this.budgetService.updateBudgetById(budget._id, budget)
       .subscribe(data => {
         console.log('data', data);
+        this.reuseProjectionsBudget = data;
       }, err => {
         this.handleError(err);
         console.error(err);
@@ -197,8 +205,6 @@ export class ModalContentPage {
     // use a hack to make a deep copy of an array
     prevBudget = JSON.parse(JSON.stringify(budgetItems));
 
-    prevBudget.total_spent = this.getActualTotals(prevBudget.budget_items);
-
     // loop through to remove all the actual values
     for (let i = 0; i < prevBudget.budget_items.length; i++) {
       prevBudget.budget_items[i].actual = [];
@@ -208,45 +214,13 @@ export class ModalContentPage {
     return prevBudget;
   }
 
-  getActualTotals(budgetItems) {
-    // initialize totalSpent to 0
-    this.totalSpent = 0;
-    // initialize totals variable to empty array
-    this.totals = [];
-    // initialize mergeTotals to 0
-    this.mergeTotals = 0;
-
-    // loop through each item in budget_items
-    for (let i = 0; i < budgetItems.length; i++) {
-      let item = budgetItems[i];
-      // for each budget_item, loop through the actual array
-      for (let j = 0; j < item.actual.length; j++) {
-        if (item.actual[j].expense === true) {
-          // add amount to totalSpent
-          this.totalSpent += +item.actual[j].amount;
-        } else {
-          // subtract amount to totalSpent
-          this.totalSpent -= +item.actual[j].amount;
-        }
-      }
-    }
-
-    // push totalSpent total to totals array
-    this.totals.push(this.totalSpent);
-
-    // loop through the totals array
-    for (let i = 0; i < this.totals.length; i++) {
-      // merge the total together
-      this.mergeTotals += +this.totals[i];
-    }
-    return this.mergeTotals;
-  }
-
   addUpdate(budget) {
     this.convertStringToNumber();
+    console.log('budget', budget);
     // update the new budget with last period's budget items
     this.budgetService.updateBudgetById(budget._id, budget)
       .subscribe(data => {
+        console.log('data', data);
         this.dismiss(budget);
 
         this.showToast('Budget updated!', 'bottom', 'toaster-green');
@@ -275,12 +249,15 @@ export class ModalContentPage {
           this.dismiss('no budgets');
         }
 
+        console.log('Budget deleted');
         this.showToast('Budget deleted!', 'bottom', 'toaster-green');
       }, err => {
         this.handleError(err);
         console.error(err);
       });
   }
+
+  // todo: add tests for error handler
 
   private handleError(error: any) {
     // if the error has status 400 meaning there are form issues

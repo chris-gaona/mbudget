@@ -7,7 +7,7 @@ import {
   Keyboard, Form, ModalController, ViewController, ToastController
 } from 'ionic-angular';
 
-import { ConfigMock, ViewControllerMock } from '../../mocks';
+import { ConfigMock, ViewControllerMock, ToastControllerMock } from '../../mocks';
 import { ModalAuthPage } from './modalAuth';
 import { UserService } from '../../services/user.service';
 import { AbstractMockObservableService } from '../../services/mock.service';
@@ -30,6 +30,10 @@ class MockService extends AbstractMockObservableService {
   }
 
   isLoggedIn() {
+    return this;
+  }
+
+  register() {
     return this;
   }
 }
@@ -59,9 +63,9 @@ describe('Component: ModalAuthPage ', () => {
         GestureController,
         DomController,
         ModalController,
-        ToastController,
-        {provide: ViewController, useClass: ViewControllerMock},
-        {provide: Config, useClass: ConfigMock}
+        {provide: ToastController, useClass: ToastControllerMock},
+        {provide: Config, useClass: ConfigMock},
+        {provide: ViewController, useClass: ViewControllerMock}
       ]
     }).overrideComponent(ModalAuthPage, {
       set: {
@@ -77,12 +81,12 @@ describe('Component: ModalAuthPage ', () => {
     component = fixture.componentInstance;
   });
 
-  it('should create an instance', () => {
+  it('should create an instance', async(() => {
     expect(component).toBeTruthy();
     expect(component.loginButtonMain).toBe(true);
     expect(component.hasValidationErrors).toBe(false);
     expect(component.loading).toBe(false);
-  });
+  }));
 
   describe('#loggedInUser()', () => {
     it('should get the currently logged in user', async(() => {
@@ -98,10 +102,19 @@ describe('Component: ModalAuthPage ', () => {
 
   // describe('#login(username, password)', () => {
   //   it('should login an existing user', () => {
-  //     let user = {username: 'jake123', password: 'password'};
+  //     let user = {username: 'jake123', firstName: 'Jake'};
   //     userService.content = user;
-  //     component.login(user.username, user.password);
-  //     expect(component.currentUser).toBe(user);
+  //     component.login('jake123', 'password');
+  //     expect(component.currentUser).toBe('hello');
+  //   });
+  // });
+
+  // describe('#signUp(username, password, confirmPassword, firstName)', () => {
+  //   it('should register a new user', () => {
+  //     let user = {username: 'jake123', password: 'password', confirmPassword: 'password', firstName: 'Jake'};
+  //     userService.content = user;
+  //     component.signUp('jake123', 'password');
+  //     expect(component.currentUser).toBe('hello');
   //   });
   // });
 

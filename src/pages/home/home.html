@@ -6,10 +6,10 @@
       </button>
     </ion-buttons>
     <ion-title>
-      <!--<div id="title-container" no-margin no-padding *ngIf="!scrollTop()">-->
-        <!--Ending Cash $17,892.53-->
-      <!--</div>-->
-      <div id="title-container" no-margin no-padding>
+      <div id="ending-cash-container" *ngIf="selectedBudget" [class.visible-ending-cash]="!visibleTitle" no-margin no-padding>
+        <span>Ending Cash</span>{{getTotalSpent(selectedBudget.budget_items, 'actual').endingCash | currency:'USD':true}}
+      </div>
+      <div id="title-container" [class.visible-title]="visibleTitle" no-margin no-padding>
         <h2 ion-text color="dark" class="title" no-margin no-padding>
           Bud
         </h2>
