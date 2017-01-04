@@ -38,14 +38,20 @@ export class HomePage {
   edited: boolean = false;
   validationErrors: any;
   hasValidationErrors: boolean = false;
-
   loading: boolean = false;
-
-  averageSaving: number;
-
   projActual: string = 'actual';
-
   visibleTitle: boolean = true;
+  saveAllData: any;
+
+
+  // progress bar variables
+  max: number = 100;
+  radius: number = 95;
+  semicircle: boolean = true;
+  color: string = '#688dcc';
+  colorAverage: string = '#826bbd';
+  duration: number = 1000;
+  animationDelay: number = 400;
 
   constructor(public navCtrl: NavController,
               public toastCtrl: ToastController,
@@ -147,7 +153,7 @@ export class HomePage {
               if (i === (this.budgets.length - 1)) {
                 // make that one the selected budget on load
                 this.selectedBudget = this.budgets[i];
-                this.averageSaving = this.getAverageSaving(this.budgets);
+                // this.averageSaving = this.getAverageSaving(this.budgets);
               }
             }
           }
@@ -166,7 +172,7 @@ export class HomePage {
 
     for (let i = 0; i < budgets.length; i++) {
       totalNumber++;
-      savings += +this.getTotalSpent(budgets[i].budget_items, 'actual').percSaving;
+      savings += +this.getTotalSpent(budgets[i], 'actual').percSaving;
     }
 
     average = savings / totalNumber;
@@ -204,7 +210,7 @@ export class HomePage {
     this.convertDate(newBudget, newBudget.start_period);
     let previousBudget = this.obtainPreviousBudget('pre');
 
-    newBudget.existing_cash = (previousBudget.existing_cash + previousBudget.current_income) - previousBudget.total_spent;
+    newBudget.existing_cash = (previousBudget.existing_cash + previousBudget.current_income) - this.actualObject.totalSpent;
     newBudget.current_income = previousBudget.current_income;
     // make this new budget the shown one in the modal for editing
     this.selectedBudget = newBudget;
@@ -289,8 +295,6 @@ export class HomePage {
     // use a hack to make a deep copy of an array
     prevBudget = JSON.parse(JSON.stringify(budgetItems));
 
-    prevBudget.total_spent = this.getActualTotals(prevBudget.budget_items);
-
     // loop through to remove all the actual values
     for (let i = 0; i < prevBudget.budget_items.length; i++) {
       prevBudget.budget_items[i].actual = [];
@@ -298,40 +302,6 @@ export class HomePage {
 
     // return the new budget_items array to use in the new budget
     return prevBudget;
-  }
-
-  getActualTotals(budgetItems) {
-    // initialize totalSpent to 0
-    this.totalSpent = 0;
-    // initialize totals variable to empty array
-    this.totals = [];
-    // initialize mergeTotals to 0
-    this.mergeTotals = 0;
-
-    // loop through each item in budget_items
-    for (let i = 0; i < budgetItems.length; i++) {
-      let item = budgetItems[i];
-      // for each budget_item, loop through the actual array
-      for (let j = 0; j < item.actual.length; j++) {
-        if (item.actual[j].expense === true) {
-          // add amount to totalSpent
-          this.totalSpent += +item.actual[j].amount;
-        } else {
-          // subtract amount to totalSpent
-          this.totalSpent -= +item.actual[j].amount;
-        }
-      }
-    }
-
-    // push totalSpent total to totals array
-    this.totals.push(this.totalSpent);
-
-    // loop through the totals array
-    for (let i = 0; i < this.totals.length; i++) {
-      // merge the total together
-      this.mergeTotals += +this.totals[i];
-    }
-    return this.mergeTotals;
   }
 
   presentPopover(ev) {
@@ -349,7 +319,6 @@ export class HomePage {
   }
 
   openModalEdit() {
-    console.log('budgets', this.budgets);
     let modal = this.modalCtrl.create(ModalContentPage, {
       editing: true,
       selectedBudget: this.selectedBudget,
@@ -473,6 +442,7 @@ export class HomePage {
       .subscribe(data => {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
         console.log('Everything saved!');
+        this.saveAllData = data;
       }, err => {
         this.handleError(err);
         console.log(err);
@@ -484,8 +454,7 @@ export class HomePage {
     // create a new budget item using defined types
     let newBudgetItem = new BudgetItems();
     let item;
-    // // make new budget item editable to start with
-    // newBudgetItem.editing = true;
+
     // add the new budget item to the array
     this.selectedBudget.budget_items.push(newBudgetItem);
 
@@ -505,13 +474,11 @@ export class HomePage {
   getTotalSpent(budget, type) {
     // initialize totalSpent to 0
     this.totalSpent = 0;
-    // initialize mergeTotals to 0
-    this.mergeTotals = 0;
 
     if (type === 'actual') {
       // loop through each item in budget_items
-      for (let i = 0; i < budget.length; i++) {
-        let item = budget[i];
+      for (let i = 0; i < budget.budget_items.length; i++) {
+        let item = budget.budget_items[i];
         // for each budget_item, loop through the actual array
         for (let j = 0; j < item.actual.length; j++) {
           if (item.actual[j].expense === true) {
@@ -525,13 +492,13 @@ export class HomePage {
       }
 
       // total saving
-      this.totalSaving = this.selectedBudget.current_income - this.totalSpent;
+      this.totalSaving = budget.current_income - this.totalSpent;
 
       // percentage saving
-      this.percSaving = this.totalSaving / this.selectedBudget.current_income;
+      this.percSaving = this.totalSaving / budget.current_income;
 
       // ending cash amount
-      this.endingCash = this.selectedBudget.existing_cash + this.selectedBudget.current_income - this.totalSpent;
+      this.endingCash = budget.existing_cash + budget.current_income - this.totalSpent;
 
       this.actualObject = Object.assign({}, {
         totalSpent: this.totalSpent,
@@ -545,18 +512,18 @@ export class HomePage {
 
     } else if (type === 'projection') {
       // loop through each item in budget_items
-      for (let i = 0; i < budget.length; i++) {
-        this.totalSpent += +budget[i].projection;
+      for (let i = 0; i < budget.budget_items.length; i++) {
+        this.totalSpent += +budget.budget_items[i].projection;
       }
 
       // total saving
-      this.totalSaving = this.selectedBudget.current_income - this.totalSpent;
+      this.totalSaving = budget.current_income - this.totalSpent;
 
       // percentage saving
-      this.percSaving = this.totalSaving / this.selectedBudget.current_income;
+      this.percSaving = this.totalSaving / budget.current_income;
 
       // ending cash amount
-      this.endingCash = this.selectedBudget.existing_cash + this.selectedBudget.current_income - this.totalSpent;
+      this.endingCash = budget.existing_cash + budget.current_income - this.totalSpent;
 
       this.projectionObject = Object.assign({}, {
         totalSpent: this.totalSpent,
@@ -631,6 +598,23 @@ export class HomePage {
     return splitDate[1] + ' ' + splitDate[2];
   }
 
+  getOverlayStyle() {
+    let isSemi = this.semicircle;
+    let transform = (isSemi ? '' : 'translateY(-50%) ') + 'translateX(-50%)';
+
+    return {
+      'top': isSemi ? 'auto' : '50%',
+      'bottom': isSemi ? '5%' : 'auto',
+      'left': '50%',
+      'transform': transform,
+      '-moz-transform': transform,
+      '-webkit-transform': transform,
+      'font-size': this.radius / 3.5 + 'px'
+    };
+  }
+
+
+  // todo: add unit test for error handler
   private handleError(error: any) {
     // if the error has status 400 meaning there are form issues
     if (error.status === 400) {
@@ -653,31 +637,5 @@ export class HomePage {
       // log the entire response to the console
       console.error(error);
     }
-  }
-
-
-  max: number = 100;
-  currentAverage: number = 21;
-  radius: number = 95;
-  semicircle: boolean = true;
-  color: string = '#688dcc';
-  colorAverage: string = '#826bbd';
-  duration: number = 1000;
-  animationDelay: number = 400;
-
-
-  getOverlayStyle() {
-    let isSemi = this.semicircle;
-    let transform = (isSemi ? '' : 'translateY(-50%) ') + 'translateX(-50%)';
-
-    return {
-      'top': isSemi ? 'auto' : '50%',
-      'bottom': isSemi ? '5%' : 'auto',
-      'left': '50%',
-      'transform': transform,
-      '-moz-transform': transform,
-      '-webkit-transform': transform,
-      'font-size': this.radius / 3.5 + 'px'
-    };
   }
 }

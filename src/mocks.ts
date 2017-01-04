@@ -48,7 +48,7 @@ export class FormMock {
   }
 }
 
-export class NavMock {
+export class NavControllerMock {
 
   public pop(): any {
     return new Promise(function(resolve: Function): void {
@@ -111,5 +111,18 @@ export class ToastControllerMock {
         return true;
       }
     };
+  }
+}
+
+export class ModalControllerMock {
+  public create(): any {
+    return {
+      onDidDismiss: () => {
+        return true;
+      },
+      present: () => {
+        return true;
+      }
+    }
   }
 }

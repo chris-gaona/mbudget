@@ -17,6 +17,7 @@ export class EditPage {
   hasValidationErrors: boolean = false;
   totalActual: number;
   loading: boolean = false;
+  saveAllData: Budget;
 
   constructor(public navCtrl: NavController,
               public alertCtrl: AlertController,
@@ -39,23 +40,14 @@ export class EditPage {
     toast.present(toast);
   }
 
-  // add new actual item to actual array under specific budget_items
-  // pass in which actual array we want to add to
-  addActualItem(actual) {
-    // create a new actual item using the defined types
-    let newActualItem = new ActualItems();
-    // add that item to the array
-    actual.push(newActualItem);
-  }
-
   // save all edits
   saveAll() {
     // passes budget_items array to saveAll function on budgetService
     this.budgetService.updateBudgetById(this._id, this.budget)
       .subscribe(data => {
         this.goBack();
-        // todo: do something with data returned here
 
+        this.saveAllData = data;
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
         console.log('Everything saved!');
       }, err => {
@@ -107,6 +99,15 @@ export class EditPage {
     alert.present();
   }
 
+  // add new actual item to actual array under specific budget_items
+  // pass in which actual array we want to add to
+  addActualItem(actual) {
+    // create a new actual item using the defined types
+    let newActualItem = new ActualItems();
+    // add that item to the array
+    actual.push(newActualItem);
+  }
+
   // delete specific actual item
   // pass in the specific budget_item & the actual item within that budget_item
   deleteActual(budget, actual) {
@@ -118,7 +119,6 @@ export class EditPage {
         budget.actual.splice(i, 1);
       }
     }
-    console.log(budget);
   }
 
   // delete specific budget item
@@ -156,6 +156,7 @@ export class EditPage {
     actual.expense = !actual.expense;
   }
 
+  // todo: add unit test for error handler
   private handleError(error: any) {
     // if the error has status 400 meaning there are form issues
     if (error.status === 400) {

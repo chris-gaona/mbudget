@@ -7,7 +7,7 @@ import {
   Keyboard, Form, ModalController, ViewController, ToastController
 } from 'ionic-angular';
 
-import { ConfigMock, ViewControllerMock, ToastControllerMock } from '../../mocks';
+import { ConfigMock, ViewControllerMock, ToastControllerMock, ModalControllerMock } from '../../mocks';
 import { ModalAuthPage } from './modalAuth';
 import { UserService } from '../../services/user.service';
 import { AbstractMockObservableService } from '../../services/mock.service';
@@ -62,7 +62,7 @@ describe('Component: ModalAuthPage ', () => {
         NavController,
         GestureController,
         DomController,
-        ModalController,
+        {provide: ModalController, useClass: ModalControllerMock},
         {provide: ToastController, useClass: ToastControllerMock},
         {provide: Config, useClass: ConfigMock},
         {provide: ViewController, useClass: ViewControllerMock}
@@ -98,32 +98,21 @@ describe('Component: ModalAuthPage ', () => {
     }));
   });
 
-  //todo: add unit test for login, signUp, and handlError functions
+  describe('#login(username, password)', () => {
+    it('should login an existing user', () => {
+      let user = {username: 'jake123', password: 'password', firstName: 'Jake'};
+      userService.content = user;
+      component.login('jake123', 'password');
+      expect(component.currentUser).toBe(user);
+    });
+  });
 
-  // describe('#login(username, password)', () => {
-  //   it('should login an existing user', () => {
-  //     let user = {username: 'jake123', firstName: 'Jake'};
-  //     userService.content = user;
-  //     component.login('jake123', 'password');
-  //     expect(component.currentUser).toBe('hello');
-  //   });
-  // });
-
-  // describe('#signUp(username, password, confirmPassword, firstName)', () => {
-  //   it('should register a new user', () => {
-  //     let user = {username: 'jake123', password: 'password', confirmPassword: 'password', firstName: 'Jake'};
-  //     userService.content = user;
-  //     component.signUp('jake123', 'password');
-  //     expect(component.currentUser).toBe('hello');
-  //   });
-  // });
-
-  // describe('#handleError(error)', () => {
-  //   it('should handle errors properly', () => {
-  //     component.loading = true;
-  //     expect(component.hasValidationErrors).toBe(false);
-  //     component.handleError(JSON.stringify({ "_body": { "message": "message", "statusText": "error" }}));
-  //     expect(component.loading).toBe(false);
-  //   });
-  // })
+  describe('#signUp(username, password, confirmPassword, firstName)', () => {
+    it('should register a new user', () => {
+      let user = {username: 'jake123', password: 'password', confirmPassword: 'password', firstName: 'Jake'};
+      userService.content = user;
+      component.signUp('jake123', 'password', 'password', 'Jake');
+      expect(component.currentUser).toBe(user);
+    });
+  });
 });

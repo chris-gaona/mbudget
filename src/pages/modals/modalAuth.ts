@@ -83,6 +83,7 @@ export class ModalAuthPage {
     });
   }
 
+  // todo: add unit test for error handler
   private handleError(error: any) {
     this.loading = false;
     let errorMessage = JSON.parse(error._body);

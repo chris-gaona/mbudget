@@ -50,6 +50,7 @@ export class ModalContentPage {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
     this.budgets = params.get('budgets');
+    console.log(params.get('budgets'));
   }
 
   ngOnInit() {
