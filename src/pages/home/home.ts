@@ -42,6 +42,7 @@ export class HomePage {
   projActual: string = 'actual';
   visibleTitle: boolean = true;
   saveAllData: any;
+  errorMessage: any;
 
 
   // progress bar variables
@@ -393,6 +394,9 @@ export class HomePage {
         // remove it
         budget.splice(i, 1);
         this.saveAll();
+      } else {
+        this.showToast('Sorry. That item does not exist.', 'bottom', 'toaster-red');
+        return;
       }
     }
   }
@@ -616,26 +620,17 @@ export class HomePage {
 
   // todo: add unit test for error handler
   private handleError(error: any) {
-    // if the error has status 400 meaning there are form issues
-    if (error.status === 400) {
-      // tell user to fix the form issues
-      this.showToast('Form Errors\nPlease see above.', 'bottom', 'toaster-red');
-      console.log('response', error);
-      this.hasValidationErrors = true;
-      this.validationErrors = error;
+    // else display the message to the user
+    this.errorMessage = error && error.statusText;
+
+    if (this.errorMessage) {
+      this.showToast('Uh oh! ' + this.errorMessage, 'bottom', 'toaster-red');
     } else {
-      // else display the message to the user
-      let message = error && error.statusText;
-
-      if (message) {
-        this.showToast('Uh oh! ' + message, 'bottom', 'toaster-red');
-      } else {
-        message = 'Please try again.';
-        this.showToast('Unexpected Error! ' + message, 'bottom', 'toaster-red');
-      }
-
-      // log the entire response to the console
-      console.error(error);
+      this.errorMessage = 'Please try again.';
+      this.showToast('Unexpected Error! ' + this.errorMessage, 'bottom', 'toaster-red');
     }
+
+    // log the entire response to the console
+    console.error(error);
   }
 }

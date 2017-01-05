@@ -34,10 +34,6 @@ export class PopoverPage {
     this.currentUser = params.get('userInfo');
   }
 
-  ngOnInit() {
-
-  }
-
   // used to close the popover on command
   closePopover(data: boolean) {
     this.viewCtrl.dismiss(data);
