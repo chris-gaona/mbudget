@@ -136,7 +136,7 @@
         </ion-item>
 
         <div class="progress-wrapper">
-          <div class="current" [ngStyle]="getOverlayStyle()"><p ion-text text-center>Current</p>{{actualObject.percSaving | percent:'1.0-0'}}</div>
+          <div class="current" [ngStyle]="getOverlayStyle()"><p ion-text text-center>Current</p>{{getTotalSpent(selectedBudget, 'actual').percSaving | percent:'1.0-0'}}</div>
           <round-progress [current]="actualObject.percSaving" [max]="1" [duration]="duration" [animationDelay]="animationDelay" [radius]="radius" [semicircle]="semicircle" [color]="gradient ? 'url(#gradient)' : color" [responsive]="true"></round-progress>
         </div>
 
