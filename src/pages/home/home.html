@@ -234,12 +234,10 @@
           <ion-item-divider color="lighter" text-capitalize>{{item.item}}<span item-right ion-text color="{{(item.projection - getActualTotal(item)) < 0 ? 'danger' : 'light'}}" class="small-text">{{item.projection - getActualTotal(item) | currency:'USD':true}}</span></ion-item-divider>
           <ion-item-sliding *ngFor="let actual of item.actual" class="projActualItem">
             <ion-item text-capitalize (click)="goToEditPage(selectedBudget._id, selectedBudget, item)">{{actual.name}}<span><ion-icon name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense"></ion-icon> {{actual.amount | currency:'USD':true}}</span></ion-item>
-            <ion-item-options side="left">
-              <button ion-button color="light" (click)="toggleAddSubtract(actual)">
-                + | -
-              </button>
-            </ion-item-options>
             <ion-item-options side="right">
+              <button ion-button color="lighter">
+                <ion-toggle color="danger" checked="true" [(ngModel)]="actual.expense" (ngModelChange)="toggleAddSubtract()"></ion-toggle>
+              </button>
               <button ion-button color="danger" (click)="showConfirmation(item, actual)">
                 Delete
               </button>

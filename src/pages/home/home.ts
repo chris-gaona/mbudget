@@ -440,13 +440,15 @@ export class HomePage {
   }
 
   // save all edits
-  saveAll() {
+  saveAll(string?) {
     // passes budget_items array to saveAll function on budgetService
     this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
       .subscribe(data => {
-        this.showToast('Everything saved!', 'bottom', 'toaster-green');
         console.log('Everything saved!');
         this.saveAllData = data;
+        if (string !== 'toggle') {
+          this.showToast('Everything saved!', 'bottom', 'toaster-green');
+        }
       }, err => {
         this.handleError(err);
         console.log(err);
@@ -558,9 +560,8 @@ export class HomePage {
     return this.totalActual;
   }
 
-  toggleAddSubtract(actual) {
-    actual.expense = !actual.expense;
-    this.saveAll();
+  toggleAddSubtract() {
+    this.saveAll('toggle');
   }
 
   parseDate(date: string) {
