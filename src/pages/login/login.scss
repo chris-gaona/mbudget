@@ -32,6 +32,10 @@ page-login {
     border-bottom: 1px solid #FF6153;
   }
 
+  .error-message .item-inner {
+    border-bottom: 0 !important;
+  }
+
   //#budtrac-logo {
   //  position: relative;
   //  left: 50%;
