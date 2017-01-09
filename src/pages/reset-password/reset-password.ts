@@ -3,7 +3,6 @@ import { NavController, AlertController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { AuthData } from '../../providers/auth-data';
-import { LoginPage } from '../login/login';
 import { EmailValidator } from '../../validators/email';
 
 

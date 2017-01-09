@@ -26,8 +26,17 @@
     <!--</ion-item>-->
 
     <ion-item padding-horizontal>
+      <ion-label floating>First Name</ion-label>
+      <ion-input #name formControlName="name" type="text" (change)="elementChanged(name)" [class.invalid]="!signupForm.controls.name.valid && (nameChanged || submitAttempt)"></ion-input>
+    </ion-item>
+
+    <ion-item class="error-message" *ngIf="!signupForm.controls.name.valid  && (nameChanged || submitAttempt)">
+      <p>Please enter a name.</p>
+    </ion-item>
+
+    <ion-item padding-horizontal>
       <ion-label floating>Email</ion-label>
-      <ion-input formControlName="email" type="email" (change)="elementChanged(email)" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true" [class.invalid]="!signupForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
+      <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)" [class.invalid]="!signupForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!signupForm.controls.email.valid  && (emailChanged || submitAttempt)">
@@ -36,7 +45,7 @@
 
     <ion-item padding-horizontal>
       <ion-label floating>Password</ion-label>
-      <ion-input formControlName="password" type="password" (change)="elementChanged(password)" [(ngModel)]="password" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true" [class.invalid]="!signupForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
+      <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)" [class.invalid]="!signupForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!signupForm.controls.password.valid  && (passwordChanged || submitAttempt)">
@@ -45,7 +54,8 @@
 
     <ion-item padding-top class="no-bottom-border">
       <ion-buttons>
-        <button type="submit" ion-button block [disabled]="loading" [class.loading]="loading" (click)="loading = true">{{loading ? 'Loading...' : 'Create an Account'}}<span id="loading-spinner" *ngIf="loading"></span></button>
+        <button type="submit" ion-button block>Create an Account</button>
+        <!--<button type="submit" ion-button block [disabled]="loadingButton" [class.loading]="loadingButton" (click)="loadingButton = true">{{loadingButton ? 'Loading...' : 'Create an Account'}}<span id="loading-spinner" *ngIf="loadingButton"></span></button>-->
       </ion-buttons>
     </ion-item>
 
