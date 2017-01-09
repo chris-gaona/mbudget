@@ -15,6 +15,20 @@ import { RoundProgressModule } from 'angular-svg-round-progressbar/dist/round-pr
 import { TextMaskModule } from 'angular2-text-mask';
 import { FormsModule } from '@angular/forms';
 
+// Import the AF2 Module
+import { AngularFireModule } from 'angularfire2';
+
+import * as config from '../../config.json';
+
+// AF2 Settings
+export const firebaseConfig = {
+  apiKey: config.apiKey,
+  authDomain: config.authDomain,
+  databaseURL: config.databaseURL,
+  storageBucket: config.storageBucket,
+  messagingSenderId: config.messagingSenderId
+};
+
 
 @NgModule({
   declarations: [
@@ -33,6 +47,7 @@ import { FormsModule } from '@angular/forms';
         }
       }
     }),
+    AngularFireModule.initializeApp(firebaseConfig),
     ChartsModule,
     RoundProgressModule,
     FormsModule,

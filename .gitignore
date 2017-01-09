@@ -36,3 +36,5 @@ UserInterfaceState.xcuserstate
 # e2e
 /e2e/*.js
 /e2e/*.map
+
+config.json
