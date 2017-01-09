@@ -5,7 +5,6 @@ import { EditPage } from '../pages/edit/edit';
 import { HomePage } from '../pages/home/home';
 import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
-import { ModalAuthPage } from '../pages/modals/modalAuth';
 import { UserService } from '../services/user.service';
 import { AUTH_PROVIDERS } from 'angular2-jwt';
 import { BudgetService } from '../services/budget.service';
@@ -17,6 +16,7 @@ import { FormsModule } from '@angular/forms';
 import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
+import { WelcomePage } from '../pages/welcome/welcome';
 
 // Importing Providers
 import { AuthData } from '../providers/auth-data';
@@ -48,10 +48,10 @@ const myFirebaseAuthConfig = {
     HomePage,
     PopoverPage,
     ModalContentPage,
-    ModalAuthPage,
     LoginPage,
     SignupPage,
-    ResetPasswordPage
+    ResetPasswordPage,
+    WelcomePage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -74,10 +74,10 @@ const myFirebaseAuthConfig = {
     HomePage,
     PopoverPage,
     ModalContentPage,
-    ModalAuthPage,
     LoginPage,
     SignupPage,
-    ResetPasswordPage
+    ResetPasswordPage,
+    WelcomePage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     UserService,

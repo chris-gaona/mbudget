@@ -13,6 +13,10 @@ import { BudgetService } from '../../services/budget.service';
 import { Budget, BudgetItems } from '../../models/budget';
 import { NetworkService } from '../../services/network.service';
 import 'chart.js';
+import { AuthData } from '../../providers/auth-data';
+
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { WelcomePage } from '../welcome/welcome';
 
 @Component({
   selector: 'page-home',
@@ -22,9 +26,11 @@ export class HomePage {
 
   @ViewChild(Content) content: Content;
 
+  allBudgets: FirebaseListObservable<any>;
   budgets: Budget[];
   selectedBudget: Budget;
-  currentUser: string;
+  currentUser: any;
+  user: any;
   visibleBudgets: boolean = true;
   totalActual: number;
   totalSpent: number;
@@ -63,13 +69,18 @@ export class HomePage {
               private userService: UserService,
               private budgetService: BudgetService,
               private networkService: NetworkService,
-              private ref: ChangeDetectorRef
+              private ref: ChangeDetectorRef,
+              public authData: AuthData,
+              af: AngularFire
   ) {
-
+    this.currentUser = this.authData.getUserInfo();
+    this.user = af.database.list('/users/' + this.currentUser.uid + '/user-info');
+    this.allBudgets = af.database.list('/users/' + this.authData.getUserInfo().uid + '/budgets');
   }
 
   ngOnInit() {
-    this.checkUserAuth();
+    // this.checkUserAuth();
+    this.getAllBudgets();
   }
 
   ngAfterViewInit() {
@@ -109,60 +120,82 @@ export class HomePage {
     toast.present(toast);
   }
 
-  checkUserAuth () {
-    if (!this.userService.isLoggedIn()) {
-      this.openAuthModal();
-    } else {
-      this.loggedInUser();
-      this.getAllBudgets();
-    }
+  logoutUser() {
+    this.authData.logoutUser();
   }
 
-  loggedInUser() {
-    this.userService.getUser()
-      .subscribe(data => {
-        this.currentUser = data;
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
-  }
+  // checkUserAuth () {
+  //   if (!this.userService.isLoggedIn()) {
+  //     this.openAuthModal();
+  //   } else {
+  //     this.loggedInUser();
+  //     this.getAllBudgets();
+  //   }
+  // }
+
+  // loggedInUser() {
+  //   this.userService.getUser()
+  //     .subscribe(data => {
+  //       this.currentUser = data;
+  //     }, err => {
+  //       this.handleError(err);
+  //       console.log(err);
+  //     });
+  // }
 
   getAllBudgets(editedBudget?) {
-    // retrieves all budgets from budgetService
-    this.budgetService.getAllBudgets()
-      .subscribe(data => {
-        console.log('data', data);
-        if (data.length === 0) {
-          this.budgets = null;
-          this.visibleBudgets = false;
-        } else {
-          this.budgets = data;
-          this.visibleBudgets = true;
+    this.authData.getBudgets().subscribe(data => {
+      console.log('budgets', data);
 
-          if (editedBudget) {
+      if (data.length === 0) {
+        this.budgets = data;
+        console.log('allbudgets', this.budgets);
+        console.log('no budgets!');
+        this.visibleBudgets = false;
+        this.navCtrl.push(WelcomePage);
+      } else {
+        this.budgets = data;
+        this.visibleBudgets = true;
 
-            for (let i = 0; i < this.budgets.length; i++) {
-              if (this.budgets[i]._id === editedBudget._id) {
-                this.selectedBudget = this.budgets[i];
-              }
-            }
-          } else {
-            // loop through each budget entry
-            for (let i = 0; i < this.budgets.length; i++) {
-              // find the latest created budget entry in the array
-              if (i === (this.budgets.length - 1)) {
-                // make that one the selected budget on load
-                this.selectedBudget = this.budgets[i];
-                // this.averageSaving = this.getAverageSaving(this.budgets);
-              }
-            }
+        // loop through each budget entry
+        for (let i = 0; i < this.budgets.length; i++) {
+          // find the latest created budget entry in the array
+          if (i === (this.budgets.length - 1)) {
+            // make that one the selected budget on load
+            this.selectedBudget = this.budgets[i];
+            // this.averageSaving = this.getAverageSaving(this.budgets);
           }
         }
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
+      }
+      console.log('budgets', this.budgets);
+    });
+
+    // // retrieves all budgets from budgetService
+    // this.budgetService.getAllBudgets()
+    //   .subscribe(data => {
+    //     console.log('data', data);
+    //     if (data.length === 0) {
+    //       this.budgets = null;
+    //       this.visibleBudgets = false;
+    //     } else {
+    //       this.budgets = data;
+    //       this.visibleBudgets = true;
+    //
+    //       if (editedBudget) {
+    //
+    //         for (let i = 0; i < this.budgets.length; i++) {
+    //           if (this.budgets[i]._id === editedBudget._id) {
+    //             this.selectedBudget = this.budgets[i];
+    //           }
+    //         }
+    //       } else {
+
+    //       }
+    //     }
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.log(err);
+    //   });
   }
 
   getAverageSaving(budgets) {
@@ -181,29 +214,6 @@ export class HomePage {
     return average;
   }
 
-  // creates empty budget
-  createFirstBudget() {
-    let newBudget = new Budget();
-    newBudget.existing_cash = 1;
-    newBudget.current_income = 1;
-
-    this.budgetService.addBudget(newBudget)
-      .subscribe(data => {
-        this.getAllBudgets();
-        this.selectedBudget = data;
-        this.visibleBudgets = true;
-        this.loading = false;
-
-        this.openModalEdit();
-
-        console.log('First Budget', this.budgets);
-
-        this.showToast('First budget created!', 'bottom', 'toaster-green');
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
-  }
 
   // creates empty budget
   createEmptyBudget() {
@@ -310,7 +320,7 @@ export class HomePage {
 
     popover.onDidDismiss(data => {
       if (data === true) {
-        this.checkUserAuth();
+        // this.checkUserAuth();
       }
     });
 
@@ -346,7 +356,7 @@ export class HomePage {
   openAuthModal() {
     let modal = this.modalCtrl.create(ModalAuthPage);
     modal.onDidDismiss(data => {
-      this.checkUserAuth();
+      // this.checkUserAuth();
     });
     modal.present();
   }
