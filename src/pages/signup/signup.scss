@@ -1,3 +1,46 @@
 page-signup {
+  #modal-auth-toolbar {
 
+    div {
+      background-color: #688dcc;
+    }
+  }
+
+  #modal-title {
+
+    div {
+      color: #fff;
+    }
+  }
+  #modal-auth-container {
+    background-color: #eee;
+
+    img {
+      position: relative;
+      left: 50%;
+      margin-left: -75px;
+      width: 150px;
+      height: auto;
+    }
+  }
+
+  .small-text {
+    font-size: 1.2rem;
+  }
+
+  .invalid {
+    border-bottom: 1px solid #FF6153;
+  }
+
+  .error-message .item-inner {
+    border-bottom: 0 !important;
+  }
+
+  .no-bottom-border .item-inner {
+    border-bottom: none !important;
+  }
+
+  button.back-button {
+    color: #fff !important;
+  }
 }

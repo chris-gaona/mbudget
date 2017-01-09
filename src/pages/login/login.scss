@@ -36,6 +36,10 @@ page-login {
     border-bottom: 0 !important;
   }
 
+  .no-bottom-border .item-inner {
+    border-bottom: none !important;
+  }
+
   //#budtrac-logo {
   //  position: relative;
   //  left: 50%;

@@ -14,7 +14,7 @@
   <!--<div id="budtrac-logo-overlap"></div>-->
   <!--</div>-->
 
-  <p ion-text color="light" text-center padding>Welcome to the BudTrac app! We're glad you're here. Use this app to easily track your weekly / monthly budgets. And best of all, it's free!</p>
+  <p ion-text color="light" text-center padding>Welcome to the BudTrac app! We're glad you're here. Use this app to easily track your weekly / monthly budgets. And best of all, it's free! Login below.</p>
 
   <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
 
@@ -26,8 +26,8 @@
     <!--</ion-item>-->
 
     <ion-item padding-horizontal>
-      <ion-label floating>Username</ion-label>
-      <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true" [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
+      <ion-label floating>Email</ion-label>
+      <ion-input formControlName="email" type="email" (change)="elementChanged(email)" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true" [class.invalid]="!loginForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid  && (emailChanged || submitAttempt)">
@@ -36,7 +36,7 @@
 
     <ion-item padding-horizontal>
       <ion-label floating>Password</ion-label>
-      <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)" [(ngModel)]="password" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true" [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
+      <ion-input formControlName="password" type="password" (change)="elementChanged(password)" [(ngModel)]="password" (keyup.enter)="loginButtonMain ? login(username, password) : signUp(username, password, confirmPassword, firstName); loading = true" [class.invalid]="!loginForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid  &&
@@ -44,15 +44,22 @@
       <p>Your password needs more than 6 characters.</p>
     </ion-item>
 
-    <ion-item padding-top>
+    <ion-item padding-top class="no-bottom-border">
       <ion-buttons>
         <button type="submit" ion-button block [disabled]="loading" [class.loading]="loading" (click)="loading = true">{{loading ? 'Loading...' : 'Login'}}<span id="loading-spinner" *ngIf="loading"></span></button>
-        <button margin-top ion-button block color="lighter" (click)="createAccount()">Register</button>
-        <button margin-top ion-button block clear (click)="goToResetPassword()">Forgot password?</button>
       </ion-buttons>
     </ion-item>
 
   </form>
+
+  <hr>
+
+  <ion-item class="no-bottom-border">
+    <ion-buttons>
+      <button ion-button block color="lighter" (click)="createAccount()">Register</button>
+      <button margin-top ion-button block clear class="small-text" (click)="goToResetPassword()">Forgot password?</button>
+    </ion-buttons>
+  </ion-item>
 
   <div id="footer-container">
     <p ion-text color="light" class="small-text" text-center>
