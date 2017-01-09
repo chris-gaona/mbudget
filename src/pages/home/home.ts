@@ -8,7 +8,6 @@ import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
 import { UserService } from '../../services/user.service';
-import { ModalAuthPage } from '../modals/modalAuth';
 import { BudgetService } from '../../services/budget.service';
 import { Budget, BudgetItems } from '../../models/budget';
 import { NetworkService } from '../../services/network.service';
@@ -17,6 +16,7 @@ import { AuthData } from '../../providers/auth-data';
 
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
+import { LoginPage } from '../login/login';
 
 @Component({
   selector: 'page-home',
@@ -120,10 +120,6 @@ export class HomePage {
     toast.present(toast);
   }
 
-  logoutUser() {
-    this.authData.logoutUser();
-  }
-
   // checkUserAuth () {
   //   if (!this.userService.isLoggedIn()) {
   //     this.openAuthModal();
@@ -148,7 +144,7 @@ export class HomePage {
       console.log('budgets', data);
 
       if (data.length === 0) {
-        this.budgets = data;
+        this.budgets = null;
         console.log('allbudgets', this.budgets);
         console.log('no budgets!');
         this.visibleBudgets = false;
@@ -319,8 +315,8 @@ export class HomePage {
     let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
 
     popover.onDidDismiss(data => {
-      if (data === true) {
-        // this.checkUserAuth();
+      if (data === 'logout') {
+        this.navCtrl.setRoot(LoginPage);
       }
     });
 
@@ -353,13 +349,13 @@ export class HomePage {
     this.createEmptyBudget();
   }
 
-  openAuthModal() {
-    let modal = this.modalCtrl.create(ModalAuthPage);
-    modal.onDidDismiss(data => {
-      // this.checkUserAuth();
-    });
-    modal.present();
-  }
+  // openAuthModal() {
+  //   let modal = this.modalCtrl.create(ModalAuthPage);
+  //   modal.onDidDismiss(data => {
+  //     // this.checkUserAuth();
+  //   });
+  //   modal.present();
+  // }
 
   goToEditPage(_id, budget, budgetItems) {
     //push another page onto the history stack

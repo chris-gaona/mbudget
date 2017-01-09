@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController } from 'ionic-angular';
+import { NavController, ToastController, PopoverController } from 'ionic-angular';
 import { Budget } from '../../models/budget';
 import {AuthData} from "../../providers/auth-data";
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { PopoverPage } from '../popovers/userInfo';
+import { LoginPage } from '../login/login';
 
 
 @Component({
@@ -13,14 +15,15 @@ export class WelcomePage {
 
   loading: boolean = false;
   budgets: FirebaseListObservable<any>;
+  currentUser: any;
 
   constructor(public navCtrl: NavController,
-              private navParams: NavParams,
               public toastCtrl: ToastController,
+              public popoverCtrl: PopoverController,
               public authData: AuthData,
               af: AngularFire) {
-    // this.budgets = navParams.get('budgets');
     this.budgets = af.database.list('/users/' + this.authData.getUserInfo().uid + '/budgets');
+    this.currentUser = this.authData.getUserInfo();
   }
 
   showToast(message:string, position: string, color: string) {
@@ -66,6 +69,20 @@ export class WelcomePage {
     //     this.handleError(err);
     //     console.log(err);
     //   });
+  }
+
+  presentPopover(ev) {
+    let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
+
+    popover.onDidDismiss(data => {
+      if (data === 'logout') {
+        this.navCtrl.setRoot(LoginPage);
+      }
+    });
+
+    popover.present({
+      ev: ev
+    });
   }
 
   goBack() {

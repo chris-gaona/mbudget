@@ -1,6 +1,11 @@
 <ion-header>
 
   <ion-navbar id="header">
+    <ion-buttons start *ngIf="currentUser">
+      <button ion-button icon-only ion-text color="dark" (click)="presentPopover($event)">
+        <ion-icon name="contact"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>Welcome</ion-title>
   </ion-navbar>
 

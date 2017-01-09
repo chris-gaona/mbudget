@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, LoadingController, AlertController } from 'ionic-angular';
+import { NavController, LoadingController, AlertController, ToastController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 
 import { AuthData } from '../../providers/auth-data';
@@ -19,9 +19,12 @@ export class SignupPage {
   submitAttempt: boolean = false;
   loading;
 
-  constructor(public navCtrl: NavController, public authData: AuthData,
-              public formBuilder: FormBuilder, public loadingCtrl: LoadingController,
-              public alertCtrl: AlertController) {
+  constructor(public navCtrl: NavController,
+              public authData: AuthData,
+              public formBuilder: FormBuilder,
+              public loadingCtrl: LoadingController,
+              public alertCtrl: AlertController,
+              public toastCtrl: ToastController) {
     this.signupForm = formBuilder.group({
       name: ['', Validators.compose([Validators.required])],
       email: ['', Validators.compose([Validators.required,
@@ -29,6 +32,17 @@ export class SignupPage {
       password: ['', Validators.compose([Validators.minLength(6),
         Validators.required])]
     });
+  }
+
+  showToast(message:string, position: string, color: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: position,
+      cssClass: color
+    });
+
+    toast.present(toast);
   }
 
   /**
@@ -48,12 +62,23 @@ export class SignupPage {
   signupUser(){
     this.submitAttempt = true;
 
+    this.loading = this.loadingCtrl.create({});
+
+    this.loading.present();
+
     if (!this.signupForm.valid){
       console.log(this.signupForm.value);
+      this.loading.dismiss();
     } else {
       this.authData.signupUser(this.signupForm.value.email,
         this.signupForm.value.password).then(() => {
-        this.navCtrl.setRoot(HomePage);
+        this.authData.updateProfile(this.signupForm.value.name, '').then(() => {
+          this.navCtrl.setRoot(HomePage).then(() => {
+            this.loading.dismiss();
+            this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
+          });
+        });
+
       }, (error) => {
         this.loading.dismiss().then( () => {
           var errorMessage: string = error.message;
@@ -65,12 +90,6 @@ export class SignupPage {
           alert.present();
         });
       });
-
-      this.loading = this.loadingCtrl.create({
-        dismissOnPageChange: true,
-      });
-
-      this.loading.present();
 
     }
   }
