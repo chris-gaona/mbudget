@@ -14,9 +14,15 @@ import { ChartsModule } from 'ng2-charts';
 import { RoundProgressModule } from 'angular-svg-round-progressbar/dist/round-progress';
 import { TextMaskModule } from 'angular2-text-mask';
 import { FormsModule } from '@angular/forms';
+import { LoginPage } from '../pages/login/login';
+import { SignupPage } from '../pages/signup/signup';
+import { ResetPasswordPage } from '../pages/reset-password/reset-password';
+
+// Importing Providers
+import { AuthData } from '../providers/auth-data';
 
 // Import the AF2 Module
-import { AngularFireModule } from 'angularfire2';
+import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 import * as config from '../../config.json';
 
@@ -29,6 +35,11 @@ export const firebaseConfig = {
   messagingSenderId: config.messagingSenderId
 };
 
+const myFirebaseAuthConfig = {
+  provider: AuthProviders.Password,
+  method: AuthMethods.Password
+}
+
 
 @NgModule({
   declarations: [
@@ -37,7 +48,10 @@ export const firebaseConfig = {
     HomePage,
     PopoverPage,
     ModalContentPage,
-    ModalAuthPage
+    ModalAuthPage,
+    LoginPage,
+    SignupPage,
+    ResetPasswordPage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -47,7 +61,7 @@ export const firebaseConfig = {
         }
       }
     }),
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(firebaseConfig, myFirebaseAuthConfig),
     ChartsModule,
     RoundProgressModule,
     FormsModule,
@@ -60,8 +74,17 @@ export const firebaseConfig = {
     HomePage,
     PopoverPage,
     ModalContentPage,
-    ModalAuthPage
+    ModalAuthPage,
+    LoginPage,
+    SignupPage,
+    ResetPasswordPage
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}, UserService, BudgetService, AUTH_PROVIDERS, NetworkService]
+  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
+    UserService,
+    BudgetService,
+    AUTH_PROVIDERS,
+    NetworkService,
+    AuthData
+  ]
 })
 export class AppModule {}
