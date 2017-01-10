@@ -17,6 +17,7 @@ import { AuthData } from '../../providers/auth-data';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
 import { LoginPage } from '../login/login';
+import {log} from "util";
 
 @Component({
   selector: 'page-home',
@@ -50,6 +51,8 @@ export class HomePage {
   saveAllData: any;
   errorMessage: any;
 
+  private subscription: any;
+
 
   // progress bar variables
   max: number = 100;
@@ -75,16 +78,17 @@ export class HomePage {
   ) {
     this.currentUser = this.authData.getUserInfo();
     this.user = af.database.list('/users/' + this.currentUser.uid + '/user-info');
-    this.allBudgets = af.database.list('/users/' + this.authData.getUserInfo().uid + '/budgets');
+    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
 
   ngOnInit() {
     // this.checkUserAuth();
-    this.getAllBudgets();
+
   }
 
   ngAfterViewInit() {
     this.checkScroll();
+    this.getAllBudgets();
   }
 
   checkScroll() {
@@ -101,7 +105,7 @@ export class HomePage {
 
   doRefresh(refresher) {
     console.log('Begin async operation', refresher);
-    this.getAllBudgets();
+    // this.getAllBudgets();
 
     setTimeout(() => {
       console.log('Async operation has ended');
@@ -139,13 +143,14 @@ export class HomePage {
   //     });
   // }
 
-  getAllBudgets(editedBudget?) {
-    this.authData.getBudgets().subscribe(data => {
-      console.log('budgets', data);
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
 
+  getAllBudgets(editedBudget?) {
+    this.subscription = this.authData.getBudgets().subscribe(data => {
       if (data.length === 0) {
         this.budgets = null;
-        console.log('allbudgets', this.budgets);
         console.log('no budgets!');
         this.visibleBudgets = false;
         this.navCtrl.push(WelcomePage);
@@ -311,11 +316,17 @@ export class HomePage {
     return prevBudget;
   }
 
+  logoutUser() {
+    this.authData.logoutUser();
+  }
+
   presentPopover(ev) {
     let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
 
     popover.onDidDismiss(data => {
       if (data === 'logout') {
+        this.ngOnDestroy();
+        this.logoutUser();
         this.navCtrl.setRoot(LoginPage);
       }
     });

@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 
 import { AuthData } from '../../providers/auth-data';
 
-// import { HomePage } from '../home/home';
+import { HomePage } from '../home/home';
 import { SignupPage } from '../signup/signup';
 import { ResetPasswordPage } from '../reset-password/reset-password';
 
@@ -56,14 +56,21 @@ export class LoginPage {
   loginUser(){
     this.submitAttempt = true;
 
+    this.loading = this.loadingCtrl.create({});
+
+    this.loading.present();
+
     if (!this.loginForm.valid){
       console.log(this.loginForm.value);
+      this.loading.dismiss();
     } else {
       this.authData.loginUser(this.loginForm.value.email,
         this.loginForm.value.password).then( authData => {
-        // this.navCtrl.setRoot(HomePage);
-        console.log('logged in!');
-        this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
+        this.navCtrl.setRoot(HomePage).then(() => {
+          this.loading.dismiss();
+          console.log('logged in!');
+          this.showToast('Successfully logged in!', 'bottom', 'toaster-green');
+        });
       }, error => {
         this.loading.dismiss().then( () => {
           let alert = this.alertCtrl.create({
@@ -78,11 +85,6 @@ export class LoginPage {
           alert.present();
         });
       });
-
-      this.loading = this.loadingCtrl.create({
-        dismissOnPageChange: true,
-      });
-      this.loading.present();
     }
   }
 

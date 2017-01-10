@@ -18,7 +18,7 @@ import { AuthData } from '../../providers/auth-data';
         <p>Enjoy today!</p>
       </ion-item>
       <ion-item>
-        <button ion-button block padding-vertical (click)="logoutUser(); closePopover('logout')">Logout</button>
+        <button ion-button block padding-vertical (click)="closePopover('logout')">Logout</button>
       </ion-item>
     </ion-list>
   `
@@ -33,10 +33,6 @@ export class PopoverPage {
               public authData: AuthData) {
     this.currentUser = params.get('userInfo');
     console.log(params.get('userInfo'));
-  }
-
-  logoutUser() {
-    this.authData.logoutUser();
   }
 
   // used to close the popover on command
