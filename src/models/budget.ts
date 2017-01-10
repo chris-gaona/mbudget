@@ -1,5 +1,6 @@
 export class Budget {
   $key: any;
+  $exists: any;
   _id: number;
   updatedAt: any;
   createdAt: any;

@@ -465,18 +465,35 @@ export class HomePage {
 
   // save all edits
   saveAll(string?) {
-    // passes budget_items array to saveAll function on budgetService
-    this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
-      .subscribe(data => {
-        console.log('Everything saved!');
-        this.saveAllData = data;
-        if (string !== 'toggle') {
-          this.showToast('Everything saved!', 'bottom', 'toaster-green');
-        }
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
+    let chosenBudgetKey;
+
+    chosenBudgetKey = this.selectedBudget.$key;
+
+    delete this.selectedBudget.$exists;
+    delete this.selectedBudget.$key;
+    this.selectedBudget.updatedAt = (new Date).toISOString();
+
+    this.allBudgets.update(chosenBudgetKey, this.selectedBudget).then(() => {
+      if (string !== 'toggle') {
+        this.showToast('Everything saved!', 'bottom', 'toaster-green');
+      }
+    }).catch((err) => {
+      this.handleError(err);
+      console.log(err);
+    });
+
+    // // passes budget_items array to saveAll function on budgetService
+    // this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
+    //   .subscribe(data => {
+    //     console.log('Everything saved!');
+    //     this.saveAllData = data;
+    //     if (string !== 'toggle') {
+    //       this.showToast('Everything saved!', 'bottom', 'toaster-green');
+    //     }
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.log(err);
+    //   });
   }
 
   // add new budget item to budget_items array in specific budget
@@ -584,9 +601,9 @@ export class HomePage {
     return this.totalActual;
   }
 
-  toggleAddSubtract() {
-    this.saveAll('toggle');
-  }
+  // toggleAddSubtract() {
+  //   this.saveAll('toggle');
+  // }
 
   parseDate(date: string) {
     // parses a string representation of a date, &
