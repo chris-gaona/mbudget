@@ -274,44 +274,69 @@ export class ModalContentPage {
   addUpdate(budget) {
     this.convertStringToNumber();
     console.log('budget', budget);
-    // update the new budget with last period's budget items
-    this.budgetService.updateBudgetById(budget._id, budget)
-      .subscribe(data => {
-        console.log('data', data);
-        this.dismiss(budget);
 
-        this.showToast('Budget updated!', 'bottom', 'toaster-green');
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+    let chosenBudgetKey = budget.$key;
+
+    delete budget.$key;
+    delete budget.$exists;
+
+    budget.updatedAt = (new Date).toISOString();
+
+    this.allBudgets.update(chosenBudgetKey, budget).then(() => {
+      this.dismiss(budget);
+
+      this.showToast('Budget updated!', 'bottom', 'toaster-green');
+    });
+
+    // // update the new budget with last period's budget items
+    // this.budgetService.updateBudgetById(budget._id, budget)
+    //   .subscribe(data => {
+    //     console.log('data', data);
+    //
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.error(err);
+    //   });
   }
 
   deleteBudget(budget) {
-    this.budgetService.deleteBudgetById(budget._id)
-      .subscribe(data => {
-        let newIndex = 0;
+    let chosenBudgetKey = budget.$key;
 
-        this.budgets.filter((item, i) => {
-          if (item._id === budget._id) {
-            this.budgets.splice(i, 1);
-            newIndex = i - 1;
-          }
-        });
+    delete budget.$key;
+    delete budget.$exists;
 
-        if (this.budgets.length > 0) {
-          this.selectedBudget = this.budgets[newIndex];
-          this.dismiss(this.selectedBudget);
-        } else {
-          this.dismiss('no budgets');
-        }
+    this.allBudgets.remove(chosenBudgetKey).then(() => {
+      console.log('Budget deleted');
+      this.showToast('Budget deleted!', 'bottom', 'toaster-green');
 
-        console.log('Budget deleted');
-        this.showToast('Budget deleted!', 'bottom', 'toaster-green');
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+      this.dismiss();
+    });
+
+
+    // this.budgetService.deleteBudgetById(budget._id)
+    //   .subscribe(data => {
+    //     let newIndex = 0;
+    //
+    //     this.budgets.filter((item, i) => {
+    //       if (item._id === budget._id) {
+    //         this.budgets.splice(i, 1);
+    //         newIndex = i - 1;
+    //       }
+    //     });
+    //
+    //     if (this.budgets.length > 0) {
+    //       this.selectedBudget = this.budgets[newIndex];
+    //       this.dismiss(this.selectedBudget);
+    //     } else {
+    //       this.dismiss('no budgets');
+    //     }
+    //
+    //     console.log('Budget deleted');
+    //     this.showToast('Budget deleted!', 'bottom', 'toaster-green');
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.error(err);
+    //   });
   }
 
   // todo: add tests for error handler

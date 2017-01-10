@@ -353,10 +353,10 @@ export class HomePage {
       if (data) {
         if (data === 'no budgets') {
           this.visibleBudgets = false;
-          this.getAllBudgets();
+          // this.getAllBudgets();
         } else {
           this.edited = true;
-          this.getAllBudgets(data);
+          // this.getAllBudgets(data);
         }
       }
     });
