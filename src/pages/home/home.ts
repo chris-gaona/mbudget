@@ -17,7 +17,6 @@ import { AuthData } from '../../providers/auth-data';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
 import { LoginPage } from '../login/login';
-import {log} from "util";
 
 @Component({
   selector: 'page-home',
@@ -158,13 +157,21 @@ export class HomePage {
         this.budgets = data;
         this.visibleBudgets = true;
 
-        // loop through each budget entry
-        for (let i = 0; i < this.budgets.length; i++) {
-          // find the latest created budget entry in the array
-          if (i === (this.budgets.length - 1)) {
-            // make that one the selected budget on load
-            this.selectedBudget = this.budgets[i];
-            // this.averageSaving = this.getAverageSaving(this.budgets);
+        if (editedBudget) {
+          for (let i = 0; i < this.budgets.length; i++) {
+            if (this.budgets[i]._id === editedBudget._id) {
+              this.selectedBudget = this.budgets[i];
+            }
+          }
+        } else {
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (i === (this.budgets.length - 1)) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+              // this.averageSaving = this.getAverageSaving(this.budgets);
+            }
           }
         }
       }

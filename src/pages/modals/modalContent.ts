@@ -4,11 +4,14 @@ import { Platform, ViewController, NavParams, AlertController, ToastController }
 
 import { Keyboard } from 'ionic-native';
 
-import { Budget } from '../../models/budget';
+import { Budget, ActualItems } from '../../models/budget';
 
 import { BudgetService } from '../../services/budget.service';
 
 import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
+
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AuthData } from '../../providers/auth-data';
 
 // First, you need to create the `numberMask` with your desired configurations
 const numberMask = createNumberMask({
@@ -22,7 +25,10 @@ const numberMask = createNumberMask({
 })
 
 export class ModalContentPage {
+  allBudgets: FirebaseListObservable<any>;
+  currentUser: any;
   selectedBudget: Budget;
+  lastBudget: Budget;
   budgets: Budget[];
   reuseProjectionsBudget: Budget;
   editing: boolean;
@@ -42,15 +48,20 @@ export class ModalContentPage {
   constructor(
     public platform: Platform,
     public viewCtrl: ViewController,
-    params: NavParams,
+    public params: NavParams,
     public toastCtrl: ToastController,
     private budgetService: BudgetService,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public authData: AuthData,
+    af: AngularFire
   ) {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
     this.budgets = params.get('budgets');
     console.log(params.get('budgets'));
+
+    this.currentUser = this.authData.getUserInfo();
+    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
 
   ngOnInit() {
@@ -136,18 +147,13 @@ export class ModalContentPage {
     // converts the date string from 2016-10-30 to 10/30/2016
     let startDate = budget.start_period.split('-');
     let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
-    let newDate = new Date(newDateString);
+    let newDate = new Date(newDateString).toISOString();
     budget.start_period = newDate;
     this.convertStringToNumber();
 
-    this.budgetService.addBudget(budget)
-      .subscribe(data => {
-        console.log('data', data);
+    if (this.reuseProjection === false) {
+      this.allBudgets.push(budget).then(() => {
 
-        if (this.reuseProjection === false) {
-        } else {
-          this.reuseProjections(data);
-        }
 
         this.reuseProjection = false;
 
@@ -155,31 +161,79 @@ export class ModalContentPage {
 
         this.showToast('Budget created!', 'bottom', 'toaster-green');
         console.log('Budget created!');
-        this.removeModal(data);
-      }, err => {
-        this.handleError(err);
-        console.error(err);
+        this.removeModal();
       });
+    } else {
+      budget.budget_items = this.reuseProjections();
+      console.log('here is the budget', budget);
+      this.allBudgets.push(budget).then(() => {
+
+        this.reuseProjection = false;
+
+        this.hasValidationErrors = false;
+
+        this.showToast('Budget created!', 'bottom', 'toaster-green');
+        console.log('Budget created!');
+        this.removeModal();
+      });
+    }
+
+    // this.budgetService.addBudget(budget)
+    //   .subscribe(data => {
+    //     console.log('data', data);
+    //
+    //     if (this.reuseProjection === false) {
+    //     } else {
+    //       this.reuseProjections(data);
+    //     }
+    //
+    //     this.reuseProjection = false;
+    //
+    //     this.hasValidationErrors = false;
+    //
+    //     this.showToast('Budget created!', 'bottom', 'toaster-green');
+    //     console.log('Budget created!');
+    //     this.removeModal(data);
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.error(err);
+    //   });
   }
 
   // reuse projections from last budget
-  reuseProjections(budget) {
+  reuseProjections() {
     let prevProjection;
+
+    // // loop through each budget entry
+    // for (let i = 0; i < this.budgets.length; i++) {
+    //   // find the latest created budget entry in the array
+    //   if (i === (this.budgets.length - 2)) {
+    //     // make that one the selected budget on load
+    //     this.lastBudget = this.budgets[i];
+    //     // this.averageSaving = this.getAverageSaving(this.budgets);
+    //   }
+    // }
 
     // get the budget items
     prevProjection = this.obtainPreviousBudget('post');
 
-    budget.budget_items = prevProjection.budget_items;
+    console.log('previous budget', prevProjection.budget_items);
 
-    // update the new budget with last period's budget items
-    this.budgetService.updateBudgetById(budget._id, budget)
-      .subscribe(data => {
-        console.log('data', data);
-        this.reuseProjectionsBudget = data;
-      }, err => {
-        this.handleError(err);
-        console.error(err);
-      });
+    return prevProjection.budget_items;
+
+    // this.selectedBudget.updatedAt = (new Date()).toISOString();
+
+    // this.allBudgets.update(this.selectedBudget.$key, this.selectedBudget);
+
+    // // update the new budget with last period's budget items
+    // this.budgetService.updateBudgetById(budget._id, budget)
+    //   .subscribe(data => {
+    //     console.log('data', data);
+    //     this.reuseProjectionsBudget = data;
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.error(err);
+    //   });
   }
 
   // get the projection or budget items from last period
@@ -191,9 +245,10 @@ export class ModalContentPage {
     for (let i = 0; i < this.budgets.length; i++) {
       // find the budget that was created last week
       if (string === 'post') {
-        if (i === (this.budgets.length - 2)) {
+        if (i === (this.budgets.length - 1)) {
           // assign the last budget to shownBudget variable
           budgetItems = this.budgets[i];
+          console.log('budget item before', budgetItems);
         }
       } else if (string === 'pre') {
         if (i === (this.budgets.length - 1)) {
@@ -209,6 +264,7 @@ export class ModalContentPage {
     // loop through to remove all the actual values
     for (let i = 0; i < prevBudget.budget_items.length; i++) {
       prevBudget.budget_items[i].actual = [];
+      prevBudget.budget_items[i].actual.push(new ActualItems());
     }
 
     // return the new budget_items array to use in the new budget
