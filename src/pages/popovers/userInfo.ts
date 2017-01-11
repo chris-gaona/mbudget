@@ -32,7 +32,6 @@ export class PopoverPage {
               private userService: UserService,
               public authData: AuthData) {
     this.currentUser = params.get('userInfo');
-    console.log(params.get('userInfo'));
   }
 
   // used to close the popover on command

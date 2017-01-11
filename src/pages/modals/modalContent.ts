@@ -2,11 +2,7 @@ import { Component } from '@angular/core';
 
 import { Platform, ViewController, NavParams, AlertController, ToastController } from 'ionic-angular';
 
-import { Keyboard } from 'ionic-native';
-
 import { Budget, ActualItems } from '../../models/budget';
-
-import { BudgetService } from '../../services/budget.service';
 
 import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
 
@@ -28,7 +24,6 @@ export class ModalContentPage {
   allBudgets: FirebaseListObservable<any>;
   currentUser: any;
   selectedBudget: Budget;
-  lastBudget: Budget;
   budgets: Budget[];
   reuseProjectionsBudget: Budget;
   editing: boolean;
@@ -50,7 +45,6 @@ export class ModalContentPage {
     public viewCtrl: ViewController,
     public params: NavParams,
     public toastCtrl: ToastController,
-    private budgetService: BudgetService,
     public alertCtrl: AlertController,
     public authData: AuthData,
     af: AngularFire
@@ -165,7 +159,7 @@ export class ModalContentPage {
       });
     } else {
       budget.budget_items = this.reuseProjections();
-      console.log('here is the budget', budget);
+
       this.allBudgets.push(budget).then(() => {
 
         this.reuseProjection = false;
@@ -177,63 +171,16 @@ export class ModalContentPage {
         this.removeModal();
       });
     }
-
-    // this.budgetService.addBudget(budget)
-    //   .subscribe(data => {
-    //     console.log('data', data);
-    //
-    //     if (this.reuseProjection === false) {
-    //     } else {
-    //       this.reuseProjections(data);
-    //     }
-    //
-    //     this.reuseProjection = false;
-    //
-    //     this.hasValidationErrors = false;
-    //
-    //     this.showToast('Budget created!', 'bottom', 'toaster-green');
-    //     console.log('Budget created!');
-    //     this.removeModal(data);
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.error(err);
-    //   });
   }
 
   // reuse projections from last budget
   reuseProjections() {
     let prevProjection;
 
-    // // loop through each budget entry
-    // for (let i = 0; i < this.budgets.length; i++) {
-    //   // find the latest created budget entry in the array
-    //   if (i === (this.budgets.length - 2)) {
-    //     // make that one the selected budget on load
-    //     this.lastBudget = this.budgets[i];
-    //     // this.averageSaving = this.getAverageSaving(this.budgets);
-    //   }
-    // }
-
     // get the budget items
     prevProjection = this.obtainPreviousBudget('post');
 
-    console.log('previous budget', prevProjection.budget_items);
-
     return prevProjection.budget_items;
-
-    // this.selectedBudget.updatedAt = (new Date()).toISOString();
-
-    // this.allBudgets.update(this.selectedBudget.$key, this.selectedBudget);
-
-    // // update the new budget with last period's budget items
-    // this.budgetService.updateBudgetById(budget._id, budget)
-    //   .subscribe(data => {
-    //     console.log('data', data);
-    //     this.reuseProjectionsBudget = data;
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.error(err);
-    //   });
   }
 
   // get the projection or budget items from last period
@@ -244,17 +191,9 @@ export class ModalContentPage {
     // loop through each budget item
     for (let i = 0; i < this.budgets.length; i++) {
       // find the budget that was created last week
-      if (string === 'post') {
-        if (i === (this.budgets.length - 1)) {
-          // assign the last budget to shownBudget variable
-          budgetItems = this.budgets[i];
-          console.log('budget item before', budgetItems);
-        }
-      } else if (string === 'pre') {
-        if (i === (this.budgets.length - 1)) {
-          // assign the last budget to shownBudget variable
-          budgetItems = this.budgets[i];
-        }
+      if (i === (this.budgets.length - 2)) {
+        // assign the last budget to shownBudget variable
+        budgetItems = this.budgets[i];
       }
     }
 
@@ -273,7 +212,6 @@ export class ModalContentPage {
 
   addUpdate(budget) {
     this.convertStringToNumber();
-    console.log('budget', budget);
 
     let chosenBudgetKey = budget.$key;
 
@@ -287,16 +225,6 @@ export class ModalContentPage {
 
       this.showToast('Budget updated!', 'bottom', 'toaster-green');
     });
-
-    // // update the new budget with last period's budget items
-    // this.budgetService.updateBudgetById(budget._id, budget)
-    //   .subscribe(data => {
-    //     console.log('data', data);
-    //
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.error(err);
-    //   });
   }
 
   deleteBudget(budget) {
@@ -311,32 +239,6 @@ export class ModalContentPage {
 
       this.dismiss();
     });
-
-
-    // this.budgetService.deleteBudgetById(budget._id)
-    //   .subscribe(data => {
-    //     let newIndex = 0;
-    //
-    //     this.budgets.filter((item, i) => {
-    //       if (item._id === budget._id) {
-    //         this.budgets.splice(i, 1);
-    //         newIndex = i - 1;
-    //       }
-    //     });
-    //
-    //     if (this.budgets.length > 0) {
-    //       this.selectedBudget = this.budgets[newIndex];
-    //       this.dismiss(this.selectedBudget);
-    //     } else {
-    //       this.dismiss('no budgets');
-    //     }
-    //
-    //     console.log('Budget deleted');
-    //     this.showToast('Budget deleted!', 'bottom', 'toaster-green');
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.error(err);
-    //   });
   }
 
   // todo: add tests for error handler
