@@ -122,7 +122,7 @@ export class HomePage {
     this.subscription.unsubscribe();
   }
 
-  getAllBudgets(editedBudget?) {
+  getAllBudgets() {
     this.subscription = this.authData.getBudgets().subscribe(data => {
       if (data.length === 0) {
         this.budgets = null;
@@ -133,9 +133,12 @@ export class HomePage {
         this.budgets = data;
         this.visibleBudgets = true;
 
-        if (editedBudget) {
+        if (this.selectedBudget) {
+          // loop through each budget entry
           for (let i = 0; i < this.budgets.length; i++) {
-            if (this.budgets[i]._id === editedBudget._id) {
+            // find the latest created budget entry in the array
+            if (this.budgets[i].start_period === this.selectedBudget.start_period) {
+              // make that one the selected budget on load
               this.selectedBudget = this.budgets[i];
             }
           }
@@ -146,7 +149,6 @@ export class HomePage {
             if (i === (this.budgets.length - 1)) {
               // make that one the selected budget on load
               this.selectedBudget = this.budgets[i];
-              // this.averageSaving = this.getAverageSaving(this.budgets);
             }
           }
         }
@@ -318,8 +320,15 @@ export class HomePage {
           this.visibleBudgets = false;
           // this.getAllBudgets();
         } else {
-          this.edited = true;
-          // this.getAllBudgets(data);
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (this.budgets[i].start_period === data.start_period) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+              // this.averageSaving = this.getAverageSaving(this.budgets);
+            }
+          }
         }
       }
     });
@@ -329,14 +338,6 @@ export class HomePage {
   openModalNew() {
     this.createEmptyBudget();
   }
-
-  // openAuthModal() {
-  //   let modal = this.modalCtrl.create(ModalAuthPage);
-  //   modal.onDidDismiss(data => {
-  //     // this.checkUserAuth();
-  //   });
-  //   modal.present();
-  // }
 
   goToEditPage(budget, budgetItems) {
     //push another page onto the history stack
