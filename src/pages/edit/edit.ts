@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
-
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
+
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
 import { BudgetService } from '../../services/budget.service';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AuthData } from '../../providers/auth-data';
 
 @Component({
   selector: 'page-edit',
   templateUrl: './edit.html'
 })
 export class EditPage {
-
-  _id: any;
+  allBudgets: FirebaseListObservable<any>;
+  currentUser: any;
   budget: Budget;
   item: BudgetItems;
   validationErrors: any;
@@ -24,10 +26,14 @@ export class EditPage {
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
               private navParams: NavParams,
-              private budgetService: BudgetService) {
-    this._id = navParams.get('_id');
+              private budgetService: BudgetService,
+              public authData: AuthData,
+              af: AngularFire) {
     this.budget = navParams.get('budget');
     this.item = navParams.get('budgetItem');
+
+    this.currentUser = this.authData.getUserInfo();
+    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
 
   showToast(message:string, position: string, color: string) {
@@ -43,18 +49,35 @@ export class EditPage {
 
   // save all edits
   saveAll() {
-    // passes budget_items array to saveAll function on budgetService
-    this.budgetService.updateBudgetById(this._id, this.budget)
-      .subscribe(data => {
-        this.goBack();
+    let chosenBudgetKey;
 
-        this.saveAllData = data;
-        this.showToast('Everything saved!', 'bottom', 'toaster-green');
-        console.log('Everything saved!');
-      }, err => {
-        this.handleError(err);
-        console.log(err);
-      });
+    chosenBudgetKey = this.budget.$key;
+
+    delete this.budget.$exists;
+    delete this.budget.$key;
+    this.budget.updatedAt = (new Date).toISOString();
+
+    this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
+      this.showToast('Everything saved!', 'bottom', 'toaster-green');
+      this.goBack();
+    }).catch((err) => {
+      this.handleError(err);
+      console.log(err);
+    });
+
+
+    // // passes budget_items array to saveAll function on budgetService
+    // this.budgetService.updateBudgetById(this._id, this.budget)
+    //   .subscribe(data => {
+    //     this.goBack();
+    //
+    //     this.saveAllData = data;
+    //     this.showToast('Everything saved!', 'bottom', 'toaster-green');
+    //     console.log('Everything saved!');
+    //   }, err => {
+    //     this.handleError(err);
+    //     console.log(err);
+    //   });
   }
 
   goBack() {
@@ -90,6 +113,7 @@ export class EditPage {
 
         for (let i = 0; i < data.length; i++) {
           if (data[i] === this.item.item) {
+            console.log('data item', data[i]);
             this.deleteBudgetItem(data[i]);
           } else {
             this.deleteActual(this.item, data[i]);
@@ -114,15 +138,23 @@ export class EditPage {
   deleteActual(budget, actual) {
     // loop through the actual array
     for (let i = 0; i < budget.actual.length; i++) {
+      console.log(budget.actual[i]);
+
+      console.log('actua', actual);
+
       // if a match to the actual passed in
       if (budget.actual[i].name + ' $' + budget.actual[i].amount === actual) {
+
+        console.log(true);
         // remove it
         budget.actual.splice(i, 1);
-      } else {
-        this.showToast('Sorry. That item does not exist.', 'bottom', 'toaster-red');
-        return;
+      }
+
+      if (budget.actual.length === 0) {
+        budget.actual.push(new ActualItems());
       }
     }
+    console.log(budget);
   }
 
   // delete specific budget item

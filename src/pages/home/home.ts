@@ -1,4 +1,4 @@
-import {Component, ViewChild, ChangeDetectorRef} from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 
 import {
   ModalController, NavController, PopoverController, AlertController, ToastController, Content, App
@@ -375,11 +375,10 @@ export class HomePage {
   //   modal.present();
   // }
 
-  goToEditPage(_id, budget, budgetItems) {
+  goToEditPage(budget, budgetItems) {
     //push another page onto the history stack
     //causing the nav controller to animate the new page in
     this.navCtrl.push(EditPage, {
-      _id: _id,
       budget: budget,
       budgetItem: budgetItems
     });
@@ -514,7 +513,7 @@ export class HomePage {
       }
     }
 
-    this.goToEditPage(this.selectedBudget._id, this.selectedBudget, item);
+    this.goToEditPage(this.selectedBudget, item);
   }
 
   // calculates total spent for entire budget
