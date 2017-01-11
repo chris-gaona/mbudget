@@ -24,7 +24,7 @@ import { AuthData } from '../providers/auth-data';
 // Import the AF2 Module
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
-import * as config from '../../config.json';
+import * as config from '../assets/config.json';
 
 // AF2 Settings
 export const firebaseConfig = {

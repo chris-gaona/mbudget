@@ -41,7 +41,12 @@ export class WelcomePage {
   createFirstBudget() {
     let newBudget = new Budget();
     console.log('new budget', newBudget);
-    newBudget.start_period = (new Date).toISOString();
+    this.convertDate(newBudget, newBudget.start_period);
+    // converts the date string from 2016-10-30 to 10/30/2016
+    let startDate = newBudget.start_period.split('-');
+    let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
+    let newDate = new Date(newDateString).toISOString();
+    newBudget.start_period = newDate;
     newBudget.existing_cash = 1;
     newBudget.current_income = 1;
 
@@ -52,23 +57,6 @@ export class WelcomePage {
     this.showToast('First budget created!', 'bottom', 'toaster-green');
 
     this.goBack();
-
-    // this.budgetService.addBudget(newBudget)
-    //   .subscribe(data => {
-    //     this.getAllBudgets();
-    //     this.selectedBudget = data;
-    //     this.visibleBudgets = true;
-    //     this.loading = false;
-    //
-    //     this.openModalEdit();
-    //
-    //     console.log('First Budget', this.budgets);
-    //
-    //     this.showToast('First budget created!', 'bottom', 'toaster-green');
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.log(err);
-    //   });
   }
 
   presentPopover(ev) {
@@ -87,5 +75,26 @@ export class WelcomePage {
 
   goBack() {
     this.navCtrl.pop();
+  }
+
+  // converts date string to 2016-10-29
+  convertDate(budget, date) {
+    date = new Date(date);
+    let dateString;
+
+    if ((date.getMonth() + 1) < 10 && date.getDate() < 10) {
+      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-0' + date.getDate();
+
+    } else if ((date.getMonth() + 1) < 10 && date.getDate() >= 10) {
+      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-' + date.getDate();
+
+    } else if ((date.getMonth() + 1) >= 10 && date.getDate() < 10) {
+      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-0' + date.getDate();
+
+    } else {
+      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+    // converts new date to proper string to be handled by date type input
+    return budget.start_period = dateString;
   }
 }

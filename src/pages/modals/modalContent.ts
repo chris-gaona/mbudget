@@ -52,7 +52,6 @@ export class ModalContentPage {
     this.editing = params.get('editing');
     this.selectedBudget = params.get('selectedBudget');
     this.budgets = params.get('budgets');
-    console.log(params.get('budgets'));
 
     this.currentUser = this.authData.getUserInfo();
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
@@ -155,6 +154,7 @@ export class ModalContentPage {
 
         this.showToast('Budget created!', 'bottom', 'toaster-green');
         console.log('Budget created!');
+
         this.removeModal();
       });
     } else {
@@ -211,6 +211,7 @@ export class ModalContentPage {
   }
 
   addUpdate(budget) {
+    console.log('start period', budget.start_period);
     this.convertStringToNumber();
 
     let chosenBudgetKey = budget.$key;

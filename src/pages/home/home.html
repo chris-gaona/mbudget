@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar id="header">
-    <ion-buttons start *ngIf="currentUser && networkService.wifiConnected">
+    <ion-buttons start *ngIf="currentUser">
       <button ion-button icon-only ion-text color="dark" (click)="presentPopover($event)">
         <ion-icon name="contact"></ion-icon>
       </button>
@@ -19,7 +19,7 @@
         </h2>
       </div>
     </ion-title>
-    <ion-buttons end *ngIf="budgets && currentUser && networkService.wifiConnected">
+    <ion-buttons end *ngIf="budgets && currentUser">
       <button ion-button icon-only ion-text color="dark" (click)="openModalEdit()">
         <ion-icon name="settings"></ion-icon>
       </button>
@@ -37,16 +37,16 @@
     <!--</ion-refresher-content>-->
   <!--</ion-refresher>-->
 
-  <div *ngIf="!networkService.wifiConnected" id="no-wifi" text-center>
-    <ion-icon name="cloud" color="dark"></ion-icon>
-    <p no-margin ion-text color="dark">Offline</p>
-  </div>
+  <!--<div *ngIf="!networkService.wifiConnected" id="no-wifi" text-center>-->
+    <!--<ion-icon name="cloud" color="dark"></ion-icon>-->
+    <!--<p no-margin ion-text color="dark">Offline</p>-->
+  <!--</div>-->
 
 
 
-  <div *ngIf="!budgets && networkService.wifiConnected && visibleBudgets" id="main-loader"></div>
+  <div *ngIf="!budgets && visibleBudgets" id="main-loader"></div>
 
-  <div padding *ngIf="budgets && networkService.wifiConnected && visibleBudgets" id="sub-container">
+  <div padding *ngIf="budgets && visibleBudgets" id="sub-container">
 
     <div>
       <ion-card no-margin margin-bottom class="full-width" id="ipad-screens-health-snapshot">

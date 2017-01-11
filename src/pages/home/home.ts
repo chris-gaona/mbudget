@@ -7,8 +7,6 @@ import {
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
-import { UserService } from '../../services/user.service';
-import { BudgetService } from '../../services/budget.service';
 import { Budget, BudgetItems } from '../../models/budget';
 import { NetworkService } from '../../services/network.service';
 import 'chart.js';
@@ -68,8 +66,6 @@ export class HomePage {
               public modalCtrl: ModalController,
               public alertCtrl: AlertController,
               public app: App,
-              private userService: UserService,
-              private budgetService: BudgetService,
               private networkService: NetworkService,
               private ref: ChangeDetectorRef,
               public authData: AuthData,
@@ -81,7 +77,6 @@ export class HomePage {
   }
 
   ngOnInit() {
-    // this.checkUserAuth();
 
   }
 
@@ -123,25 +118,6 @@ export class HomePage {
     toast.present(toast);
   }
 
-  // checkUserAuth () {
-  //   if (!this.userService.isLoggedIn()) {
-  //     this.openAuthModal();
-  //   } else {
-  //     this.loggedInUser();
-  //     this.getAllBudgets();
-  //   }
-  // }
-
-  // loggedInUser() {
-  //   this.userService.getUser()
-  //     .subscribe(data => {
-  //       this.currentUser = data;
-  //     }, err => {
-  //       this.handleError(err);
-  //       console.log(err);
-  //     });
-  // }
-
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
@@ -177,33 +153,6 @@ export class HomePage {
       }
       console.log('budgets', this.budgets);
     });
-
-    // // retrieves all budgets from budgetService
-    // this.budgetService.getAllBudgets()
-    //   .subscribe(data => {
-    //     console.log('data', data);
-    //     if (data.length === 0) {
-    //       this.budgets = null;
-    //       this.visibleBudgets = false;
-    //     } else {
-    //       this.budgets = data;
-    //       this.visibleBudgets = true;
-    //
-    //       if (editedBudget) {
-    //
-    //         for (let i = 0; i < this.budgets.length; i++) {
-    //           if (this.budgets[i]._id === editedBudget._id) {
-    //             this.selectedBudget = this.budgets[i];
-    //           }
-    //         }
-    //       } else {
-
-    //       }
-    //     }
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.log(err);
-    //   });
   }
 
   getAverageSaving(budgets) {
@@ -250,19 +199,33 @@ export class HomePage {
           let newIndex = 0;
 
           this.budgets.filter((item, i) => {
-            if (item._id === this.selectedBudget._id) {
+            if (item.start_period === this.selectedBudget.start_period) {
               this.budgets.splice(i, 1);
               newIndex = i - 1;
             }
           });
 
-          if (this.budgets.length > 0) {
-            updatedBudget = this.budgets[newIndex];
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (i === (this.budgets.length - 1)) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+              // this.averageSaving = this.getAverageSaving(this.budgets);
+            }
           }
         } else {
-          updatedBudget = data;
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (i === (this.budgets.length - 1)) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+              // this.averageSaving = this.getAverageSaving(this.budgets);
+            }
+          }
         }
-        this.getAllBudgets(updatedBudget);
+        // this.getAllBudgets(updatedBudget);
       }
     });
 
