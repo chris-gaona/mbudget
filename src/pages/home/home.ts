@@ -7,7 +7,7 @@ import {
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
-import { Budget, BudgetItems } from '../../models/budget';
+import {Budget, BudgetItems, ActualItems} from '../../models/budget';
 import { NetworkService } from '../../services/network.service';
 import 'chart.js';
 import { AuthData } from '../../providers/auth-data';
@@ -381,10 +381,12 @@ export class HomePage {
       if (budget[i] === budgetItem) {
         // remove it
         budget.splice(i, 1);
+
+        if (budget.length === 0) {
+          budget.push(new BudgetItems());
+        }
+
         this.saveAll();
-      } else {
-        this.showToast('Sorry. That item does not exist.', 'bottom', 'toaster-red');
-        return;
       }
     }
   }
@@ -421,6 +423,11 @@ export class HomePage {
       if (budget.actual[i] === actual) {
         // remove it
         budget.actual.splice(i, 1);
+
+        if (budget.actual.length === 0) {
+          budget.actual.push(new ActualItems());
+        }
+
         this.saveAll();
       }
     }

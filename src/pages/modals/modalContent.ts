@@ -222,10 +222,10 @@ export class ModalContentPage {
     budget.updatedAt = (new Date).toISOString();
 
     this.allBudgets.update(chosenBudgetKey, budget).then(() => {
-      this.dismiss(budget);
-
       this.showToast('Budget updated!', 'bottom', 'toaster-green');
     });
+
+    this.dismiss(budget);
   }
 
   deleteBudget(budget) {
@@ -237,9 +237,9 @@ export class ModalContentPage {
     this.allBudgets.remove(chosenBudgetKey).then(() => {
       console.log('Budget deleted');
       this.showToast('Budget deleted!', 'bottom', 'toaster-red');
-
-      this.dismiss();
     });
+
+    this.dismiss();
   }
 
   // todo: add tests for error handler

@@ -21,6 +21,11 @@ export class AuthData {
     });
   }
 
+  getConnectionState(): any {
+    var connectedRef = firebase.database().ref(".info/connected");
+    return connectedRef;
+  }
+
   getUserInfo(): any {
     return this.fireAuth;
   }
@@ -45,13 +50,13 @@ export class AuthData {
     return this.af.auth.createUser({ email: newEmail, password: newPassword });
   }
 
-  sendConfirmationEmail() {
+  sendConfirmationEmail(): any {
     firebase.auth().onAuthStateChanged(function(user) {
       user.sendEmailVerification();
     });
   }
 
-  updateProfile(displayName, photoURL) {
+  updateProfile(displayName, photoURL): any {
     this.user.push({
       user_since: (new Date()).getTime()
     });

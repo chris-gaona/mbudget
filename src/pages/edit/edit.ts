@@ -59,25 +59,12 @@ export class EditPage {
 
     this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
       this.showToast('Everything saved!', 'bottom', 'toaster-green');
-      this.goBack();
     }).catch((err) => {
       this.handleError(err);
       console.log(err);
     });
 
-
-    // // passes budget_items array to saveAll function on budgetService
-    // this.budgetService.updateBudgetById(this._id, this.budget)
-    //   .subscribe(data => {
-    //     this.goBack();
-    //
-    //     this.saveAllData = data;
-    //     this.showToast('Everything saved!', 'bottom', 'toaster-green');
-    //     console.log('Everything saved!');
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.log(err);
-    //   });
+    this.goBack();
   }
 
   goBack() {
