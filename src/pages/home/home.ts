@@ -16,6 +16,7 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
 import { LoginPage } from '../login/login';
 
+
 @Component({
   selector: 'page-home',
   templateUrl: './home.html'

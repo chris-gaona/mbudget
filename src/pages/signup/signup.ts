@@ -45,6 +45,18 @@ export class SignupPage {
     toast.present(toast);
   }
 
+  showEmailConfirmToast(message:string, position: string, color: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      position: position,
+      cssClass: color,
+      showCloseButton: true,
+      closeButtonText: 'Ok'
+    });
+
+    toast.present(toast);
+  }
+
   /**
    * Receives an input field and sets the corresponding fieldChanged property to 'true' to help with the styles.
    */
@@ -73,9 +85,13 @@ export class SignupPage {
       this.authData.signupUser(this.signupForm.value.email,
         this.signupForm.value.password).then(() => {
         this.authData.updateProfile(this.signupForm.value.name, '').then(() => {
+          this.authData.sendConfirmationEmail();
           this.navCtrl.setRoot(HomePage).then(() => {
             this.loading.dismiss();
             this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
+            setTimeout(() =>{
+              this.showEmailConfirmToast('We sent you an email to confirm your email.', 'middle', 'toaster-purple');
+            }, 2000);
           });
         });
 

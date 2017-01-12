@@ -5,6 +5,8 @@
         <ion-icon name="contact"></ion-icon>
       </button>
     </ion-buttons>
+    <span *ngIf="networkService.wifiConnected" ion-text color="green" id="online-status">Online</span>
+    <span *ngIf="!networkService.wifiConnected" ion-text color="light" id="online-status">Offline</span>
     <ion-title>
       <div id="ending-cash-container" *ngIf="selectedBudget" [class.visible-ending-cash]="!visibleTitle" no-margin no-padding>
         <span>Ending Cash</span>{{getTotalSpent(selectedBudget, 'actual').endingCash | currency:'USD':true}}

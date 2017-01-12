@@ -45,6 +45,12 @@ export class AuthData {
     return this.af.auth.createUser({ email: newEmail, password: newPassword });
   }
 
+  sendConfirmationEmail() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      user.sendEmailVerification();
+    });
+  }
+
   updateProfile(displayName, photoURL) {
     this.user.push({
       user_since: (new Date()).getTime()

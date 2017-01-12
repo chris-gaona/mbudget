@@ -236,7 +236,7 @@ export class ModalContentPage {
 
     this.allBudgets.remove(chosenBudgetKey).then(() => {
       console.log('Budget deleted');
-      this.showToast('Budget deleted!', 'bottom', 'toaster-green');
+      this.showToast('Budget deleted!', 'bottom', 'toaster-red');
 
       this.dismiss();
     });

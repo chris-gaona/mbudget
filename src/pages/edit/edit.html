@@ -58,7 +58,7 @@
         <ion-col width-50 no-padding>
           <ion-item no-padding>
             <!--<ion-icon name="information-circle" item-left class="no-margin"></ion-icon>-->
-            <ion-icon name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" item-left class="no-margin" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense" (click)="toggleAddSubtract(actual)"></ion-icon>
+            <ion-icon id="toggle-switch" name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" item-left class="no-margin" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense" (click)="toggleAddSubtract(actual)"></ion-icon>
             <ion-input text-capitalize type="text" [(ngModel)]="actual.name" class="no-padding"></ion-input>
           </ion-item>
         </ion-col>
