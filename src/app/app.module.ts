@@ -17,6 +17,7 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { WelcomePage } from '../pages/welcome/welcome';
+import { ProfilePage } from '../pages/profile/profile';
 
 // Importing Providers
 import { AuthData } from '../providers/auth-data';
@@ -25,6 +26,7 @@ import { AuthData } from '../providers/auth-data';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
 import * as config from '../assets/config.json';
+
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -51,7 +53,8 @@ const myFirebaseAuthConfig = {
     LoginPage,
     SignupPage,
     ResetPasswordPage,
-    WelcomePage
+    WelcomePage,
+    ProfilePage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -77,7 +80,8 @@ const myFirebaseAuthConfig = {
     LoginPage,
     SignupPage,
     ResetPasswordPage,
-    WelcomePage
+    WelcomePage,
+    ProfilePage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     UserService,

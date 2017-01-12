@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ViewController, NavParams } from 'ionic-angular';
+import { ViewController, NavParams, NavController } from 'ionic-angular';
 
-import { UserService } from '../../services/user.service';
 import { AuthData } from '../../providers/auth-data';
+import { ProfilePage } from '../profile/profile';
 
 @Component({
   template: `
@@ -18,7 +18,7 @@ import { AuthData } from '../../providers/auth-data';
         <p>Enjoy today!</p>
       </ion-item>
       <ion-item>
-        <button ion-button block padding-vertical (click)="closePopover('logout')">Logout</button>
+        <button ion-button block padding-vertical (click)="goToProfilePage()">Your Profile</button>
       </ion-item>
     </ion-list>
   `
@@ -28,14 +28,19 @@ export class PopoverPage {
   currentUser: any;
 
   constructor(params: NavParams,
+              public navCtrl: NavController,
               public viewCtrl: ViewController,
-              private userService: UserService,
               public authData: AuthData) {
     this.currentUser = params.get('userInfo');
   }
 
   // used to close the popover on command
-  closePopover(string: string) {
+  closePopover(string?: string) {
     this.viewCtrl.dismiss(string);
+  }
+
+  goToProfilePage() {
+    this.closePopover();
+    this.navCtrl.push(ProfilePage);
   }
 }
