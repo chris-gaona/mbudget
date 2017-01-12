@@ -100,6 +100,7 @@ export class EditPage {
 
         for (let i = 0; i < data.length; i++) {
           if (data[i] === this.item.item) {
+            console.log(this.item.item);
             console.log('data item', data[i]);
             this.deleteBudgetItem(data[i]);
           } else {
@@ -125,14 +126,10 @@ export class EditPage {
   deleteActual(budget, actual) {
     // loop through the actual array
     for (let i = 0; i < budget.actual.length; i++) {
-      console.log(budget.actual[i]);
-
-      console.log('actua', actual);
 
       // if a match to the actual passed in
       if (budget.actual[i].name + ' $' + budget.actual[i].amount === actual) {
 
-        console.log(true);
         // remove it
         budget.actual.splice(i, 1);
       }
@@ -141,21 +138,25 @@ export class EditPage {
         budget.actual.push(new ActualItems());
       }
     }
-    console.log(budget);
   }
 
   // delete specific budget item
   deleteBudgetItem(budgetItem) {
+    console.log('budget item', budgetItem);
     let budget = this.budget.budget_items;
     // loop through budget_items
     for (let i = 0; i < budget.length; i++) {
+      console.log(budget[i]);
       // if a match to the budget passed in
-      if (budget[i] === budgetItem) {
+      if (budget[i].item === budgetItem) {
         // remove it
         budget.splice(i, 1);
-      } else {
-        this.showToast('Sorry. That item does not exist.', 'bottom', 'toaster-red');
-        return;
+
+        if (budget.length === 0) {
+          budget.push(new BudgetItems());
+        }
+
+        this.saveAll();
       }
     }
   }

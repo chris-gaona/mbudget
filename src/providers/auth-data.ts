@@ -21,11 +21,6 @@ export class AuthData {
     });
   }
 
-  getConnectionState(): any {
-    var connectedRef = firebase.database().ref(".info/connected");
-    return connectedRef;
-  }
-
   getUserInfo(): any {
     return this.fireAuth;
   }
