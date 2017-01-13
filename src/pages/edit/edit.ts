@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
-import { BudgetService } from '../../services/budget.service';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 
@@ -26,7 +25,6 @@ export class EditPage {
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
               private navParams: NavParams,
-              private budgetService: BudgetService,
               public authData: AuthData,
               af: AngularFire) {
     this.budget = navParams.get('budget');

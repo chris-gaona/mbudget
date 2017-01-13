@@ -15,7 +15,7 @@ import { ViewController, NavParams } from 'ionic-angular';
         <p>Enjoy today!</p>
       </ion-item>
       <ion-item>
-        <button ion-button block padding-vertical color="lighter" margin-bottom>Change profile pic</button>
+        <button ion-button block padding-vertical color="lighter" margin-bottom><ion-icon name="image"></ion-icon> Change profile pic</button>
         <button ion-button block padding-vertical (click)="closePopover('logout')">Logout</button>
       </ion-item>
     </ion-list>
