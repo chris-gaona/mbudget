@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams, NavController } from 'ionic-angular';
 
 import { AuthData } from '../../providers/auth-data';
-import { ProfilePage } from '../profile/profile';
 
 @Component({
   template: `
-    <ion-list no-lines no-margin class="popover-item">
+    <ion-list no-lines no-margin class="popover-item" id="greeting">
       <ion-list-header>
         User Info
       </ion-list-header>
@@ -15,13 +14,37 @@ import { ProfilePage } from '../profile/profile';
           <img src="https://placeimg.com/100/100/animals">
         </ion-avatar>
         <h2>Hello, {{currentUser.displayName}}</h2>
-        <p>Enjoy today!</p>
+        <p id="member-since">Member since 1/11/16</p>
       </ion-item>
       <ion-item>
-        <button ion-button block padding-vertical (click)="goToProfilePage()">Your Profile</button>
+        <button ion-button block padding-vertical color="lighter" margin-bottom>Change profile pic</button>
+        <button ion-button block padding-vertical (click)="closePopover('logout')">Logout</button>
       </ion-item>
     </ion-list>
-  `
+  `,
+  styles: [`
+    ion-list-header {
+      color: #fff;
+      text-shadow: 1px 1px 1px #000;
+    }
+    #greeting {
+      background-image: url("https://placeimg.com/500/500/animals");
+      background-size: cover;
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 290px;
+    }
+    
+    img {
+      width: 80px !important;
+      height: 80px !important;
+    }
+    
+    #member-since {
+      font-size: 1.1rem;
+      margin-top: 5px;
+    }
+  `]
 })
 export class PopoverPage {
 
@@ -35,12 +58,7 @@ export class PopoverPage {
   }
 
   // used to close the popover on command
-  closePopover(string?: string) {
+  closePopover(string: string) {
     this.viewCtrl.dismiss(string);
-  }
-
-  goToProfilePage() {
-    this.closePopover();
-    this.navCtrl.push(ProfilePage);
   }
 }
