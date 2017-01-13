@@ -52,10 +52,6 @@ export class AuthData {
   }
 
   updateProfile(displayName, photoURL): any {
-    this.user.push({
-      user_since: (new Date()).getTime()
-    });
-
     return this.authState.auth.updateProfile({displayName: displayName, photoURL: null});
   }
 }

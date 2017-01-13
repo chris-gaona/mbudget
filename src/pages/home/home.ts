@@ -73,7 +73,6 @@ export class HomePage {
               af: AngularFire
   ) {
     this.currentUser = this.authData.getUserInfo();
-    this.user = af.database.list('/users/' + this.currentUser.uid + '/user-info');
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
 
