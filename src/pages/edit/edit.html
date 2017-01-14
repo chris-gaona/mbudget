@@ -14,32 +14,16 @@
       Let's do some edits!
     </p>
 
-    <ion-item class="paid">
+    <ion-item class="paid no-bottom-border">
       <ion-label>Mark this item fully paid?</ion-label>
       <ion-checkbox color="secondary" checked="false" [(ngModel)]="item.paid"></ion-checkbox>
     </ion-item>
 
-    <ion-card>
-      <ion-card-content>
-
-        <p>
-          Set a due date for this item.
-          <ion-item>
-            <!--<ion-label>No due date set</ion-label>-->
-            <ion-label>Due in <span id="due-date">7</span> days</ion-label>
-            <ion-toggle checked="true"></ion-toggle>
-          </ion-item>
-        </p>
-
-        <!--<p class="due-date" ion-text color="light">Is there a due date for this item?</p>-->
-        <!--<ion-item class="due-date-next">-->
-          <!--<ion-label>Due Date</ion-label>-->
-          <!--<ion-datetime displayFormat="MM/DD/YYYY" [(ngModel)]="dueDate"></ion-datetime>-->
-        <!--</ion-item>-->
-
-      </ion-card-content>
-
-    </ion-card>
+    <ion-item class="no-bottom-border">
+      <ion-label *ngIf="!item.due_date">No due date set</ion-label>
+      <ion-label *ngIf="item.due_date">{{parseDate(item.due_date)}}</ion-label>
+      <ion-toggle checked="true" [(ngModel)]="item.due" (ngModelChange)="presentPopover($event)"></ion-toggle>
+    </ion-item>
 
     <ion-list-header>
       Projection

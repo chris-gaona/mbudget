@@ -17,6 +17,8 @@ export class Budget {
 export class BudgetItems {
   _id: number;
   paid: boolean;
+  due: boolean;
+  due_date: any;
   editing: boolean = false;
   item: string = '';
   projection: number = 0;

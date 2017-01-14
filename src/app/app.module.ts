@@ -17,6 +17,7 @@ import { LoginPage } from '../pages/login/login';
 import { SignupPage } from '../pages/signup/signup';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { WelcomePage } from '../pages/welcome/welcome';
+import { PopoverDueDatePage } from '../pages/popovers/dueDate';
 
 // Importing Providers
 import { AuthData } from '../providers/auth-data';
@@ -52,7 +53,8 @@ const myFirebaseAuthConfig = {
     LoginPage,
     SignupPage,
     ResetPasswordPage,
-    WelcomePage
+    WelcomePage,
+    PopoverDueDatePage
   ],
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -78,7 +80,8 @@ const myFirebaseAuthConfig = {
     LoginPage,
     SignupPage,
     ResetPasswordPage,
-    WelcomePage
+    WelcomePage,
+    PopoverDueDatePage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
     UserService,

@@ -319,12 +319,16 @@ page-home {
     font-weight: bold;
   }
 
-  #paid-boolean {
+  .paid-boolean {
     position: relative;
     top: -2px;
     font-size: .9rem;
   }
 
+  .alarm-icon {
+    position: relative;
+    top: 1px;
+  }
 
 
 
