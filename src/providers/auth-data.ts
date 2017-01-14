@@ -26,7 +26,11 @@ export class AuthData {
   }
 
   getBudgets(): any {
-    return this.af.database.list('/users/' + this.getUserInfo().uid + '/budgets');
+    return this.af.database.list('/users/' + this.getUserInfo().uid + '/budgets', {
+      query: {
+        orderByChild: 'start_period',
+      }
+    });
   }
 
   loginUser(newEmail: string, newPassword: string): any {

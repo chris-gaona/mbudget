@@ -73,7 +73,11 @@ export class HomePage {
               af: AngularFire
   ) {
     this.currentUser = this.authData.getUserInfo();
-    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
+    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets', {
+      query: {
+        orderByChild: 'start_period',
+      }
+    });
   }
 
   ngOnInit() {
