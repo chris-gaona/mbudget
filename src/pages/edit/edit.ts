@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, ToastController, PopoverController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ToastController, PopoverController, Platform } from 'ionic-angular';
 
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
@@ -25,7 +25,10 @@ export class EditPage {
   saveAllData: Budget;
   errorMessage: any;
 
+  notification: any;
+
   constructor(public navCtrl: NavController,
+              public platform: Platform,
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
               private navParams: NavParams,
@@ -73,6 +76,9 @@ export class EditPage {
     this.budget.updatedAt = (new Date).toISOString();
 
     this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
+      if (this.item.due === true) {
+        this.addNotifications();
+      }
       this.showToast('Everything saved!', 'bottom', 'toaster-green');
     }).catch((err) => {
       this.handleError(err);
@@ -200,6 +206,30 @@ export class EditPage {
 
   parseDate(date: any) {
     return moment().to(date);
+  }
+
+  addNotifications() {
+    this.notification = {
+      id: this.item.due_date + ' ' + this.item.item,
+      title: 'Reminder from BudTrac!',
+      text: this.item.item + ' is due soon :)',
+      at: moment(this.item.due_date).subtract(1, 'days')
+    };
+
+    console.log("Notification to be scheduled: ", this.notification);
+
+    if (this.platform.is('cordova')) {
+
+      // Cancel any existing notifications
+      LocalNotifications.cancel(this.item.due_date + ' ' + this.item.item).then(() => {
+
+        // Schedule the new notifications
+        LocalNotifications.schedule(this.notification);
+
+      });
+
+    }
+
   }
 
   // todo: add unit test for error handler

@@ -9,6 +9,7 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 
+import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
 
 // First, you need to create the `numberMask` with your desired configurations
@@ -157,6 +158,8 @@ export class ModalContentPage {
         this.showToast('Budget created!', 'bottom', 'toaster-green');
         console.log('Budget created!');
 
+        LocalNotifications.cancelAll();
+
         this.removeModal();
       });
     } else {
@@ -167,6 +170,8 @@ export class ModalContentPage {
         this.reuseProjection = false;
 
         this.hasValidationErrors = false;
+
+        LocalNotifications.cancelAll();
 
         this.showToast('Budget created!', 'bottom', 'toaster-green');
         console.log('Budget created!');
