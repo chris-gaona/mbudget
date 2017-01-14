@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams } from 'ionic-angular';
 import { BudgetItems } from '../../models/budget';
 
+import { LocalNotifications } from 'ionic-native';
+import * as moment from 'moment';
+
 @Component({
   template: `
     <ion-list no-lines no-margin class="popover-item" id="greeting">
@@ -10,7 +13,7 @@ import { BudgetItems } from '../../models/budget';
       </ion-list-header>
       <ion-item>
         <ion-label>Due Date</ion-label>
-        <ion-datetime displayFormat="MMM DD YYYY" [min]="convertDate(0)" [max]="convertDate(30)" [(ngModel)]="myDate"></ion-datetime>
+        <ion-datetime displayFormat="MMM DD, YYYY hh:mm a" [min]="minDate()" [max]="maxDate()" [(ngModel)]="myDate"></ion-datetime>
       </ion-item>
     </ion-list>
   `,
@@ -20,7 +23,7 @@ import { BudgetItems } from '../../models/budget';
 })
 export class PopoverDueDatePage {
 
-  myDate: any = this.convertDate(0);
+  myDate: any = moment().format();
   budgetItem: BudgetItems;
 
   constructor(params: NavParams,
@@ -29,7 +32,7 @@ export class PopoverDueDatePage {
   }
 
   ionViewWillLeave() {
-    this.budgetItem.due_date = new Date(this.myDate).toISOString();
+    this.budgetItem.due_date = this.myDate;
   }
 
   // used to close the popover on command
@@ -41,28 +44,11 @@ export class PopoverDueDatePage {
     return new Date();
   }
 
-  // converts date string to 2016-10-29
-  convertDate(days) {
-    let date = new Date();
+  minDate() {
+    return moment().format();
+  }
 
-    date.setTime( date.getTime() + days * 86400000 );
-
-
-    let dateString;
-
-    if ((date.getMonth() + 1) < 10 && date.getDate() < 10) {
-      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-0' + date.getDate();
-
-    } else if ((date.getMonth() + 1) < 10 && date.getDate() >= 10) {
-      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-' + date.getDate();
-
-    } else if ((date.getMonth() + 1) >= 10 && date.getDate() < 10) {
-      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-0' + date.getDate();
-
-    } else {
-      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    }
-    // converts new date to proper string to be handled by date type input
-    return dateString;
+  maxDate() {
+    return moment().add(30, 'days').format();
   }
 }

@@ -177,7 +177,6 @@ export class HomePage {
   // creates empty budget
   createEmptyBudget() {
     let newBudget = new Budget();
-    this.convertDate(newBudget, newBudget.start_period);
     let previousBudget = this.obtainPreviousBudget('pre');
 
     newBudget.existing_cash = (previousBudget.existing_cash + previousBudget.current_income) - this.actualObject.totalSpent;
@@ -194,8 +193,6 @@ export class HomePage {
     });
 
     modal.onDidDismiss(data => {
-      let updatedBudget;
-
       if (data) {
         if (data.remove && data.remove === true) {
           let newIndex = 0;
@@ -232,27 +229,6 @@ export class HomePage {
     });
 
     modal.present();
-  }
-
-  // converts date string to 2016-10-29
-  convertDate(budget, date) {
-    date = new Date(date);
-    let dateString;
-
-    if ((date.getMonth() + 1) < 10 && date.getDate() < 10) {
-      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-0' + date.getDate();
-
-    } else if ((date.getMonth() + 1) < 10 && date.getDate() >= 10) {
-      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-' + date.getDate();
-
-    } else if ((date.getMonth() + 1) >= 10 && date.getDate() < 10) {
-      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-0' + date.getDate();
-
-    } else {
-      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    }
-    // converts new date to proper string to be handled by date type input
-    return budget.start_period = dateString;
   }
 
   // get the projection or budget items from last period
@@ -328,6 +304,15 @@ export class HomePage {
               this.selectedBudget = this.budgets[i];
               // this.averageSaving = this.getAverageSaving(this.budgets);
             }
+          }
+        }
+      } else {
+        // loop through each budget entry
+        for (let i = 0; i < this.budgets.length; i++) {
+          // find the latest created budget entry in the array
+          if (i === (this.budgets.length - 1)) {
+            // make that one the selected budget on load
+            this.selectedBudget = this.budgets[i];
           }
         }
       }

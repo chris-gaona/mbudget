@@ -9,6 +9,8 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 
+import * as moment from 'moment';
+
 // First, you need to create the `numberMask` with your desired configurations
 const numberMask = createNumberMask({
   allowDecimal: true
@@ -138,10 +140,10 @@ export class ModalContentPage {
   // connected through @Output decorator
   createBudget(budget) {
     // converts the date string from 2016-10-30 to 10/30/2016
-    let startDate = budget.start_period.split('-');
-    let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
-    let newDate = new Date(newDateString).toISOString();
-    budget.start_period = newDate;
+    // let startDate = budget.start_period.split('-');
+    // let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
+    // let newDate = new Date(newDateString).toISOString();
+
     this.convertStringToNumber();
 
     if (this.reuseProjection === false) {

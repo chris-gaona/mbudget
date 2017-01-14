@@ -1,10 +1,12 @@
+import * as moment from 'moment';
+
 export class Budget {
   $key: any;
   $exists: any;
   _id: number;
   updatedAt: any;
   createdAt: any;
-  start_period: any = new Date();
+  start_period: any = moment().format();;
   existing_cash: any = 0;
   current_income: any = 0;
   budget_items: any = [new BudgetItems()];

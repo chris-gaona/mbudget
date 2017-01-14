@@ -6,6 +6,8 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { PopoverPage } from '../popovers/userInfo';
 import { LoginPage } from '../login/login';
 
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'page-welcome',
@@ -40,13 +42,6 @@ export class WelcomePage {
   // creates empty budget
   createFirstBudget() {
     let newBudget = new Budget();
-    console.log('new budget', newBudget);
-    this.convertDate(newBudget, newBudget.start_period);
-    // converts the date string from 2016-10-30 to 10/30/2016
-    let startDate = newBudget.start_period.split('-');
-    let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
-    let newDate = new Date(newDateString).toISOString();
-    newBudget.start_period = newDate;
     newBudget.existing_cash = 1;
     newBudget.current_income = 1;
 

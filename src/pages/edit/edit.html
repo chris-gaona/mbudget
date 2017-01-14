@@ -21,7 +21,7 @@
 
     <ion-item class="no-bottom-border">
       <ion-label *ngIf="!item.due_date">No due date set</ion-label>
-      <ion-label *ngIf="item.due_date">{{parseDate(item.due_date)}}</ion-label>
+      <ion-label *ngIf="item.due_date">Due {{parseDate(item.due_date)}}</ion-label>
       <ion-toggle [(ngModel)]="item.due" (ngModelChange)="presentPopover($event)"></ion-toggle>
     </ion-item>
 
