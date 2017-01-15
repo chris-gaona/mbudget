@@ -209,11 +209,15 @@ export class EditPage {
   }
 
   addNotifications() {
+    let d = new Date(this.item.due_date);
+    d.setDate(d.getDate() - 1);
+
     this.notification = {
-      id: this.item.due_date + ' ' + this.item.item,
+      id: Date.parse(this.item.due_date),
       title: 'Reminder from BudTrac!',
       text: this.item.item + ' is due soon :)',
-      at: moment(this.item.due_date).subtract(1, 'days')
+      at: d,
+      every: 'year'
     };
 
     console.log("Notification to be scheduled: ", this.notification);
@@ -221,7 +225,7 @@ export class EditPage {
     if (this.platform.is('cordova')) {
 
       // Cancel any existing notifications
-      LocalNotifications.cancel(this.item.due_date + ' ' + this.item.item).then(() => {
+      LocalNotifications.cancel(Date.parse(this.item.due_date)).then(() => {
 
         // Schedule the new notifications
         LocalNotifications.schedule(this.notification);
