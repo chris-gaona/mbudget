@@ -29,10 +29,12 @@
       Projection
     </ion-list-header>
 
-    <ion-item no-padding class="projection-name">
-      <ion-icon name="information-circle" item-left class="no-margin" color="primary"></ion-icon>
-      <ion-input text-capitalize ion-text color="primary" type="text" [(ngModel)]="item.item" class="no-padding"></ion-input>
-    </ion-item>
+    <div class="form-group">
+      <ion-item no-padding class="projection-name">
+        <ion-icon name="information-circle" item-left class="no-margin" color="primary"></ion-icon>
+        <ion-input text-capitalize ion-text color="primary" type="text" [(ngModel)]="item.item" class="no-padding"></ion-input>
+      </ion-item>
+    </div>
 
     <ion-item padding-top id="edit-question">
       <p>How much do you expect to spend?</p>

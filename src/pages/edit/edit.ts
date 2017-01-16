@@ -6,8 +6,11 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 import { PopoverDueDatePage } from '../popovers/dueDate';
 
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
+
 
 @Component({
   selector: 'page-edit',
@@ -27,6 +30,8 @@ export class EditPage {
 
   notification: any;
 
+  control: any;
+
   constructor(public navCtrl: NavController,
               public platform: Platform,
               public alertCtrl: AlertController,
@@ -40,6 +45,12 @@ export class EditPage {
 
     this.currentUser = this.authData.getUserInfo();
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
+
+    // this.control = new FormControl('', [Validators.required]);
+  }
+
+  ngOnInit() {
+
   }
 
   showToast(message:string, position: string, color: string) {
@@ -67,12 +78,19 @@ export class EditPage {
 
   // save all edits
   saveAll() {
+    if(this.platform.is('cordova')) {
+      LocalNotifications.getAllTriggered().then((data) => {
+        console.log('data', data);
+      });
+    }
+
     let chosenBudgetKey;
 
     chosenBudgetKey = this.budget.$key;
 
     delete this.budget.$exists;
     delete this.budget.$key;
+
     this.budget.updatedAt = (new Date).toISOString();
 
     this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {

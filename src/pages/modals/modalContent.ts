@@ -9,8 +9,12 @@ import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 
+import { FormBuilder, Validators } from '@angular/forms';
+
 import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
+
+import { CurrencyValidator } from '../../validators/currency';
 
 // First, you need to create the `numberMask` with your desired configurations
 const numberMask = createNumberMask({
@@ -43,8 +47,15 @@ export class ModalContentPage {
 
   mask = numberMask;
 
+  budgetForm;
+  submitAttempt: boolean = false;
+  dateChanged: boolean = false;
+  existingChanged: boolean = false;
+  currentChanged: boolean = false;
+
   constructor(
     public platform: Platform,
+    public formBuilder: FormBuilder,
     public viewCtrl: ViewController,
     public params: NavParams,
     public toastCtrl: ToastController,
@@ -58,10 +69,38 @@ export class ModalContentPage {
 
     this.currentUser = this.authData.getUserInfo();
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
+
+    this.budgetForm = formBuilder.group({
+      date: ['', Validators.compose([Validators.required])],
+      existing: ['', Validators.compose([Validators.required, CurrencyValidator.isValid])],
+      current: ['', Validators.compose([Validators.required, CurrencyValidator.isValid])],
+      reuse: ['']
+    });
   }
 
   ngOnInit() {
     this.convertNumberToString();
+
+    this.budgetForm.controls['date'].setValue(this.selectedBudget.start_period, { onlySelf: true });
+    this.budgetForm.controls['existing'].setValue(this.existingCashString, { onlySelf: true });
+    this.budgetForm.controls['current'].setValue(this.currentIncomeString, { onlySelf: true });
+  }
+
+  checkWhichFunction() {
+    this.submitAttempt = true;
+
+    if (!this.budgetForm.valid) {
+      console.log(this.budgetForm.value);
+      // this.loading.dismiss();
+    } else {
+      console.log('current cash', this.budgetForm.value.current);
+
+      if (this.editing) {
+        this.addUpdate(this.selectedBudget);
+      } else {
+        this.createBudget(this.selectedBudget);
+      }
+    }
   }
 
   convertNumberToString() {
@@ -73,14 +112,10 @@ export class ModalContentPage {
     });
   }
 
-  convertStringToNumber() {
-    let existingCashSplit = this.existingCashString.split('$');
-    let existingCashString = existingCashSplit[1].replace(/,/g, '');
-    this.selectedBudget.existing_cash = +existingCashString;
-
-    let currentIncomeSplit = this.currentIncomeString.split('$');
+  convertStringToNumber(string) {
+    let currentIncomeSplit = string.split('$');
     let currentIncomeString = currentIncomeSplit[1].replace(/,/g, '');
-    this.selectedBudget.current_income = +currentIncomeString;
+    return +currentIncomeString;
   }
 
   showToast(message:string, position: string, color: string) {
@@ -137,15 +172,21 @@ export class ModalContentPage {
     this.removeModal({remove: true, chosenBudget: this.selectedBudget});
   }
 
+  checkFunctionToUse() {
+
+  }
+
+  elementChanged(input){
+    let field = input.inputControl.name;
+    this[field + "Changed"] = true;
+  }
+
   // connection function between header component & this component to create new budget
   // connected through @Output decorator
   createBudget(budget) {
-    // converts the date string from 2016-10-30 to 10/30/2016
-    // let startDate = budget.start_period.split('-');
-    // let newDateString = startDate[1] + '/' + startDate[2] + '/' + startDate[0];
-    // let newDate = new Date(newDateString).toISOString();
-
-    this.convertStringToNumber();
+    this.selectedBudget.start_period = this.budgetForm.value.date;
+    this.selectedBudget.existing_cash = this.convertStringToNumber(this.budgetForm.value.existing);
+    this.selectedBudget.current_income = this.convertStringToNumber(this.budgetForm.value.current);
 
     if (this.reuseProjection === false) {
       this.allBudgets.push(budget).then(() => {
@@ -218,8 +259,9 @@ export class ModalContentPage {
   }
 
   addUpdate(budget) {
-    console.log('start period', budget.start_period);
-    this.convertStringToNumber();
+    this.selectedBudget.start_period = this.budgetForm.value.date;
+    this.selectedBudget.existing_cash = this.convertStringToNumber(this.budgetForm.value.existing);
+    this.selectedBudget.current_income = this.convertStringToNumber(this.budgetForm.value.current);
 
     let chosenBudgetKey = budget.$key;
 

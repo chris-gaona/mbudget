@@ -37,6 +37,21 @@ modal-content {
     }
   }
 
+  .invalid {
+    border-bottom: 4px solid #FF6153;
+  }
+
+  .error-message {
+
+    p {
+      color: #FF6153;
+    }
+
+    .item-inner {
+      border-bottom: 0 !important;
+    }
+  }
+
 
   //Dog styles
   /*Thank you http://codepen.io/narendrashetty/pen/YwypNo for the awesome dog!!!*/
