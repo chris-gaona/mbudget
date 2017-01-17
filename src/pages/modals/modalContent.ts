@@ -47,7 +47,7 @@ export class ModalContentPage {
 
   mask = numberMask;
 
-  budgetForm;
+  budgetForm: any;
   submitAttempt: boolean = false;
   dateChanged: boolean = false;
   existingChanged: boolean = false;
@@ -170,10 +170,6 @@ export class ModalContentPage {
 
   setToPrevBudget() {
     this.removeModal({remove: true, chosenBudget: this.selectedBudget});
-  }
-
-  checkFunctionToUse() {
-
   }
 
   elementChanged(input){

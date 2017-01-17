@@ -46,7 +46,7 @@
 
     <ion-item padding-top class="no-bottom-border">
       <ion-buttons>
-        <button type="submit" ion-button block>Login</button>
+        <button type="submit" [disabled]="!loginForm.valid" ion-button block>Login</button>
         <!--<button type="submit" ion-button block [disabled]="loadingButton" [class.loading]="loadingButton" (click)="loadingButton = true">{{loadingButton ? 'Loading...' : 'Login'}}<span id="loading-spinner" *ngIf="loadingButton"></span></button>-->
       </ion-buttons>
     </ion-item>

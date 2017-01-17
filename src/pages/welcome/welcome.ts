@@ -42,8 +42,8 @@ export class WelcomePage {
   // creates empty budget
   createFirstBudget() {
     let newBudget = new Budget();
-    newBudget.existing_cash = 1;
-    newBudget.current_income = 1;
+    newBudget.existing_cash = 1.00;
+    newBudget.current_income = 1.00;
 
     this.budgets.push(newBudget);
     this.loading = false;

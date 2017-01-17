@@ -6,7 +6,8 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 import { PopoverDueDatePage } from '../popovers/dueDate';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
+import { CurrencyValidator } from '../../validators/currency';
 
 import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
@@ -30,9 +31,14 @@ export class EditPage {
 
   notification: any;
 
-  control: any;
+  editForm: FormGroup;
+  submitAttempt: boolean = false;
+  // dateChanged: boolean = false;
+  // existingChanged: boolean = false;
+  // currentChanged: boolean = false;
 
   constructor(public navCtrl: NavController,
+              private formBuilder: FormBuilder,
               public platform: Platform,
               public alertCtrl: AlertController,
               public toastCtrl: ToastController,
@@ -50,8 +56,51 @@ export class EditPage {
   }
 
   ngOnInit() {
+    // initialize form here
+    // we will initialize our form here
+    this.editForm = this.formBuilder.group({
+      itemName: [this.item.item, [Validators.required]],
+      projection: [this.item.projection, [Validators.required, CurrencyValidator.isValid]],
+      actuals: this.formBuilder.array([
+        this.initActual()
+      ])
+    });
 
+    this.populateActual();
   }
+
+  initActual() {
+    // initialize our address
+    return this.formBuilder.group({
+      name: [this.item.actual[0].name, [Validators.required]],
+      amount: [this.item.actual[0].amount, [Validators.required, CurrencyValidator.isValid]],
+      expense: [this.item.actual[0].expense, []]
+    });
+  }
+
+  populateActual() {
+    for (let i = 1; i < this.item.actual.length; i++) {
+      // add address to the list
+      const control = <FormArray>this.editForm.controls['actuals'];
+      control.push(this.formBuilder.group({
+        name: [this.item.actual[i].name, [Validators.required]],
+        amount: [this.item.actual[i].amount, [Validators.required, CurrencyValidator.isValid]],
+        expense: [this.item.actual[i].expense, []]
+      }));
+    }
+  }
+
+  // addActual() {
+  //   // add address to the list
+  //   const control = <FormArray>this.editForm.controls['actuals'];
+  //   control.push(this.initActual());
+  // }
+
+  // removeActual(i: number) {
+  //   // remove address from the list
+  //   const control = <FormArray>this.editForm.controls['actuals'];
+  //   control.removeAt(i);
+  // }
 
   showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
@@ -77,7 +126,9 @@ export class EditPage {
   }
 
   // save all edits
-  saveAll() {
+  saveAll(model?: ActualItems) {
+    console.log(model);
+
     if(this.platform.is('cordova')) {
       LocalNotifications.getAllTriggered().then((data) => {
         console.log('data', data);
@@ -91,6 +142,9 @@ export class EditPage {
     delete this.budget.$exists;
     delete this.budget.$key;
 
+    this.item.item = this.editForm.value.itemName;
+    this.item.projection = this.editForm.value.projection;
+    this.item.actual = this.editForm.value.actuals;
     this.budget.updatedAt = (new Date).toISOString();
 
     this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
@@ -158,6 +212,8 @@ export class EditPage {
     let newActualItem = new ActualItems();
     // add that item to the array
     actual.push(newActualItem);
+
+    this.ngOnInit();
   }
 
   // delete specific actual item
@@ -177,6 +233,8 @@ export class EditPage {
         budget.actual.push(new ActualItems());
       }
     }
+
+    this.ngOnInit();
   }
 
   // delete specific budget item

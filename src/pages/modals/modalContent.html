@@ -73,7 +73,7 @@
 
       <ion-item>
         <ion-buttons left>
-          <button ion-button type="submit">
+          <button ion-button type="submit" [disabled]="!budgetForm.valid">
             {{editing ? 'Update' : 'Create'}}
           </button>
           <button type="button" ion-button color="danger" icon-only margin-left *ngIf="editing" (click)="showConfirm()">
