@@ -34,8 +34,8 @@
       <div class="form-group">
 
         <!--display error message if name is not valid-->
-        <ion-item *ngIf="!editForm.controls.itemName.valid" color="danger">
-          Item name is required
+        <ion-item *ngIf="!editForm.controls.itemName.valid" class="no-bottom-border">
+          <span ion-text color="danger">Item name is required</span>
         </ion-item>
         <ion-item no-padding class="projection-name">
           <ion-icon name="information-circle" item-left class="no-margin" color="primary"></ion-icon>
@@ -55,12 +55,12 @@
         <!--</ion-item>-->
         <!--&lt;!&ndash;END&ndash;&gt;-->
 
-        <ion-item *ngIf="!editForm.controls.projection.valid" color="danger">
-          Add a projection using this format: $25.52
+        <ion-item *ngIf="!editForm.controls.projection.valid" class="no-bottom-border">
+          <span ion-text color="danger">Use this format: $25.52</span>
         </ion-item>
         <ion-item no-padding padding-bottom class="projection-amount">
-          <ion-icon name="logo-usd" item-left class="no-margin" color="primary"></ion-icon>
-          <ion-input formControlName="projection" no-margin id="projection-input" ion-text color="primary" type="number" class="no-padding"></ion-input>
+          <!--<ion-icon name="logo-usd" item-left class="no-margin" color="primary"></ion-icon>-->
+          <ion-input formControlName="projection" no-margin id="projection-input" ion-text color="primary" [textMask]="{mask: mask}" type="text" class="no-padding"></ion-input>
         </ion-item>
       </div>
 
@@ -82,24 +82,14 @@
             <ion-item no-padding [class.invalid]="!editForm.controls.actuals.controls[i].controls.name.valid">
               <!--<ion-icon name="information-circle" item-left class="no-margin"></ion-icon>-->
               <!--<ion-icon formControlName="expense" id="toggle-switch" name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" item-left class="no-margin" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense" (click)="toggleAddSubtract(actual)"></ion-icon>-->
-              <!--<div class="squaredThree">-->
-                <!--<input formControlName="expense" type="checkbox" value="None" id="squaredThree" name="check" checked />-->
-                <!--<label for="squaredThree"></label>-->
-              <!--</div>-->
               <ion-checkbox id="actual-checkbox" formControlName="expense" color="danger"></ion-checkbox>
               <ion-input formControlName="name" text-capitalize type="text" class="no-padding"></ion-input>
-              <!--<small [hidden]="editForm.controls.actuals.controls[i].controls.actualName.valid">-->
-                <!--Actual item name is required-->
-              <!--</small>-->
             </ion-item>
           </ion-col>
           <ion-col width-50 no-padding>
             <ion-item no-padding [class.invalid]="!editForm.controls.actuals.controls[i].controls.amount.valid">
               <ion-icon name="logo-usd" item-left class="no-margin"></ion-icon>
               <ion-input formControlName="amount" type="number" class="no-padding"></ion-input>
-              <!--<small [hidden]="editForm.controls.actuals.controls[i].controls.amount.valid">-->
-                <!--Add actual amount using this format: 25.52-->
-              <!--</small>-->
             </ion-item>
           </ion-col>
         </ion-row>

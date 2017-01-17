@@ -4,12 +4,12 @@ import { Platform, ViewController, NavParams, AlertController, ToastController }
 
 import { Budget, ActualItems } from '../../models/budget';
 
-import createNumberMask from 'text-mask-addons/dist/createNumberMask.js'
+import createNumberMask from 'text-mask-addons/dist/createNumberMask.js';
 
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
@@ -47,7 +47,7 @@ export class ModalContentPage {
 
   mask = numberMask;
 
-  budgetForm: any;
+  budgetForm: FormGroup;
   submitAttempt: boolean = false;
   dateChanged: boolean = false;
   existingChanged: boolean = false;
