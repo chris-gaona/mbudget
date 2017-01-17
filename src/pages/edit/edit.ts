@@ -67,6 +67,12 @@ export class EditPage {
     });
 
     this.populateActual();
+
+    this.editForm.valueChanges.subscribe(data => {
+      this.item.item = this.editForm.value.itemName;
+      this.item.projection = this.editForm.value.projection;
+      this.item.actual = this.editForm.value.actuals;
+    })
   }
 
   initActual() {
