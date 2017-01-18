@@ -16,6 +16,8 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
 import { LoginPage } from '../login/login';
 
+import { Network } from 'ionic-native';
+
 
 @Component({
   selector: 'page-home',
@@ -48,6 +50,7 @@ export class HomePage {
   visibleTitle: boolean = true;
   saveAllData: any;
   errorMessage: any;
+  connectionExists: boolean = true;
 
   private subscription: any;
 
@@ -81,7 +84,9 @@ export class HomePage {
   }
 
   ngOnInit() {
-
+    if (Network.type === 'none') {
+      this.connectionExists = false;
+    }
   }
 
   ngAfterViewInit() {
@@ -99,16 +104,6 @@ export class HomePage {
         this.ref.detectChanges();
       }
     });
-  }
-
-  doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
-    // this.getAllBudgets();
-
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      refresher.complete();
-    }, 2000);
   }
 
   showToast(message:string, position: string, color: string) {
@@ -440,19 +435,6 @@ export class HomePage {
       this.handleError(err);
       console.log(err);
     });
-
-    // // passes budget_items array to saveAll function on budgetService
-    // this.budgetService.updateBudgetById(this.selectedBudget._id, this.selectedBudget)
-    //   .subscribe(data => {
-    //     console.log('Everything saved!');
-    //     this.saveAllData = data;
-    //     if (string !== 'toggle') {
-    //       this.showToast('Everything saved!', 'bottom', 'toaster-green');
-    //     }
-    //   }, err => {
-    //     this.handleError(err);
-    //     console.log(err);
-    //   });
   }
 
   // add new budget item to budget_items array in specific budget
@@ -559,10 +541,6 @@ export class HomePage {
     // return the total calculated
     return this.totalActual;
   }
-
-  // toggleAddSubtract() {
-  //   this.saveAll('toggle');
-  // }
 
   parseDate(date: string) {
     // parses a string representation of a date, &

@@ -12,7 +12,6 @@ import { AuthData } from '../../providers/auth-data';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { LocalNotifications } from 'ionic-native';
-import * as moment from 'moment';
 
 import { CurrencyValidator } from '../../validators/currency';
 
@@ -180,6 +179,8 @@ export class ModalContentPage {
   // connection function between header component & this component to create new budget
   // connected through @Output decorator
   createBudget(budget) {
+    LocalNotifications.cancelAll();
+
     this.selectedBudget.start_period = this.budgetForm.value.date;
     this.selectedBudget.existing_cash = this.convertStringToNumber(this.budgetForm.value.existing);
     this.selectedBudget.current_income = this.convertStringToNumber(this.budgetForm.value.current);
@@ -284,7 +285,11 @@ export class ModalContentPage {
       this.showToast('Budget deleted!', 'bottom', 'toaster-red');
     });
 
-    this.dismiss();
+    if (this.budgets.length === 1) {
+      this.dismiss('no budgets');
+    } else {
+      this.dismiss();
+    }
   }
 
   // todo: add tests for error handler

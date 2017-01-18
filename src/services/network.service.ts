@@ -8,6 +8,7 @@ let networkAlert;
 export class NetworkService {
 
   wifiConnected: boolean = true;
+  connectionExists: boolean = true;
 
   constructor(public alertCtrl: AlertController) {
   }
@@ -31,6 +32,7 @@ export class NetworkService {
         }
       ]
     });
+
     networkAlert.present();
   }
 
