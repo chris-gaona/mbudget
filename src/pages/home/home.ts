@@ -153,6 +153,15 @@ export class HomePage {
         }
       }
       console.log('budgets', this.budgets);
+    }, (err) => {
+      console.log(err);
+      let errorMessage: string = err.message;
+      let alert = this.alertCtrl.create({
+        message: errorMessage,
+        buttons: [{ text: "Ok", role: 'cancel' } ]
+      });
+
+      alert.present();
     });
   }
 
@@ -264,7 +273,18 @@ export class HomePage {
   }
 
   logoutUser() {
-    this.authData.logoutUser();
+    this.authData.logoutUser().then(() => {
+      console.log('User logged out');
+    }, (err) => {
+      console.log(err);
+      let errorMessage: string = err.message;
+      let alert = this.alertCtrl.create({
+        message: errorMessage,
+        buttons: [{ text: "Ok", role: 'cancel' } ]
+      });
+
+      alert.present();
+    });
   }
 
   presentPopover(ev) {
@@ -431,9 +451,15 @@ export class HomePage {
       if (string !== 'toggle') {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
       }
-    }).catch((err) => {
-      this.handleError(err);
+    }, (err) => {
       console.log(err);
+      let errorMessage: string = err.message;
+      let alert = this.alertCtrl.create({
+        message: errorMessage,
+        buttons: [{ text: "Ok", role: 'cancel' } ]
+      });
+
+      alert.present();
     });
   }
 
@@ -594,22 +620,5 @@ export class HomePage {
       '-webkit-transform': transform,
       'font-size': this.radius / 3.5 + 'px'
     };
-  }
-
-
-  // todo: add unit test for error handler
-  private handleError(error: any) {
-    // else display the message to the user
-    this.errorMessage = error && error.statusText;
-
-    if (this.errorMessage) {
-      this.showToast('Uh oh! ' + this.errorMessage, 'bottom', 'toaster-red');
-    } else {
-      this.errorMessage = 'Please try again.';
-      this.showToast('Unexpected Error! ' + this.errorMessage, 'bottom', 'toaster-red');
-    }
-
-    // log the entire response to the console
-    console.error(error);
   }
 }

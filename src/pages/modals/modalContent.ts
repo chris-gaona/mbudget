@@ -90,10 +90,7 @@ export class ModalContentPage {
 
     if (!this.budgetForm.valid) {
       console.log(this.budgetForm.value);
-      // this.loading.dismiss();
     } else {
-      console.log('current cash', this.budgetForm.value.current);
-
       if (this.editing) {
         this.addUpdate(this.selectedBudget);
       } else {
@@ -199,6 +196,15 @@ export class ModalContentPage {
         LocalNotifications.cancelAll();
 
         this.removeModal();
+      }, (err) => {
+        console.log(err);
+        let errorMessage: string = err.message;
+        let alert = this.alertCtrl.create({
+          message: errorMessage,
+          buttons: [{ text: "Ok", role: 'cancel' } ]
+        });
+
+        alert.present();
       });
     } else {
       budget.budget_items = this.reuseProjections();
@@ -214,6 +220,15 @@ export class ModalContentPage {
         this.showToast('Budget created!', 'bottom', 'toaster-green');
         console.log('Budget created!');
         this.removeModal();
+      }, (err) => {
+        console.log(err);
+        let errorMessage: string = err.message;
+        let alert = this.alertCtrl.create({
+          message: errorMessage,
+          buttons: [{ text: "Ok", role: 'cancel' } ]
+        });
+
+        alert.present();
       });
     }
   }
@@ -269,6 +284,15 @@ export class ModalContentPage {
 
     this.allBudgets.update(chosenBudgetKey, budget).then(() => {
       this.showToast('Budget updated!', 'bottom', 'toaster-green');
+    }, (err) => {
+      console.log(err);
+      let errorMessage: string = err.message;
+      let alert = this.alertCtrl.create({
+        message: errorMessage,
+        buttons: [{ text: "Ok", role: 'cancel' } ]
+      });
+
+      alert.present();
     });
 
     this.dismiss(budget);
@@ -283,38 +307,21 @@ export class ModalContentPage {
     this.allBudgets.remove(chosenBudgetKey).then(() => {
       console.log('Budget deleted');
       this.showToast('Budget deleted!', 'bottom', 'toaster-red');
+    }, (err) => {
+      console.log(err);
+      let errorMessage: string = err.message;
+      let alert = this.alertCtrl.create({
+        message: errorMessage,
+        buttons: [{ text: "Ok", role: 'cancel' } ]
+      });
+
+      alert.present();
     });
 
     if (this.budgets.length === 1) {
       this.dismiss('no budgets');
     } else {
       this.dismiss();
-    }
-  }
-
-  // todo: add tests for error handler
-
-  private handleError(error: any) {
-    // if the error has status 400 meaning there are form issues
-    if (error.status === 400) {
-      // tell user to fix the form issues
-      this.showToast('Form Errors\nPlease see above.', 'bottom', 'toaster-red');
-      console.log('response', error);
-      this.hasValidationErrors = true;
-      this.validationErrors = error;
-    } else {
-      // else display the message to the user
-      let message = error && error.statusText;
-
-      if (message) {
-        this.showToast('Uh oh! ' + message, 'bottom', 'toaster-red');
-      } else {
-        message = 'Please try again.';
-        this.showToast('Unexpected Error! ' + message, 'bottom', 'toaster-red');
-      }
-
-      // log the entire response to the console
-      console.error(error);
     }
   }
 }

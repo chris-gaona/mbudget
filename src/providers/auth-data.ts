@@ -18,6 +18,10 @@ export class AuthData {
         console.log(user);
         this.user = af.database.list('/users/' + this.fireAuth.uid + '/user-info');
       }
+    }, (err) => {
+      console.log(err);
+      this.fireAuth = null;
+      this.user = null;
     });
   }
 

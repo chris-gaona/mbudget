@@ -93,11 +93,20 @@ export class SignupPage {
               this.showEmailConfirmToast('We sent you an email to confirm your email.', 'middle', 'toaster-purple');
             }, 2000);
           });
+        }, (err) => {
+          console.log(err);
+          let errorMessage: string = err.message;
+          let alert = this.alertCtrl.create({
+            message: errorMessage,
+            buttons: [{ text: "Ok", role: 'cancel' } ]
+          });
+
+          alert.present();
         });
 
       }, (error) => {
         this.loading.dismiss().then( () => {
-          var errorMessage: string = error.message;
+          let errorMessage: string = error.message;
           let alert = this.alertCtrl.create({
             message: errorMessage,
             buttons: [{ text: "Ok", role: 'cancel' } ]
