@@ -13,6 +13,14 @@ page-home {
     transition: all 0.3s linear;
   }
 
+  #title-other-container {
+    top: -3px;
+    position: relative;
+    left: 50%;
+    width: 145px;
+    margin-left: -70px;
+  }
+
   #ending-cash-container {
     top: 150px;
     position: relative;
@@ -217,7 +225,7 @@ page-home {
     top: 50%;
     height: 120px;
     width: 100%;
-    margin-top: -80px;
+    margin-top: -90px;
 
     ion-icon {
       font-size: 5em;

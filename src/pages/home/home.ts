@@ -16,7 +16,7 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
 import { LoginPage } from '../login/login';
 
-import { Network } from 'ionic-native';
+import * as moment from 'moment';
 
 
 @Component({
@@ -50,7 +50,8 @@ export class HomePage {
   visibleTitle: boolean = true;
   saveAllData: any;
   errorMessage: any;
-  connectionExists: boolean = true;
+  upcomingItems: boolean = false;
+  upcomingItemsArray: any = [];
 
   private subscription: any;
 
@@ -84,9 +85,7 @@ export class HomePage {
   }
 
   ngOnInit() {
-    if (Network.type === 'none') {
-      this.connectionExists = false;
-    }
+
   }
 
   ngAfterViewInit() {
@@ -117,11 +116,44 @@ export class HomePage {
     toast.present(toast);
   }
 
+  checkForDueDates(selectedBudget) {
+    this.upcomingItemsArray = [];
+
+    for (let i = 0; i < selectedBudget.budget_items.length; i++) {
+      if (selectedBudget.budget_items[i].due === true) {
+        this.upcomingItemsArray.push({name: selectedBudget.budget_items[i].item, dueDate: selectedBudget.budget_items[i].due_date});
+      }
+    }
+
+    if (this.upcomingItemsArray.length === 0) {
+      this.upcomingItems = false;
+    } else {
+      this.upcomingItems = true;
+      this.upcomingItemsArray.sort((a, b) => {
+        let firstDate: any = new Date(a.dueDate);
+        let secondDate: any = new Date(b.dueDate);
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return firstDate - secondDate;
+      });
+    }
+
+    console.log(this.upcomingItemsArray);
+  }
+
+  parseMomentDate(date: any) {
+    return moment().to(date);
+  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 
   getAllBudgets() {
+    if (this.networkService.isNoConnection()) {
+      return this.networkService.showNetworkAlert();
+    }
+
     this.subscription = this.authData.getBudgets().subscribe(data => {
       if (data.length === 0) {
         this.budgets = null;
@@ -152,6 +184,7 @@ export class HomePage {
           }
         }
       }
+      this.checkForDueDates(this.selectedBudget);
       console.log('budgets', this.budgets);
     }, (err) => {
       console.log(err);
@@ -273,18 +306,7 @@ export class HomePage {
   }
 
   logoutUser() {
-    this.authData.logoutUser().then(() => {
-      console.log('User logged out');
-    }, (err) => {
-      console.log(err);
-      let errorMessage: string = err.message;
-      let alert = this.alertCtrl.create({
-        message: errorMessage,
-        buttons: [{ text: "Ok", role: 'cancel' } ]
-      });
-
-      alert.present();
-    });
+    this.authData.logoutUser();
   }
 
   presentPopover(ev) {

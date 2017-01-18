@@ -8,7 +8,6 @@ let networkAlert;
 export class NetworkService {
 
   wifiConnected: boolean = true;
-  connectionExists: boolean = true;
 
   constructor(public alertCtrl: AlertController) {
   }
@@ -36,7 +35,16 @@ export class NetworkService {
     networkAlert.present();
   }
 
+  isNoConnection() {
+    return (Network.type === 'none');
+  }
+
   noConnection() {
+    if (this.isNoConnection()) {
+      this.showNetworkAlert();
+      this.wifiConnected = false;
+    }
+
     Network.onDisconnect().subscribe(() => {
       console.log('network was disconnected :-(');
       this.showNetworkAlert();

@@ -12,13 +12,6 @@ import { CurrencyValidator } from '../../validators/currency';
 import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
 
-import createNumberMask from 'text-mask-addons/dist/createNumberMask.js';
-
-// First, you need to create the `numberMask` with your desired configurations
-const numberMask = createNumberMask({
-  allowDecimal: true
-});
-
 
 @Component({
   selector: 'page-edit',
@@ -37,8 +30,6 @@ export class EditPage {
   errorMessage: any;
 
   projectionAmountString: string;
-
-  mask = numberMask;
 
   notification: any;
 
@@ -59,18 +50,14 @@ export class EditPage {
 
     this.currentUser = this.authData.getUserInfo();
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
-
-    // this.control = new FormControl('', [Validators.required]);
   }
 
   ngOnInit() {
-    this.convertNumberToString();
-
     // initialize form here
     // we will initialize our form here
     this.editForm = this.formBuilder.group({
       itemName: [this.item.item, [Validators.required]],
-      projection: [this.projectionAmountString, [Validators.required, CurrencyValidator.isValid]],
+      projection: [this.item.projection, [Validators.required, CurrencyValidator.isValid]],
       actuals: this.formBuilder.array([
         this.initActual()
       ])
@@ -104,19 +91,6 @@ export class EditPage {
         expense: [this.item.actual[i].expense, []]
       }));
     }
-  }
-
-  convertNumberToString() {
-    console.log(this.item.projection);
-    this.projectionAmountString = '$' + this.item.projection.toFixed(2).replace(/./g, function(c, i, a) {
-      return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
-    });
-  }
-
-  convertStringToNumber(string) {
-    let currentIncomeSplit = string.split('$');
-    let currentIncomeString = currentIncomeSplit[1].replace(/,/g, '');
-    return +currentIncomeString;
   }
 
   showToast(message:string, position: string, color: string) {
@@ -160,7 +134,7 @@ export class EditPage {
     delete this.budget.$key;
 
     this.item.item = this.editForm.value.itemName;
-    this.item.projection = this.convertStringToNumber(this.editForm.value.projection);
+    this.item.projection = this.editForm.value.projection;
     this.item.actual = this.editForm.value.actuals;
     this.budget.updatedAt = (new Date).toISOString();
 
