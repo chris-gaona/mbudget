@@ -233,19 +233,8 @@ export class ModalContentPage {
     }
   }
 
-  // reuse projections from last budget
-  // TODO: re-look into this...the following function is a wasted step!!
-  reuseProjections() {
-    let prevProjection;
-
-    // get the budget items
-    prevProjection = this.obtainPreviousBudget();
-
-    return prevProjection.budget_items;
-  }
-
   // get the projection or budget items from last period
-  obtainPreviousBudget() {
+  reuseProjections() {
     let budgetItems;
     let prevBudget;
 
@@ -271,7 +260,7 @@ export class ModalContentPage {
     }
 
     // return the new budget_items array to use in the new budget
-    return prevBudget;
+    return prevBudget.budget_items;
   }
 
   addUpdate(budget) {
