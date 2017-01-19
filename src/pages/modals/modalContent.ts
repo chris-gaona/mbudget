@@ -234,17 +234,18 @@ export class ModalContentPage {
   }
 
   // reuse projections from last budget
+  // TODO: re-look into this...the following function is a wasted step!!
   reuseProjections() {
     let prevProjection;
 
     // get the budget items
-    prevProjection = this.obtainPreviousBudget('post');
+    prevProjection = this.obtainPreviousBudget();
 
     return prevProjection.budget_items;
   }
 
   // get the projection or budget items from last period
-  obtainPreviousBudget(string) {
+  obtainPreviousBudget() {
     let budgetItems;
     let prevBudget;
 
@@ -262,6 +263,9 @@ export class ModalContentPage {
 
     // loop through to remove all the actual values
     for (let i = 0; i < prevBudget.budget_items.length; i++) {
+      prevBudget.budget_items[i].due = false;
+      prevBudget.budget_items[i].due_date = null;
+      prevBudget.budget_items[i].paid = false;
       prevBudget.budget_items[i].actual = [];
       prevBudget.budget_items[i].actual.push(new ActualItems());
     }

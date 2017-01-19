@@ -45,18 +45,6 @@ export class SignupPage {
     toast.present(toast);
   }
 
-  showEmailConfirmToast(message:string, position: string, color: string) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      position: position,
-      cssClass: color,
-      showCloseButton: true,
-      closeButtonText: 'Ok'
-    });
-
-    toast.present(toast);
-  }
-
   /**
    * Receives an input field and sets the corresponding fieldChanged property to 'true' to help with the styles.
    */
@@ -90,7 +78,12 @@ export class SignupPage {
             this.loading.dismiss();
             this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
             setTimeout(() =>{
-              this.showEmailConfirmToast('We sent you an email to confirm your email.', 'middle', 'toaster-purple');
+              let alert = this.alertCtrl.create({
+                message: 'We sent you an email to confirm your email.',
+                buttons: [{ text: 'Ok', role: 'cancel' }]
+              });
+
+              alert.present();
             }, 2000);
           });
         }, (err) => {
@@ -98,7 +91,7 @@ export class SignupPage {
           let errorMessage: string = err.message;
           let alert = this.alertCtrl.create({
             message: errorMessage,
-            buttons: [{ text: "Ok", role: 'cancel' } ]
+            buttons: [{ text: "Ok", role: 'cancel' }]
           });
 
           alert.present();

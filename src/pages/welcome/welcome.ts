@@ -71,25 +71,4 @@ export class WelcomePage {
   goBack() {
     this.navCtrl.pop();
   }
-
-  // converts date string to 2016-10-29
-  convertDate(budget, date) {
-    date = new Date(date);
-    let dateString;
-
-    if ((date.getMonth() + 1) < 10 && date.getDate() < 10) {
-      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-0' + date.getDate();
-
-    } else if ((date.getMonth() + 1) < 10 && date.getDate() >= 10) {
-      dateString = date.getFullYear() + '-0' + (date.getMonth() + 1) + '-' + date.getDate();
-
-    } else if ((date.getMonth() + 1) >= 10 && date.getDate() < 10) {
-      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-0' + date.getDate();
-
-    } else {
-      dateString = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-    }
-    // converts new date to proper string to be handled by date type input
-    return budget.start_period = dateString;
-  }
 }

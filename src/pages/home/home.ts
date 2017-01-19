@@ -43,7 +43,6 @@ export class HomePage {
   projectionObject: any = {};
   actualObject: any = {};
   edited: boolean = false;
-  validationErrors: any;
   hasValidationErrors: boolean = false;
   loading: boolean = false;
   projActual: string = 'actual';
@@ -168,9 +167,10 @@ export class HomePage {
 
     this.subscription = this.authData.getBudgets().subscribe(data => {
       if (data.length === 0) {
-        this.budgets = null;
         console.log('no budgets!');
+        this.budgets = null;
         this.visibleBudgets = false;
+        this.selectedBudget = null;
         this.navCtrl.push(WelcomePage);
       } else {
         this.budgets = data;
@@ -195,8 +195,9 @@ export class HomePage {
             }
           }
         }
+
+        this.checkForDueDates(this.selectedBudget);
       }
-      this.checkForDueDates(this.selectedBudget);
       console.log('budgets', this.budgets);
     }, (err) => {
       console.log(err);
@@ -346,8 +347,9 @@ export class HomePage {
     modal.onDidDismiss(data => {
       if (data) {
         if (data === 'no budgets') {
+          // don't really need this part of the if statement since it's handled in the getAllBudgets function above
           this.visibleBudgets = false;
-          // this.getAllBudgets();
+
         } else {
           // loop through each budget entry
           for (let i = 0; i < this.budgets.length; i++) {
