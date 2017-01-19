@@ -110,7 +110,7 @@
     <ion-list no-margin margin-top id="select-container">
       <ion-item>
         <ion-label class="select-field">Period</ion-label>
-        <ion-select [(ngModel)]="selectedBudget" class="select-field">
+        <ion-select [(ngModel)]="selectedBudget" (ionChange)="onSelectChange($event)" class="select-field">
           <ion-option *ngFor="let budget of budgets" [value]="budget">{{budget.start_period | date}}</ion-option>
         </ion-select>
       </ion-item>

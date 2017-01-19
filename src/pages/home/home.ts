@@ -156,6 +156,10 @@ export class HomePage {
     return moment().to(date);
   }
 
+  onSelectChange(event) {
+    this.checkForDueDates(this.selectedBudget);
+  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }

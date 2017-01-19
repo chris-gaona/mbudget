@@ -6,7 +6,7 @@ export class Budget {
   _id: number;
   updatedAt: any;
   createdAt: any;
-  start_period: any = moment().format();;
+  start_period: any = moment().format();
   existing_cash: any = 0;
   current_income: any = 0;
   budget_items: any = [new BudgetItems()];
