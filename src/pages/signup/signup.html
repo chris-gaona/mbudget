@@ -25,27 +25,27 @@
     <!--</ul>-->
     <!--</ion-item>-->
 
-    <ion-item padding-horizontal>
+    <ion-item padding-horizontal class="no-bottom-border">
       <ion-label floating>First Name</ion-label>
-      <ion-input #name formControlName="name" type="text" (change)="elementChanged(name)" [class.invalid]="!signupForm.controls.name.valid && (nameChanged || submitAttempt)"></ion-input>
+      <ion-input #name formControlName="name" type="text" (change)="elementChanged(name)" class="border-bottom" [class.invalid]="!signupForm.controls.name.valid && (nameChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!signupForm.controls.name.valid  && (nameChanged || submitAttempt)">
       <p>Please enter a name.</p>
     </ion-item>
 
-    <ion-item padding-horizontal>
+    <ion-item padding-horizontal class="no-bottom-border">
       <ion-label floating>Email</ion-label>
-      <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)" [class.invalid]="!signupForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
+      <ion-input #email formControlName="email" type="email" (change)="elementChanged(email)" class="border-bottom" [class.invalid]="!signupForm.controls.email.valid && (emailChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!signupForm.controls.email.valid  && (emailChanged || submitAttempt)">
       <p>Please enter a valid email.</p>
     </ion-item>
 
-    <ion-item padding-horizontal>
+    <ion-item padding-horizontal class="no-bottom-border">
       <ion-label floating>Password</ion-label>
-      <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)" [class.invalid]="!signupForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
+      <ion-input #password formControlName="password" type="password" (change)="elementChanged(password)" class="border-bottom" [class.invalid]="!signupForm.controls.password.valid && (passwordChanged || submitAttempt)"></ion-input>
     </ion-item>
 
     <ion-item class="error-message" *ngIf="!signupForm.controls.password.valid  && (passwordChanged || submitAttempt)">
@@ -54,7 +54,7 @@
 
     <ion-item padding-top class="no-bottom-border">
       <ion-buttons>
-        <button type="submit" [disabled]="!signupForm.valid" ion-button block>Create an Account</button>
+        <button type="submit" ion-button block>Create an Account</button>
         <!--<button type="submit" ion-button block [disabled]="loadingButton" [class.loading]="loadingButton" (click)="loadingButton = true">{{loadingButton ? 'Loading...' : 'Create an Account'}}<span id="loading-spinner" *ngIf="loadingButton"></span></button>-->
       </ion-buttons>
     </ion-item>

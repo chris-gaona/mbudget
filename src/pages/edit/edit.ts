@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, ToastController, PopoverController, Platform } from 'ionic-angular';
+import {
+  NavController, NavParams, AlertController, ToastController, PopoverController, Platform
+} from 'ionic-angular';
 
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
@@ -22,19 +24,16 @@ export class EditPage {
   currentUser: any;
   budget: Budget;
   item: BudgetItems;
-  validationErrors: any;
   hasValidationErrors: boolean = false;
   totalActual: number;
   loading: boolean = false;
   saveAllData: Budget;
   errorMessage: any;
 
-  projectionAmountString: string;
-
   notification: any;
 
   editForm: FormGroup;
-  // submitAttempt: boolean = false;
+  submitAttempt: boolean = false;
 
   constructor(public navCtrl: NavController,
               private formBuilder: FormBuilder,
@@ -86,7 +85,7 @@ export class EditPage {
       // add address to the list
       const control = <FormArray>this.editForm.controls['actuals'];
       control.push(this.formBuilder.group({
-        name: [this.item.actual[i].name, [Validators.required]],
+        name: [this.item.actual[i].name, []],
         amount: [this.item.actual[i].amount, [Validators.required, CurrencyValidator.isValid]],
         expense: [this.item.actual[i].expense, []]
       }));
@@ -118,6 +117,8 @@ export class EditPage {
 
   // save all edits
   saveAll(model?: ActualItems) {
+    this.submitAttempt = true;
+
     console.log(model);
 
     if(this.platform.is('cordova')) {
@@ -126,35 +127,42 @@ export class EditPage {
       });
     }
 
-    let chosenBudgetKey;
+    if (!this.editForm.valid){
+      console.log(this.editForm.value);
 
-    chosenBudgetKey = this.budget.$key;
+    } else {
 
-    delete this.budget.$exists;
-    delete this.budget.$key;
+      let chosenBudgetKey;
 
-    this.item.item = this.editForm.value.itemName;
-    this.item.projection = this.editForm.value.projection;
-    this.item.actual = this.editForm.value.actuals;
-    this.budget.updatedAt = (new Date).toISOString();
+      chosenBudgetKey = this.budget.$key;
 
-    this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
-      if (this.item.due === true) {
-        this.addNotifications();
-      }
-      this.showToast('Everything saved!', 'bottom', 'toaster-green');
-    }, (err) => {
-      console.log(err);
-      let errorMessage: string = err.message;
-      let alert = this.alertCtrl.create({
-        message: errorMessage,
-        buttons: [{ text: "Ok", role: 'cancel' } ]
+      delete this.budget.$exists;
+      delete this.budget.$key;
+
+      this.item.item = this.editForm.value.itemName;
+      this.item.projection = this.editForm.value.projection;
+      this.item.actual = this.editForm.value.actuals;
+      this.budget.updatedAt = (new Date).toISOString();
+
+      this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
+        if (this.item.due === true) {
+          this.addNotifications();
+        }
+
+        this.showToast('Everything saved!', 'bottom', 'toaster-green');
+      }, (err) => {
+        console.log(err);
+        let errorMessage: string = err.message;
+        let alert = this.alertCtrl.create({
+          message: errorMessage,
+          buttons: [{text: "Ok", role: 'cancel'}]
+        });
+
+        alert.present();
       });
 
-      alert.present();
-    });
-
-    this.goBack();
+      this.goBack();
+    }
   }
 
   goBack() {

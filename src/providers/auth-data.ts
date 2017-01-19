@@ -60,6 +60,10 @@ export class AuthData {
   }
 
   updateProfile(displayName, photoURL): any {
-    return this.authState.auth.updateProfile({displayName: displayName, photoURL: null});
+    if (photoURL === '') {
+      return this.authState.auth.updateProfile({displayName: displayName, photoURL: null});
+    } else {
+      return this.authState.auth.updateProfile({displayName: displayName, photoURL: photoURL});
+    }
   }
 }

@@ -105,6 +105,18 @@ export class HomePage {
     });
   }
 
+  doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
+    this.ngOnDestroy();
+
+    this.getAllBudgets();
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      refresher.complete();
+    }, 2000);
+  }
+
   showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
       message: message,

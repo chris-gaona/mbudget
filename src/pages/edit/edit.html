@@ -34,7 +34,7 @@
       <div class="form-group">
 
         <!--display error message if name is not valid-->
-        <ion-item *ngIf="!editForm.controls.itemName.valid" class="no-bottom-border">
+        <ion-item *ngIf="!editForm.controls.itemName.valid && (editForm.controls.itemName.dirty || submitAttempt)" class="no-bottom-border">
           <span ion-text color="danger">Item name is required</span>
         </ion-item>
         <ion-item no-padding class="projection-name">
@@ -55,12 +55,12 @@
         <!--</ion-item>-->
         <!--&lt;!&ndash;END&ndash;&gt;-->
 
-        <ion-item *ngIf="!editForm.controls.projection.valid" class="no-bottom-border">
+        <ion-item *ngIf="!editForm.controls.projection.valid && (editForm.controls.projection.dirty || submitAttempt)" class="no-bottom-border">
           <span ion-text color="danger">Use this format: $25.52</span>
         </ion-item>
         <ion-item no-padding padding-bottom class="projection-amount">
           <ion-icon name="logo-usd" item-left class="no-margin" color="primary"></ion-icon>
-          <ion-input formControlName="projection" no-margin id="projection-input" ion-text color="primary" type="text" class="no-padding"></ion-input>
+          <ion-input formControlName="projection" no-margin id="projection-input" ion-text color="primary" type="number" class="no-padding"></ion-input>
         </ion-item>
       </div>
 
@@ -100,7 +100,7 @@
           <button type="button" ion-button color="lighter" icon-only margin-left (click)="addActualItem(item.actual)">
             <ion-icon name="add"></ion-icon>
           </button>
-          <button type="submit" [disabled]="!editForm.valid" ion-button margin-left>
+          <button type="submit" ion-button margin-left>
             Save
             <span id="loading-spinner" *ngIf="loading"></span>
           </button>
