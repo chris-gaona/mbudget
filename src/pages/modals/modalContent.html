@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar id="header">
     <ion-title color="dark">
-      {{editing ? "Making some changes!" : "Let's track your pay!"}}
+      {{editing ? "Edit Current Period" : "Start New Period"}}
     </ion-title>
     <ion-buttons end>
 
@@ -22,7 +22,7 @@
   <p ion-text padding no-margin class="sub-text" *ngIf="editing">
     Please be careful while editing. I take no responsibility for your mistakes.
   </p>
-  <p ion-text padding no-margin class="sub-text" *ngIf="!editing">
+  <p ion-text padding no-margin class="sub-text-other" *ngIf="!editing">
     I've done my best to populate the following fields for you. Your welcome!
   </p>
 
@@ -68,13 +68,16 @@
 
       <ion-item *ngIf="!editing" id="checkbox">
         <ion-label>Use last period's projections?</ion-label>
-        <ion-checkbox checked="true" color="primary" #reuse formcontrolname="reuse"></ion-checkbox>
+        <ion-checkbox checked="true" color="purple" #reuse formcontrolname="reuse"></ion-checkbox>
       </ion-item>
 
       <ion-item>
         <ion-buttons left>
-          <button ion-button type="submit">
-            {{editing ? 'Update' : 'Create'}}
+          <button *ngIf="editing" ion-button type="submit">
+            Update
+          </button>
+          <button *ngIf="!editing" ion-button color="purple" type="submit">
+            Create
           </button>
           <button type="button" ion-button color="danger" icon-only margin-left *ngIf="editing" (click)="showConfirm()">
             <ion-icon name="trash"></ion-icon>

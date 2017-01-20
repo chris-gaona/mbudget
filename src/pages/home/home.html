@@ -33,8 +33,11 @@
       </div>
     </ion-title>
     <ion-buttons end *ngIf="budgets && currentUser">
+      <button ion-button icon-only color="dark" (click)="openModalNew()">
+        <ion-icon name="add"></ion-icon>
+      </button>
       <button ion-button icon-only ion-text color="dark" (click)="openModalEdit()">
-        <ion-icon name="settings"></ion-icon>
+        <ion-icon name="create"></ion-icon>
       </button>
     </ion-buttons>
   </ion-navbar>
@@ -90,8 +93,8 @@
       <hr id="health-hr">
 
       <ion-item id="saving-overview">
-        <ion-icon name="arrow-dropright-circle" color="primary" item-left></ion-icon>
-        <span ion-text text-center color="light">Saving Overview</span>
+        <!--<ion-icon name="arrow-dropright-circle" color="primary" item-left></ion-icon>-->
+        <p ion-text text-center color="light">Saving Overview</p>
         <!--<ion-badge item-right id="badge">See More</ion-badge>-->
       </ion-item>
 
@@ -205,12 +208,12 @@
         </ion-item-sliding>
       </ion-item-group>
 
-      <ion-buttons>
-        <button id="add-new-button" ion-button color="primary" icon-left round (click)="addBudgetItem()">
-          <ion-icon name="add"></ion-icon>
-          Add new item
-        </button>
-      </ion-buttons>
+      <!--<ion-buttons>-->
+        <!--<button id="add-new-button" ion-button color="primary" icon-left round (click)="addBudgetItem()">-->
+          <!--<ion-icon name="add"></ion-icon>-->
+          <!--Add new item-->
+        <!--</button>-->
+      <!--</ion-buttons>-->
 
     </ion-list>
 
@@ -252,7 +255,7 @@
 
   </div>
 
-    <ion-fab right bottom (click)="openModalNew()" *ngIf="budgets && networkService.wifiConnected">
+    <ion-fab right bottom (click)="addBudgetItem()" *ngIf="budgets && networkService.wifiConnected">
       <button ion-fab><ion-icon name="add"></ion-icon></button>
     </ion-fab>
 

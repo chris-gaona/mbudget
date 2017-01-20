@@ -130,7 +130,7 @@ export class EditPage {
     if (!this.editForm.valid){
       console.log(this.editForm.value);
 
-      this.showToast('Form validation(s)', 'bottom', 'toaster-red');
+      this.showToast('Form validation error(s)', 'bottom', 'toaster-red');
 
     } else {
 
