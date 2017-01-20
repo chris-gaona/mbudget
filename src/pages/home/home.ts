@@ -104,17 +104,17 @@ export class HomePage {
     });
   }
 
-  // doRefresh(refresher) {
-  //   console.log('Begin async operation', refresher);
-  //   this.ngOnDestroy();
-  //
-  //   this.getAllBudgets();
-  //
-  //   setTimeout(() => {
-  //     console.log('Async operation has ended');
-  //     refresher.complete();
-  //   }, 2000);
-  // }
+  doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
+
+    this.ngOnDestroy();
+
+    setTimeout(() => {
+      console.log('Async operation has ended');
+      refresher.complete();
+      this.getAllBudgets();
+    }, 2000);
+  }
 
   showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
@@ -164,7 +164,7 @@ export class HomePage {
     this.subscription.unsubscribe();
   }
 
-  getAllBudgets() {
+  getAllBudgets(refresh?) {
     if (this.networkService.isNoConnection()) {
       return this.networkService.showNetworkAlert();
     }
@@ -208,7 +208,7 @@ export class HomePage {
       let errorMessage: string = err.message;
       let alert = this.alertCtrl.create({
         message: errorMessage,
-        buttons: [{ text: "Ok", role: 'cancel' } ]
+        buttons: [{text: "Ok", role: 'cancel'}]
       });
 
       alert.present();
@@ -282,7 +282,7 @@ export class HomePage {
             }
           }
         }
-        // this.getAllBudgets(updatedBudget);
+        this.checkForDueDates(this.selectedBudget);
       }
     });
 
@@ -375,6 +375,9 @@ export class HomePage {
           }
         }
       }
+
+      this.checkForDueDates(this.selectedBudget);
+
     });
     modal.present();
   }

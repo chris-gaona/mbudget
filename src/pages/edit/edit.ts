@@ -130,6 +130,8 @@ export class EditPage {
     if (!this.editForm.valid){
       console.log(this.editForm.value);
 
+      this.showToast('Form validation(s)', 'bottom', 'toaster-red');
+
     } else {
 
       let chosenBudgetKey;
@@ -140,7 +142,12 @@ export class EditPage {
       delete this.budget.$key;
 
       this.item.item = this.editForm.value.itemName;
-      this.item.projection = this.editForm.value.projection;
+      this.item.projection = +this.editForm.value.projection;
+
+      for (let i = 0; i < this.editForm.value.actuals.length; i++) {
+        this.editForm.value.actuals[i].amount = +this.editForm.value.actuals[i].amount;
+      }
+
       this.item.actual = this.editForm.value.actuals;
       this.budget.updatedAt = (new Date).toISOString();
 

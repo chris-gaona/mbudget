@@ -255,6 +255,7 @@ export class ModalContentPage {
       prevBudget.budget_items[i].due = false;
       prevBudget.budget_items[i].due_date = null;
       prevBudget.budget_items[i].paid = false;
+      prevBudget.budget_items[i].projection = +prevBudget.budget_items[i].projection;
       prevBudget.budget_items[i].actual = [];
       prevBudget.budget_items[i].actual.push(new ActualItems());
     }
