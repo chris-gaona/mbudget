@@ -62,7 +62,7 @@
   <div padding *ngIf="budgets && visibleBudgets" id="sub-container">
 
     <ion-card no-margin margin-bottom class="full-width">
-      <ion-card-header><b>Upcoming Items</b></ion-card-header>
+      <ion-card-header><b>Upcoming Items</b><ion-badge id="upcoming-count" color="light">{{upcomingItemsArray.length}}</ion-badge></ion-card-header>
       <ion-card-content>
         <p *ngIf="!upcomingItems">None at this time.</p>
         <div *ngIf="upcomingItems">
@@ -92,7 +92,7 @@
       <ion-item id="saving-overview">
         <ion-icon name="arrow-dropright-circle" color="primary" item-left></ion-icon>
         <span ion-text text-center color="light">Saving Overview</span>
-        <ion-badge item-right id="badge">See More</ion-badge>
+        <!--<ion-badge item-right id="badge">See More</ion-badge>-->
       </ion-item>
 
       <div class="progress-wrapper">
