@@ -35,6 +35,8 @@ export class EditPage {
   editForm: FormGroup;
   submitAttempt: boolean = false;
 
+  formChanges: any;
+
   constructor(public navCtrl: NavController,
               private formBuilder: FormBuilder,
               public platform: Platform,
@@ -64,11 +66,15 @@ export class EditPage {
 
     this.populateActual();
 
-    this.editForm.valueChanges.subscribe(data => {
+    this.formChanges = this.editForm.valueChanges.subscribe(data => {
       this.item.item = this.editForm.value.itemName;
       this.item.projection = this.editForm.value.projection;
       this.item.actual = this.editForm.value.actuals;
     })
+  }
+
+  ngOnDestroy() {
+    this.formChanges.unsubscribe();
   }
 
   initActual() {

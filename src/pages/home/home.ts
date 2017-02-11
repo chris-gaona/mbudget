@@ -54,6 +54,8 @@ export class HomePage {
 
   private subscription: any;
 
+  checkingScroll: any;
+
 
   // progress bar variables
   max: number = 100;
@@ -87,13 +89,21 @@ export class HomePage {
 
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+
+    if (this.checkingScroll) {
+      this.checkingScroll.unsubscribe();
+    }
+  }
+
   ngAfterViewInit() {
     this.checkScroll();
     this.getAllBudgets();
   }
 
   checkScroll() {
-    this.content.ionScroll.subscribe(() => {
+    this.checkingScroll = this.content.ionScroll.subscribe(() => {
       if (this.content.scrollTop <= 50) {
         this.visibleTitle = true;
         this.ref.detectChanges();
@@ -109,10 +119,11 @@ export class HomePage {
 
     this.ngOnDestroy();
 
-    setTimeout(() => {
+    let timer = setTimeout(() => {
       console.log('Async operation has ended');
       refresher.complete();
       this.getAllBudgets();
+      clearTimeout(timer);
     }, 2000);
   }
 
@@ -158,10 +169,6 @@ export class HomePage {
 
   onSelectChange(event) {
     this.checkForDueDates(this.selectedBudget);
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   getAllBudgets(refresh?) {
