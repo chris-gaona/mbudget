@@ -44,11 +44,15 @@ export class ResetPasswordPage {
   resetPassword(){
     this.submitAttempt = true;
 
+    // if form is invalid log form value to console
     if (!this.resetPasswordForm.valid){
       console.log(this.resetPasswordForm.value);
+
     } else {
+      // else attempt to reset the password
       this.authData.resetPassword(this.resetPasswordForm.value.email)
         .then((user) => {
+          // on success display an alert to user
           let alert = this.alertCtrl.create({
             message: "We just sent you a reset link to your email",
             buttons: [{ text: "Ok", role: 'cancel',
@@ -59,6 +63,7 @@ export class ResetPasswordPage {
           });
           alert.present();
         }, (error) => {
+          // if error display error message to user via alert
           var errorMessage: string = error.message;
           let errorAlert = this.alertCtrl.create({
             message: errorMessage,

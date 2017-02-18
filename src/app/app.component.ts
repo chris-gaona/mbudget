@@ -15,9 +15,11 @@ import { AngularFire } from 'angularfire2';
 })
 export class MyApp {
   rootPage: any;
+  subscription: any;
 
   constructor(platform: Platform, private networkService: NetworkService, public af: AngularFire) {
-    af.auth.subscribe( user => {
+    // subscribe to check if current user is logged in... if so go to home page else go to login page
+    this.subscription = af.auth.subscribe( user => {
       if (user) {
         this.rootPage = HomePage;
       } else {
@@ -33,5 +35,9 @@ export class MyApp {
 
       networkService.noConnection();
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

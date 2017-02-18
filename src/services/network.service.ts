@@ -8,8 +8,20 @@ let networkAlert;
 export class NetworkService {
 
   wifiConnected: boolean = true;
+  onDisconnectSubscription: any;
+  onConnectSubscription: any;
 
   constructor(public alertCtrl: AlertController) {
+  }
+
+  ngOnDestroy() {
+    if (this.onConnectSubscription) {
+      this.onConnectSubscription.unsubscribe();
+    }
+
+    if (this.onDisconnectSubscription) {
+      this.onDisconnectSubscription.unsubscribe();
+    }
   }
 
   showNetworkAlert() {
@@ -45,13 +57,13 @@ export class NetworkService {
       this.wifiConnected = false;
     }
 
-    Network.onDisconnect().subscribe(() => {
+    this.onDisconnectSubscription = Network.onDisconnect().subscribe(() => {
       console.log('network was disconnected :-(');
       this.showNetworkAlert();
       this.wifiConnected = false;
     });
 
-    Network.onConnect().subscribe(() => {
+    this.onConnectSubscription = Network.onConnect().subscribe(() => {
       console.log('network connected :D');
       this.wifiConnected = true;
       networkAlert.dismiss();

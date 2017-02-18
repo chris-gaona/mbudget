@@ -20,6 +20,7 @@ import * as moment from 'moment';
   templateUrl: './edit.html'
 })
 export class EditPage {
+  // declare / initialize variables
   allBudgets: FirebaseListObservable<any>;
   currentUser: any;
   budget: Budget;
@@ -29,12 +30,11 @@ export class EditPage {
   loading: boolean = false;
   saveAllData: Budget;
   errorMessage: any;
-
   notification: any;
 
+  // form info
   editForm: FormGroup;
   submitAttempt: boolean = false;
-
   formChanges: any;
 
   constructor(public navCtrl: NavController,
@@ -46,24 +46,27 @@ export class EditPage {
               public popoverCtrl: PopoverController,
               public authData: AuthData,
               af: AngularFire) {
+    // get data from navParams sent from home component
     this.budget = navParams.get('budget');
     this.item = navParams.get('budgetItem');
 
+    // assign current user info to currentUser variable
     this.currentUser = this.authData.getUserInfo();
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
 
   ngOnInit() {
-    // initialize form here
-    // we will initialize our form here
+    // initialize form here...could also initialize in the constructor
     this.editForm = this.formBuilder.group({
       itemName: [this.item.item, [Validators.required]],
       projection: [this.item.projection, [Validators.required, CurrencyValidator.isValid]],
       actuals: this.formBuilder.array([
+        // calls function to initialize a form within a form for actuals
         this.initActual()
       ])
     });
 
+    // populates tha actual items into the form to be edited by user
     this.populateActual();
 
     this.formChanges = this.editForm.valueChanges.subscribe(data => {
@@ -77,8 +80,8 @@ export class EditPage {
     this.formChanges.unsubscribe();
   }
 
+  // initialize the form for actual items within editForm
   initActual() {
-    // initialize our address
     return this.formBuilder.group({
       name: [this.item.actual[0].name, []],
       amount: [this.item.actual[0].amount, [Validators.required, CurrencyValidator.isValid]],
@@ -86,6 +89,7 @@ export class EditPage {
     });
   }
 
+  // populate the actual form with the actual items for user to edit
   populateActual() {
     for (let i = 1; i < this.item.actual.length; i++) {
       // add address to the list
@@ -98,6 +102,7 @@ export class EditPage {
     }
   }
 
+  // creates toast message to inform user of changes
   showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
       message: message,
@@ -109,7 +114,9 @@ export class EditPage {
     toast.present(toast);
   }
 
+  // creates popover when user clicks that they want to create a due date for item
   presentPopover(ev) {
+    // if there is an item due
     if (this.item.due === true) {
       let popover = this.popoverCtrl.create(PopoverDueDatePage, {budgetItem: this.item});
 
@@ -125,46 +132,57 @@ export class EditPage {
   saveAll(model?: ActualItems) {
     this.submitAttempt = true;
 
-    console.log(model);
-
+    // if on cordova platform...log all notification items to console
     if(this.platform.is('cordova')) {
       LocalNotifications.getAllTriggered().then((data) => {
         console.log('data', data);
       });
     }
 
-    if (!this.editForm.valid){
+    // if the form is invalid simply log the form data to the console
+    if (!this.editForm.valid) {
       console.log(this.editForm.value);
-
+      // show toast for validation errors
       this.showToast('Form validation error(s)', 'bottom', 'toaster-red');
 
+      // else if form is valid
     } else {
 
       let chosenBudgetKey;
 
       chosenBudgetKey = this.budget.$key;
 
+      // delete the following key/values from budget object...if I don't firebase will scream with an error
       delete this.budget.$exists;
       delete this.budget.$key;
 
+      // assign values from form to item object
       this.item.item = this.editForm.value.itemName;
       this.item.projection = +this.editForm.value.projection;
 
+      // make sure each actual amount is coerced into a number value using + operator
       for (let i = 0; i < this.editForm.value.actuals.length; i++) {
         this.editForm.value.actuals[i].amount = +this.editForm.value.actuals[i].amount;
       }
 
+      // assign actual values to item object
       this.item.actual = this.editForm.value.actuals;
+      // add updatedAt to specific budget
       this.budget.updatedAt = (new Date).toISOString();
 
+      // update budget within all budgets to updated data
       this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
+        // add notification if a due date was created by user
         if (this.item.due === true) {
           this.addNotifications();
         }
 
+        // lastly, show the toast
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
+
       }, (err) => {
         console.log(err);
+        // if error display an alert to the user with the error message
         let errorMessage: string = err.message;
         let alert = this.alertCtrl.create({
           message: errorMessage,
@@ -174,28 +192,34 @@ export class EditPage {
         alert.present();
       });
 
+      // then go back to home component
       this.goBack();
     }
   }
 
+  // removes edit component to go back to home component
   goBack() {
     this.navCtrl.pop();
   }
 
+  // capitalize the first letter of each word
   capitalizeFirstLetter(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
   }
 
+  // display alert to delete some items
   showCheckbox() {
     let alert = this.alertCtrl.create();
     alert.setTitle('Which to delete?');
 
+    // adds main projection item to delete the whole thing
     alert.addInput({
       type: 'checkbox',
       label: this.capitalizeFirstLetter(this.item.item) + ' (MAIN)',
       value: this.item.item
     });
 
+    // loops through the actual items to display to delete
     for (let i = 0; i < this.item.actual.length; i++) {
       alert.addInput({
         type: 'checkbox',
@@ -231,6 +255,7 @@ export class EditPage {
     // add that item to the array
     actual.push(newActualItem);
 
+    // TODO: probably don't want to call ngOnInit() again
     this.ngOnInit();
   }
 
@@ -252,12 +277,12 @@ export class EditPage {
       }
     }
 
+    // TODO: probably don't want to call ngOnInit() again
     this.ngOnInit();
   }
 
   // delete specific budget item
   deleteBudgetItem(budgetItem) {
-    console.log('budget item', budgetItem);
     let budget = this.budget.budget_items;
     // loop through budget_items
     for (let i = 0; i < budget.length; i++) {
@@ -298,10 +323,12 @@ export class EditPage {
     actual.expense = !actual.expense;
   }
 
+  // parses data for due date
   parseDate(date: any) {
     return moment().to(date);
   }
 
+  // creates the notification based on the due date set
   addNotifications() {
     let d = new Date(this.item.due_date);
     d.setDate(d.getDate() - 1);
@@ -318,7 +345,7 @@ export class EditPage {
 
     if (this.platform.is('cordova')) {
 
-      // Cancel any existing notifications
+      // Cancel existing notification
       LocalNotifications.cancel(Date.parse(this.item.due_date)).then(() => {
 
         // Schedule the new notifications

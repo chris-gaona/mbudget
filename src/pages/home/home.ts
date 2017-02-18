@@ -52,7 +52,7 @@ export class HomePage {
   upcomingItems: boolean = false;
   upcomingItemsArray: any = [];
 
-  private subscription: any;
+  subscription: any;
 
   checkingScroll: any;
 
@@ -77,6 +77,7 @@ export class HomePage {
               public authData: AuthData,
               af: AngularFire
   ) {
+    // assign data to variables
     this.currentUser = this.authData.getUserInfo();
     this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets', {
       query: {
@@ -86,7 +87,8 @@ export class HomePage {
   }
 
   ngOnInit() {
-
+    this.checkScroll();
+    this.getAllBudgets();
   }
 
   ngOnDestroy() {
@@ -97,11 +99,7 @@ export class HomePage {
     }
   }
 
-  ngAfterViewInit() {
-    this.checkScroll();
-    this.getAllBudgets();
-  }
-
+  // check scroll to switch between logo image and ending cash amount
   checkScroll() {
     this.checkingScroll = this.content.ionScroll.subscribe(() => {
       if (this.content.scrollTop <= 50) {
@@ -114,19 +112,20 @@ export class HomePage {
     });
   }
 
+  // refresh the data on pull down
   doRefresh(refresher) {
     console.log('Begin async operation', refresher);
 
     this.ngOnDestroy();
 
-    let timer = setTimeout(() => {
+    setTimeout(() => {
       console.log('Async operation has ended');
       refresher.complete();
       this.getAllBudgets();
-      clearTimeout(timer);
     }, 2000);
   }
 
+  // creates toast to tell user of changes
   showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
       message: message,
@@ -138,19 +137,26 @@ export class HomePage {
     toast.present(toast);
   }
 
+  // check for due dates for current budget to display on the page
   checkForDueDates(selectedBudget) {
     this.upcomingItemsArray = [];
 
+    // loop through to get all the due dates
     for (let i = 0; i < selectedBudget.budget_items.length; i++) {
       if (selectedBudget.budget_items[i].due === true) {
         this.upcomingItemsArray.push({name: selectedBudget.budget_items[i].item, dueDate: selectedBudget.budget_items[i].due_date});
       }
     }
 
+    // if there are not due dates set upcomingItems to false
     if (this.upcomingItemsArray.length === 0) {
       this.upcomingItems = false;
+
+      // else if there are due dates
     } else {
       this.upcomingItems = true;
+
+      // sort due dates by dueDate
       this.upcomingItemsArray.sort((a, b) => {
         let firstDate: any = new Date(a.dueDate);
         let secondDate: any = new Date(b.dueDate);
@@ -159,34 +165,40 @@ export class HomePage {
         return firstDate - secondDate;
       });
     }
-
-    console.log(this.upcomingItemsArray);
   }
 
+  // parse date with moment.js
   parseMomentDate(date: any) {
     return moment().to(date);
   }
 
+  // when changing budget...check for due dates
   onSelectChange(event) {
     this.checkForDueDates(this.selectedBudget);
   }
 
-  getAllBudgets(refresh?) {
+  getAllBudgets() {
+    // show alert if no internet connection
     if (this.networkService.isNoConnection()) {
       return this.networkService.showNetworkAlert();
     }
 
+    // subscribe to get all budgets
     this.subscription = this.authData.getBudgets().subscribe(data => {
+      // if no budgets show user welcome page to create first budget
       if (data.length === 0) {
         console.log('no budgets!');
         this.budgets = null;
         this.visibleBudgets = false;
         this.selectedBudget = null;
         this.navCtrl.push(WelcomePage);
+
       } else {
+        // else assign data to budgets variable
         this.budgets = data;
         this.visibleBudgets = true;
 
+        // if specific budget assigned to selectedBudget variable then...assign that budget to selectedBudget
         if (this.selectedBudget) {
           // loop through each budget entry
           for (let i = 0; i < this.budgets.length; i++) {
@@ -196,6 +208,7 @@ export class HomePage {
               this.selectedBudget = this.budgets[i];
             }
           }
+
         } else {
           // loop through each budget entry
           for (let i = 0; i < this.budgets.length; i++) {
@@ -207,11 +220,13 @@ export class HomePage {
           }
         }
 
+        // lastly, check for any due dates
         this.checkForDueDates(this.selectedBudget);
       }
-      console.log('budgets', this.budgets);
+
     }, (err) => {
       console.log(err);
+      // alert error message to user if there is one
       let errorMessage: string = err.message;
       let alert = this.alertCtrl.create({
         message: errorMessage,
@@ -222,6 +237,7 @@ export class HomePage {
     });
   }
 
+  // calculate average saving amount for all budgets
   getAverageSaving(budgets) {
     // add up all period savings and divide by number of them
     let totalNumber = 0;
@@ -275,7 +291,6 @@ export class HomePage {
             if (i === (this.budgets.length - 1)) {
               // make that one the selected budget on load
               this.selectedBudget = this.budgets[i];
-              // this.averageSaving = this.getAverageSaving(this.budgets);
             }
           }
         } else {
@@ -285,7 +300,6 @@ export class HomePage {
             if (i === (this.budgets.length - 1)) {
               // make that one the selected budget on load
               this.selectedBudget = this.budgets[i];
-              // this.averageSaving = this.getAverageSaving(this.budgets);
             }
           }
         }
@@ -333,12 +347,13 @@ export class HomePage {
     this.authData.logoutUser();
   }
 
+  // add user popover
   presentPopover(ev) {
     let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
 
+    // if logout is clicked
     popover.onDidDismiss(data => {
       if (data === 'logout') {
-        this.ngOnDestroy();
         this.logoutUser();
         this.navCtrl.setRoot(LoginPage);
       }
@@ -368,7 +383,6 @@ export class HomePage {
             if (this.budgets[i].start_period === data.start_period) {
               // make that one the selected budget on load
               this.selectedBudget = this.budgets[i];
-              // this.averageSaving = this.getAverageSaving(this.budgets);
             }
           }
         }
@@ -402,6 +416,7 @@ export class HomePage {
     });
   }
 
+  // confirm to delete specific budget item
   showConfirm(budgetItem) {
     let confirm = this.alertCtrl.create({
       title: 'Are you sure?',
@@ -444,6 +459,7 @@ export class HomePage {
     }
   }
 
+  // confirm to delete specific actual item
   showConfirmation(budget, actual) {
     let confirm = this.alertCtrl.create({
       title: 'Are you sure?',
@@ -493,16 +509,22 @@ export class HomePage {
 
     chosenBudgetKey = this.selectedBudget.$key;
 
+    // delete key/value that causes firebase to error out
     delete this.selectedBudget.$exists;
     delete this.selectedBudget.$key;
+
+    // adds updatedAt value
     this.selectedBudget.updatedAt = (new Date).toISOString();
 
+    // update specific budget
     this.allBudgets.update(chosenBudgetKey, this.selectedBudget).then(() => {
+      // checks for 'toggle' string so toast is not showed every time user toggles between positive & negative
       if (string !== 'toggle') {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
       }
     }, (err) => {
       console.log(err);
+      // alert message to user
       let errorMessage: string = err.message;
       let alert = this.alertCtrl.create({
         message: errorMessage,
@@ -618,45 +640,7 @@ export class HomePage {
     return this.totalActual;
   }
 
-  parseDate(date: string) {
-    // parses a string representation of a date, &
-    // returns the number of milliseconds since
-    // January 1, 1970
-    let systemDate: any = new Date(Date.parse(date));
-    // gets today's date
-    let userDate: any = new Date();
-    // splits date string at space into array with
-    // each word
-    let dateToSplit: any = new Date(date).toDateString();
-    let splitDate: any = dateToSplit.split(' ');
-    // gets difference between twitter date & user date
-    // divide the value by 1000 to change milliseconds
-    // into seconds
-    let diff = Math.floor((userDate - systemDate) / 1000);
-
-    // adds text depending on how many seconds the diff is
-    // booleanValue is used to deterime to put text in
-    // timeline section or direct messages section
-    if (diff <= 1) { return 'just now'; }
-
-    if (diff <= 90) { return 'one minute ago'; }
-
-    if (diff <= 3540) { return Math.round(diff / 60) + ' minutes ago'; }
-
-    if (diff <= 5400) { return '1 hour ago'; }
-
-    if (diff <= 86400) { return Math.round(diff / 3600) + ' hours ago'; }
-
-    if (diff <= 129600) { return '1 day ago'; }
-
-    if (diff < 604800) { return Math.round(diff / 86400) + ' days ago'; }
-
-    if (diff <= 777600) { return '1 week ago'; }
-
-    // if none of the above return true show actual date
-    return splitDate[1] + ' ' + splitDate[2];
-  }
-
+  // used for saving percentage semi circle bar charts
   getOverlayStyle() {
     let isSemi = this.semicircle;
     let transform = (isSemi ? '' : 'translateY(-50%) ') + 'translateX(-50%)';

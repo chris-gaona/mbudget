@@ -25,6 +25,7 @@ export class SignupPage {
               public loadingCtrl: LoadingController,
               public alertCtrl: AlertController,
               public toastCtrl: ToastController) {
+    // initialize signupForm
     this.signupForm = formBuilder.group({
       name: ['', Validators.compose([Validators.required])],
       email: ['', Validators.compose([Validators.required,
@@ -34,6 +35,7 @@ export class SignupPage {
     });
   }
 
+  // create toast for user
   showToast(message:string, position: string, color: string) {
     let toast = this.toastCtrl.create({
       message: message,
@@ -66,17 +68,24 @@ export class SignupPage {
 
     this.loading.present();
 
+    // if form is invalid log form value to console
     if (!this.signupForm.valid){
       console.log(this.signupForm.value);
       this.loading.dismiss();
+
     } else {
+      // else attempt to signup the user
       this.authData.signupUser(this.signupForm.value.email,
         this.signupForm.value.password).then(() => {
+        // if signup success...update profile information passing in user's name
         this.authData.updateProfile(this.signupForm.value.name, '').then(() => {
+          // on success....send a confirmation email to user
           this.authData.sendConfirmationEmail();
+          // set homepage as root
           this.navCtrl.setRoot(HomePage).then(() => {
             this.loading.dismiss();
             this.showToast('Consider yourself registered!', 'bottom', 'toaster-green');
+            // add alert letting user know confirmation email was sent
             setTimeout(() =>{
               let alert = this.alertCtrl.create({
                 message: 'We sent you an email to confirm your email.',
@@ -88,6 +97,7 @@ export class SignupPage {
           });
         }, (err) => {
           console.log(err);
+          // if error alert the error message to user
           let errorMessage: string = err.message;
           let alert = this.alertCtrl.create({
             message: errorMessage,
@@ -98,6 +108,7 @@ export class SignupPage {
         });
 
       }, (error) => {
+        // if main error alert error message to user
         this.loading.dismiss().then( () => {
           let errorMessage: string = error.message;
           let alert = this.alertCtrl.create({

@@ -120,7 +120,7 @@
     </ion-list>
 
     <p no-margin margin-vertical margin-left class="small-text" ion-text color="light" *ngIf="selectedBudget.updatedAt">
-      Last Updated - {{parseDate(selectedBudget.updatedAt)}}
+      Last Updated - {{parseMomentDate(selectedBudget.updatedAt)}}
     </p>
 
     <ion-card no-margin margin-vertical class="full-width highlight-cards">
