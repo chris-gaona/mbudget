@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams, ActionSheetController, LoadingController } from 'ionic-angular';
 import { Camera, CameraOptions } from 'ionic-native';
 import { AuthData } from '../../providers/auth-data';
+import * as firebase from 'firebase';
 
 @Component({
   template: `
@@ -88,7 +89,7 @@ export class PopoverPage {
   currentUser: any;
   profilePictureRef: any;
 
-  constructor(params: NavParams,
+  constructor(public params: NavParams,
               public viewCtrl: ViewController,
               public actionSheetCtrl: ActionSheetController,
               public loadingCtrl: LoadingController,
