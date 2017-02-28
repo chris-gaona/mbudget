@@ -73,7 +73,7 @@ export class HomePage {
               public alertCtrl: AlertController,
               public app: App,
               private networkService: NetworkService,
-              private ref: ChangeDetectorRef,
+              // private ref: ChangeDetectorRef,
               public authData: AuthData,
               af: AngularFire
   ) {
@@ -87,29 +87,30 @@ export class HomePage {
   }
 
   ngOnInit() {
-    this.checkScroll();
+    // this.checkScroll();
     this.getAllBudgets();
   }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
 
-    if (this.checkingScroll) {
-      this.checkingScroll.unsubscribe();
-    }
+    // if (this.checkingScroll) {
+    //   this.checkingScroll.unsubscribe();
+    // }
   }
 
   // check scroll to switch between logo image and ending cash amount
   checkScroll() {
-    this.checkingScroll = this.content.ionScroll.subscribe(() => {
-      if (this.content.scrollTop <= 50) {
-        this.visibleTitle = true;
-        this.ref.detectChanges();
-      } else {
-        this.visibleTitle = false;
-        this.ref.detectChanges();
-      }
-    });
+    console.log('checking scroll');
+    // this.checkingScroll = this.content.ionScroll.subscribe(() => {
+    //   if (this.content.scrollTop <= 50) {
+    //     this.visibleTitle = true;
+    //     this.ref.detectChanges();
+    //   } else {
+    //     this.visibleTitle = false;
+    //     this.ref.detectChanges();
+    //   }
+    // });
   }
 
   // refresh the data on pull down
