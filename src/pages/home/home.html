@@ -7,21 +7,21 @@
     </ion-buttons>
     <span *ngIf="networkService.wifiConnected" ion-text color="green" id="online-status">Online</span>
     <span *ngIf="!networkService.wifiConnected" ion-text color="light" id="online-status">Offline</span>
-    <ion-title *ngIf="budgets">
-      <div id="ending-cash-container" *ngIf="selectedBudget" [class.visible-ending-cash]="!visibleTitle" no-margin no-padding>
-        <span>Ending Cash</span>{{getTotalSpent(selectedBudget, 'actual').endingCash | currency:'USD':true}}
-      </div>
-      <div id="title-container" [class.visible-title]="visibleTitle" no-margin no-padding>
-        <h2 ion-text color="dark" class="title" no-margin no-padding>
-          Bud
-        </h2>
-        <img src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo">
-        <h2 ion-text color="dark" class="title" no-margin no-padding>
-          Trac
-        </h2>
-      </div>
-    </ion-title>
-    <ion-title *ngIf="!budgets">
+    <!--<ion-title *ngIf="budgets">-->
+      <!--<div id="ending-cash-container" *ngIf="selectedBudget" [class.visible-ending-cash]="!visibleTitle" no-margin no-padding>-->
+        <!--<span>Ending Cash</span>{{getTotalSpent(selectedBudget, 'actual').endingCash | currency:'USD':true}}-->
+      <!--</div>-->
+      <!--<div id="title-container" [class.visible-title]="visibleTitle" no-margin no-padding>-->
+        <!--<h2 ion-text color="dark" class="title" no-margin no-padding>-->
+          <!--Bud-->
+        <!--</h2>-->
+        <!--<img src="https://s3.amazonaws.com/budtrac/budtrac-logo.png" alt="budtrac logo">-->
+        <!--<h2 ion-text color="dark" class="title" no-margin no-padding>-->
+          <!--Trac-->
+        <!--</h2>-->
+      <!--</div>-->
+    <!--</ion-title>-->
+    <ion-title>
       <div id="title-other-container" no-margin no-padding>
         <h2 ion-text color="dark" class="title" no-margin no-padding>
           Bud
@@ -255,7 +255,9 @@
 
   </div>
 
+
     <ion-fab right bottom (click)="addBudgetItem()" *ngIf="budgets && networkService.wifiConnected">
+      <span id="ending-cash-fixed">{{getTotalSpent(selectedBudget, 'actual').endingCash | currency:'USD':true}}</span>
       <button ion-fab><ion-icon name="add"></ion-icon></button>
     </ion-fab>
 
