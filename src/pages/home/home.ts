@@ -79,11 +79,11 @@ export class HomePage {
   ) {
     // assign data to variables
     this.currentUser = this.authData.getUserInfo();
-    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets', {
-      query: {
-        orderByChild: 'start_period',
-      }
-    });
+    // this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets', {
+    //   query: {
+    //     orderByChild: 'start_period',
+    //   }
+    // });
   }
 
   ngOnInit() {
@@ -93,24 +93,6 @@ export class HomePage {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-
-    // if (this.checkingScroll) {
-    //   this.checkingScroll.unsubscribe();
-    // }
-  }
-
-  // check scroll to switch between logo image and ending cash amount
-  checkScroll() {
-    console.log('checking scroll');
-    // this.checkingScroll = this.content.ionScroll.subscribe(() => {
-    //   if (this.content.scrollTop <= 50) {
-    //     this.visibleTitle = true;
-    //     this.ref.detectChanges();
-    //   } else {
-    //     this.visibleTitle = false;
-    //     this.ref.detectChanges();
-    //   }
-    // });
   }
 
   // refresh the data on pull down
@@ -510,15 +492,18 @@ export class HomePage {
 
     chosenBudgetKey = this.selectedBudget.$key;
 
+    console.log('chosen budget key', chosenBudgetKey);
+    console.log('selected budget', this.selectedBudget);
+
     // delete key/value that causes firebase to error out
-    delete this.selectedBudget.$exists;
-    delete this.selectedBudget.$key;
+    // delete this.selectedBudget.$exists;
+    // delete this.selectedBudget.$key;
 
     // adds updatedAt value
     this.selectedBudget.updatedAt = (new Date).toISOString();
 
     // update specific budget
-    this.allBudgets.update(chosenBudgetKey, this.selectedBudget).then(() => {
+    this.authData.getBudgets().update(chosenBudgetKey, this.selectedBudget).then(() => {
       // checks for 'toggle' string so toast is not showed every time user toggles between positive & negative
       if (string !== 'toggle') {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');

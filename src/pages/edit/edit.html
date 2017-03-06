@@ -25,7 +25,7 @@
       <ion-toggle [(ngModel)]="item.due" (ngModelChange)="presentPopover($event)"></ion-toggle>
     </ion-item>
 
-    <form [formGroup]="editForm" (submit)="saveAll(editForm)" novalidate>
+    <form [formGroup]="editForm" (ngSubmit)="saveAll(editForm)" novalidate>
 
       <ion-list-header>
         Projection

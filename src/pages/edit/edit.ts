@@ -52,7 +52,7 @@ export class EditPage {
 
     // assign current user info to currentUser variable
     this.currentUser = this.authData.getUserInfo();
-    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
+    // this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
 
   ngOnInit() {
@@ -148,13 +148,13 @@ export class EditPage {
       // else if form is valid
     } else {
 
-      let chosenBudgetKey;
+      let chosenBudgetKey: any;
 
       chosenBudgetKey = this.budget.$key;
 
       // delete the following key/values from budget object...if I don't firebase will scream with an error
-      delete this.budget.$exists;
-      delete this.budget.$key;
+      // delete this.budget.$exists;
+      // delete this.budget.$key;
 
       // assign values from form to item object
       this.item.item = this.editForm.value.itemName;
@@ -171,7 +171,7 @@ export class EditPage {
       this.budget.updatedAt = (new Date).toISOString();
 
       // update budget within all budgets to updated data
-      this.allBudgets.update(chosenBudgetKey, this.budget).then(() => {
+      this.authData.getBudgets().update(chosenBudgetKey, this.budget).then(() => {
         // add notification if a due date was created by user
         if (this.item.due === true) {
           this.addNotifications();

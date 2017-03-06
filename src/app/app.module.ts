@@ -7,7 +7,6 @@ import { PopoverPage } from '../pages/popovers/userInfo';
 import { ModalContentPage } from '../pages/modals/modalContent';
 import { NetworkService } from '../services/network.service';
 import { ChartsModule } from 'ng2-charts';
-import { RoundProgressModule } from 'angular-svg-round-progressbar/dist/round-progress';
 import { TextMaskModule } from 'angular2-text-mask';
 import { FormsModule } from '@angular/forms';
 import { LoginPage } from '../pages/login/login';
@@ -15,6 +14,7 @@ import { SignupPage } from '../pages/signup/signup';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { PopoverDueDatePage } from '../pages/popovers/dueDate';
+import {RoundProgressModule} from "angular-svg-round-progressbar";
 
 // Importing Providers
 import { AuthData } from '../providers/auth-data';
