@@ -45,13 +45,13 @@
 
 <ion-content id="main-container">
 
-  <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="arrow-dropdown"
-      pullingText="Pull to refresh"
-      refreshingText="Refreshing...">
-    </ion-refresher-content>
-  </ion-refresher>
+  <!--<ion-refresher (ionRefresh)="doRefresh($event)">-->
+    <!--<ion-refresher-content-->
+      <!--pullingIcon="arrow-dropdown"-->
+      <!--pullingText="Pull to refresh"-->
+      <!--refreshingText="Refreshing...">-->
+    <!--</ion-refresher-content>-->
+  <!--</ion-refresher>-->
 
   <div *ngIf="!networkService.wifiConnected && !budgets" id="no-wifi" text-center>
     <ion-icon name="cloud" color="dark"></ion-icon>

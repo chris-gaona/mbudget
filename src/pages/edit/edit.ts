@@ -181,7 +181,6 @@ export class EditPage {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
 
       }, (err) => {
-        console.log(err);
         // if error display an alert to the user with the error message
         let errorMessage: string = err.message;
         let alert = this.alertCtrl.create({

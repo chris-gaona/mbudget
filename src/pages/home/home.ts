@@ -27,7 +27,6 @@ export class HomePage {
 
   @ViewChild(Content) content: Content;
 
-  allBudgets: FirebaseListObservable<any>;
   budgets: Budget[];
   selectedBudget: Budget;
   currentUser: any;
@@ -53,8 +52,6 @@ export class HomePage {
   upcomingItemsArray: any = [];
 
   subscription: any;
-
-  checkingScroll: any;
 
 
   // progress bar variables
@@ -95,18 +92,18 @@ export class HomePage {
     this.subscription.unsubscribe();
   }
 
-  // refresh the data on pull down
-  doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
-
-    this.ngOnDestroy();
-
-    setTimeout(() => {
-      console.log('Async operation has ended');
-      refresher.complete();
-      this.getAllBudgets();
-    }, 2000);
-  }
+  // // refresh the data on pull down
+  // doRefresh(refresher) {
+  //   console.log('Begin async operation', refresher);
+  //
+  //   this.ngOnDestroy();
+  //
+  //   setTimeout(() => {
+  //     console.log('Async operation has ended');
+  //     refresher.complete();
+  //     this.getAllBudgets();
+  //   }, 2000);
+  // }
 
   // creates toast to tell user of changes
   showToast(message:string, position: string, color: string) {
@@ -170,7 +167,6 @@ export class HomePage {
     this.subscription = this.authData.getBudgets().subscribe(data => {
       // if no budgets show user welcome page to create first budget
       if (data.length === 0) {
-        console.log('no budgets!');
         this.budgets = null;
         this.visibleBudgets = false;
         this.selectedBudget = null;
@@ -208,7 +204,6 @@ export class HomePage {
       }
 
     }, (err) => {
-      console.log(err);
       // alert error message to user if there is one
       let errorMessage: string = err.message;
       let alert = this.alertCtrl.create({
@@ -408,13 +403,12 @@ export class HomePage {
         {
           text: 'Nope',
           handler: () => {
-            console.log('Nope clicked');
+
           }
         },
         {
           text: 'Yup',
           handler: () => {
-            console.log('Yup clicked');
             this.deleteBudgetItem(budgetItem);
           }
         }
@@ -451,13 +445,12 @@ export class HomePage {
         {
           text: 'Nope',
           handler: () => {
-            console.log('Nope clicked');
+
           }
         },
         {
           text: 'Yup',
           handler: () => {
-            console.log('Yup clicked');
             this.deleteActual(budget, actual);
           }
         }
@@ -483,7 +476,6 @@ export class HomePage {
         this.saveAll();
       }
     }
-    console.log(budget);
   }
 
   // save all edits
@@ -491,9 +483,6 @@ export class HomePage {
     let chosenBudgetKey;
 
     chosenBudgetKey = this.selectedBudget.$key;
-
-    console.log('chosen budget key', chosenBudgetKey);
-    console.log('selected budget', this.selectedBudget);
 
     // delete key/value that causes firebase to error out
     // delete this.selectedBudget.$exists;
@@ -509,7 +498,6 @@ export class HomePage {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
       }
     }, (err) => {
-      console.log(err);
       // alert message to user
       let errorMessage: string = err.message;
       let alert = this.alertCtrl.create({

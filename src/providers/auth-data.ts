@@ -9,6 +9,7 @@ export class AuthData {
   authState: FirebaseAuthState;
   user: any;
   subscription: any;
+  budgets: any;
 
   constructor(public af: AngularFire) {
     // subscribe to check for user authentication

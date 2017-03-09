@@ -24,7 +24,7 @@ export class WelcomePage {
               public popoverCtrl: PopoverController,
               public authData: AuthData,
               af: AngularFire) {
-    this.budgets = af.database.list('/users/' + this.authData.getUserInfo().uid + '/budgets');
+    // this.budgets = af.database.list('/users/' + this.authData.getUserInfo().uid + '/budgets');
     this.currentUser = this.authData.getUserInfo();
   }
 
@@ -45,10 +45,9 @@ export class WelcomePage {
     newBudget.existing_cash = 1.00;
     newBudget.current_income = 1.00;
 
-    this.budgets.push(newBudget);
+    this.authData.getBudgets().push(newBudget);
     this.loading = false;
 
-    console.log('First budget created!');
     this.showToast('First budget created!', 'bottom', 'toaster-green');
 
     this.goBack();
