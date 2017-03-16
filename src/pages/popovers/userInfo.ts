@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewController, NavParams, ActionSheetController, LoadingController } from 'ionic-angular';
-import { Camera, CameraOptions } from 'ionic-native';
+import { Camera } from 'ionic-native';
 import { AuthData } from '../../providers/auth-data';
 import * as firebase from 'firebase';
 

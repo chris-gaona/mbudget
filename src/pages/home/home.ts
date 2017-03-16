@@ -1,9 +1,7 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
-
+import { Component } from '@angular/core';
 import {
-  ModalController, NavController, PopoverController, AlertController, ToastController, Content, App
+  ModalController, NavController, PopoverController, AlertController, ToastController, App
 } from 'ionic-angular';
-
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
 import { EditPage } from '../edit/edit';
@@ -11,11 +9,8 @@ import {Budget, BudgetItems, ActualItems} from '../../models/budget';
 import { NetworkService } from '../../services/network.service';
 import 'chart.js';
 import { AuthData } from '../../providers/auth-data';
-
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { WelcomePage } from '../welcome/welcome';
 import { LoginPage } from '../login/login';
-
 import * as moment from 'moment';
 
 
@@ -24,8 +19,6 @@ import * as moment from 'moment';
   templateUrl: './home.html'
 })
 export class HomePage {
-
-  @ViewChild(Content) content: Content;
 
   budgets: Budget[];
   selectedBudget: Budget;
@@ -70,9 +63,7 @@ export class HomePage {
               public alertCtrl: AlertController,
               public app: App,
               private networkService: NetworkService,
-              // private ref: ChangeDetectorRef,
-              public authData: AuthData,
-              af: AngularFire
+              public authData: AuthData
   ) {
     // assign data to variables
     this.currentUser = this.authData.getUserInfo();

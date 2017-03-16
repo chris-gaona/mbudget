@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { ViewController, NavParams } from 'ionic-angular';
 import { BudgetItems } from '../../models/budget';
-
-import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
 
 @Component({

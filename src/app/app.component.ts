@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
-
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
-
 import { NetworkService } from '../services/network.service';
-
 import { AngularFire } from 'angularfire2';
 
 
@@ -15,15 +12,16 @@ import { AngularFire } from 'angularfire2';
 })
 export class MyApp {
   rootPage: any;
-  subscription: any;
 
   constructor(platform: Platform, private networkService: NetworkService, public af: AngularFire) {
     // subscribe to check if current user is logged in... if so go to home page else go to login page
-    this.subscription = af.auth.subscribe( user => {
+    const authListener = af.auth.subscribe( user => {
       if (user) {
         this.rootPage = HomePage;
+        authListener.unsubscribe();
       } else {
         this.rootPage = LoginPage;
+        authListener.unsubscribe();
       }
     });
 
@@ -35,9 +33,5 @@ export class MyApp {
 
       networkService.noConnection();
     });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

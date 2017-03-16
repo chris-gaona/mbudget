@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-
 import { AngularFire, FirebaseAuthState } from 'angularfire2';
+import * as firebase from 'firebase';
 
 @Injectable()
 export class AuthData {
@@ -14,16 +14,13 @@ export class AuthData {
   constructor(public af: AngularFire) {
     // subscribe to check for user authentication
     this.subscription = af.auth.subscribe( user => {
-      this.authState = user;
-
       // if user is authenticated assign data to fireAuth & user variables
       if (user) {
+        this.authState = user;
         this.fireAuth = user.auth;
-        console.log(user);
         this.user = af.database.list('/users/' + this.fireAuth.uid + '/user-info');
       }
     }, (err) => {
-      console.log(err);
       // else make sure variables are null
       this.fireAuth = null;
       this.user = null;
@@ -48,7 +45,7 @@ export class AuthData {
     });
   }
 
-  // attempt to login in a user
+  // login in a user
   loginUser(newEmail: string, newPassword: string): any {
     return this.af.auth.login({ email: newEmail, password: newPassword });
   }

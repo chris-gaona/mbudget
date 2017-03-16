@@ -6,8 +6,6 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { PopoverPage } from '../popovers/userInfo';
 import { LoginPage } from '../login/login';
 
-import * as moment from 'moment';
-
 
 @Component({
   selector: 'page-welcome',

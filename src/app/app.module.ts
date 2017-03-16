@@ -15,13 +15,10 @@ import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { WelcomePage } from '../pages/welcome/welcome';
 import { PopoverDueDatePage } from '../pages/popovers/dueDate';
 import {RoundProgressModule} from "angular-svg-round-progressbar";
-
 // Importing Providers
 import { AuthData } from '../providers/auth-data';
-
 // Import the AF2 Module
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
-
 import * as config from '../assets/config.json';
 
 
