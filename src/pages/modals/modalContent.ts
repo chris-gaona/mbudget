@@ -1,19 +1,12 @@
 import { Component } from '@angular/core';
-
 import { Platform, ViewController, NavParams, AlertController, ToastController } from 'ionic-angular';
-
 import { Budget, ActualItems } from '../../models/budget';
-
 import createNumberMask from 'text-mask-addons/dist/createNumberMask.js';
-
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
-
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-
 import { LocalNotifications } from 'ionic-native';
-
 import { CurrencyValidator } from '../../validators/currency';
+
 
 // create the `numberMask` with desired configurations
 const numberMask = createNumberMask({
@@ -27,17 +20,15 @@ const numberMask = createNumberMask({
 })
 
 export class ModalContentPage {
-  allBudgets: FirebaseListObservable<any>;
   currentUser: any;
   selectedBudget: Budget;
   budgets: Budget[];
   reuseProjectionsBudget: Budget;
-  editing: boolean;
   reuseProjection: boolean = true;
+  editing: boolean;
   totalSpent: number;
   totals: any;
   mergeTotals: number;
-  validationErrors: any;
   hasValidationErrors: boolean = false;
   loading: boolean = false;
 
@@ -59,8 +50,7 @@ export class ModalContentPage {
     public params: NavParams,
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
-    public authData: AuthData,
-    af: AngularFire
+    public authData: AuthData
   ) {
     // assign data sent from home component
     this.editing = params.get('editing');
@@ -68,25 +58,31 @@ export class ModalContentPage {
     this.budgets = params.get('budgets');
 
     this.currentUser = this.authData.getUserInfo();
-    this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
+    // this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
 
     // initialize budgetForm
     this.budgetForm = formBuilder.group({
       date: ['', Validators.compose([Validators.required])],
       existing: ['', Validators.compose([Validators.required, CurrencyValidator.isValid])],
-      current: ['', Validators.compose([Validators.required, CurrencyValidator.isValid])],
-      reuse: ['']
+      current: ['', Validators.compose([Validators.required, CurrencyValidator.isValid])]
     });
   }
 
   ngOnInit() {
-    // calls this function on init to make sure errors aren't thrown with currency masking
+    console.log('budgets', this.budgets);
+    console.log('selectedBudget', this.selectedBudget);
+    console.log('editing boolean', this.editing);
+  }
+
+  ngAfterViewInit() {
     this.convertNumberToString();
 
     // set budget data to form
-    this.budgetForm.controls['date'].setValue(this.selectedBudget.start_period, { onlySelf: true });
-    this.budgetForm.controls['existing'].setValue(this.existingCashString, { onlySelf: true });
-    this.budgetForm.controls['current'].setValue(this.currentIncomeString, { onlySelf: true });
+    this.budgetForm.controls['date'].setValue(this.selectedBudget.start_period);
+    this.budgetForm.controls['existing'].setValue(this.existingCashString);
+    this.budgetForm.controls['current'].setValue(this.currentIncomeString);
+
+    console.log('check out the budget form', this.budgetForm.value);
   }
 
   // check for which function to use
@@ -97,9 +93,9 @@ export class ModalContentPage {
       console.log(this.budgetForm.value);
     } else {
       if (this.editing) {
-        this.addUpdate(this.selectedBudget);
+        this.addUpdate();
       } else {
-        this.createBudget(this.selectedBudget);
+        this.createBudget();
       }
     }
   }
@@ -175,10 +171,9 @@ export class ModalContentPage {
     confirm.present();
   }
 
-  // set selected budget to selected budget when sent back to home component...otherwise most recent created budget
-  // will be the selected budget
   setToPrevBudget() {
-    this.removeModal({remove: true, chosenBudget: this.selectedBudget});
+    // this.removeModal({remove: true, chosenBudget: this.selectedBudget});
+    this.removeModal();
   }
 
   /**
@@ -189,9 +184,14 @@ export class ModalContentPage {
     this[field + "Changed"] = true;
   }
 
+  checkboxChanged(event) {
+    this.reuseProjection = !this.reuseProjection;
+    console.log('reuse projection', this.reuseProjection);
+  }
+
   // connection function between header component & this component to create new budget
   // connected through @Output decorator
-  createBudget(budget) {
+  createBudget() {
     // cancel all previous budgets when creating new budget
     LocalNotifications.cancelAll();
 
@@ -199,12 +199,12 @@ export class ModalContentPage {
     this.selectedBudget.existing_cash = this.convertStringToNumber(this.budgetForm.value.existing);
     this.selectedBudget.current_income = this.convertStringToNumber(this.budgetForm.value.current);
 
-    // newly created budget without reusing last period's projections
-    if (this.reuseProjection === false) {
-      // push newly created budget to firebase
-      this.allBudgets.push(budget).then(() => {
+    console.log('budget to create', this.selectedBudget);
 
-        this.reuseProjection = false;
+    // newly created budget without reusing last period's projections
+    if (!this.reuseProjection) {
+      // push newly created budget to firebase
+        this.authData.getBudgets().push(this.selectedBudget).then(() => {
 
         this.hasValidationErrors = false;
 
@@ -225,11 +225,9 @@ export class ModalContentPage {
 
     } else {
       // newly created budget while reusing last period's projections
-      budget.budget_items = this.reuseProjections();
+      this.selectedBudget.budget_items = this.reuseProjections();
 
-      this.allBudgets.push(budget).then(() => {
-
-        this.reuseProjection = false;
+      this.authData.getBudgets().push(this.selectedBudget).then(() => {
 
         this.hasValidationErrors = false;
 
@@ -282,21 +280,17 @@ export class ModalContentPage {
   }
 
   // edit existing budget
-  addUpdate(budget) {
+  addUpdate() {
     this.selectedBudget.start_period = this.budgetForm.value.date;
     this.selectedBudget.existing_cash = this.convertStringToNumber(this.budgetForm.value.existing);
     this.selectedBudget.current_income = this.convertStringToNumber(this.budgetForm.value.current);
 
-    let chosenBudgetKey = budget.$key;
+    let chosenBudgetKey = this.selectedBudget.$key;
 
-    // remove key/values that throw error if included
-    delete budget.$key;
-    delete budget.$exists;
-
-    budget.updatedAt = (new Date).toISOString();
+    this.selectedBudget.updatedAt = (new Date).toISOString();
 
     // update specific budget item
-    this.allBudgets.update(chosenBudgetKey, budget).then(() => {
+    this.authData.getBudgets().update(chosenBudgetKey, this.selectedBudget).then(() => {
       this.showToast('Budget updated!', 'bottom', 'toaster-green');
     }, (err) => {
       console.log(err);
@@ -310,20 +304,17 @@ export class ModalContentPage {
       alert.present();
     });
 
-    this.dismiss(budget);
+    this.dismiss(this.selectedBudget);
   }
 
   // delete entire budget
   deleteBudget(budget) {
     let chosenBudgetKey = budget.$key;
 
-    // remove key/values that throw error if included
-    delete budget.$key;
-    delete budget.$exists;
-
     // remove the specific budget
-    this.allBudgets.remove(chosenBudgetKey).then(() => {
-      console.log('Budget deleted');
+    this.authData.getBudgets().remove(chosenBudgetKey).then(() => {
+      this.dismiss();
+
       this.showToast('Budget deleted!', 'bottom', 'toaster-red');
     }, (err) => {
       console.log(err);
@@ -336,12 +327,5 @@ export class ModalContentPage {
 
       alert.present();
     });
-
-    // when budget is deleted if there are no budgets
-    if (this.budgets.length === 1) {
-      this.dismiss('no budgets');
-    } else {
-      this.dismiss();
-    }
   }
 }

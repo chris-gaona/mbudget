@@ -51,7 +51,7 @@
       </ion-item>
 
       <ion-item class="border-bottom padding-left">
-        <ion-input #existing formControlName="existing" (change)="elementChanged(existing)" [textMask]="{mask: mask}" type="text" class="input-field" name="current_cash" [class.invalid]="!budgetForm.controls.existing.valid && (existingChanged || submitAttempt)"></ion-input>
+        <ion-input #existing formControlName="existing" (ngModelChange)="elementChanged(existing)" [textMask]="{mask: mask}" type="text" class="input-field" name="current_cash" [class.invalid]="!budgetForm.controls.existing.valid && (existingChanged || submitAttempt)"></ion-input>
       </ion-item>
 
       <ion-list-header class="input-header" no-margin>
@@ -63,12 +63,12 @@
       </ion-item>
 
       <ion-item class="border-bottom padding-left">
-        <ion-input #current formControlName="current" (change)="elementChanged(current)" [textMask]="{mask: mask}" type="text" class="input-field" name="current_income" [class.invalid]="!budgetForm.controls.current.valid && (currentChanged || submitAttempt)"></ion-input>
+        <ion-input #current formControlName="current" (ngModelChange)="elementChanged(current)" [textMask]="{mask: mask}" type="text" class="input-field" name="current_income" [class.invalid]="!budgetForm.controls.current.valid && (currentChanged || submitAttempt)"></ion-input>
       </ion-item>
 
       <ion-item *ngIf="!editing" id="checkbox">
         <ion-label>Use last period's projections?</ion-label>
-        <ion-checkbox checked="true" color="purple" #reuse formcontrolname="reuse"></ion-checkbox>
+        <ion-checkbox color="purple" checked="true" (ionChange)="checkboxChanged($event)"></ion-checkbox>
       </ion-item>
 
       <ion-item>
@@ -89,35 +89,35 @@
 
   </ion-list>
 
-  <div class="dog-container">
-    <div class="dog">
-      <div class="ears"></div>
+  <!--<div class="dog-container">-->
+    <!--<div class="dog">-->
+      <!--<div class="ears"></div>-->
 
-      <div class="dog-body">
-        <div class="eyes"></div>
-        <div class="beard">
-          <div class="mouth">
-            <div class="tongue"></div>
-          </div>
-        </div>
-        <div class="belt">
-          <div class="locket"></div>
-          <div class="dot dot1"></div>
-          <div class="dot dot2"></div>
-          <div class="dot dot3"></div>
-          <div class="dot dot4"></div>
-          <div class="tag"></div>
-        </div>
-        <div class="stomach">
-        </div>
-        <div class="legs">
-          <div class="left"></div>
-          <div class="right"></div>
-        </div>
-      </div>
-      <div class="tail">
-      </div>
-    </div>
-  </div>
+      <!--<div class="dog-body">-->
+        <!--<div class="eyes"></div>-->
+        <!--<div class="beard">-->
+          <!--<div class="mouth">-->
+            <!--<div class="tongue"></div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="belt">-->
+          <!--<div class="locket"></div>-->
+          <!--<div class="dot dot1"></div>-->
+          <!--<div class="dot dot2"></div>-->
+          <!--<div class="dot dot3"></div>-->
+          <!--<div class="dot dot4"></div>-->
+          <!--<div class="tag"></div>-->
+        <!--</div>-->
+        <!--<div class="stomach">-->
+        <!--</div>-->
+        <!--<div class="legs">-->
+          <!--<div class="left"></div>-->
+          <!--<div class="right"></div>-->
+        <!--</div>-->
+      <!--</div>-->
+      <!--<div class="tail">-->
+      <!--</div>-->
+    <!--</div>-->
+  <!--</div>-->
 
 </ion-content>
