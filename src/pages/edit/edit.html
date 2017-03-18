@@ -25,7 +25,7 @@
       <ion-toggle [(ngModel)]="item.due" (ngModelChange)="presentPopover($event)"></ion-toggle>
     </ion-item>
 
-    <form [formGroup]="editForm" (ngSubmit)="saveAll(editForm)" novalidate>
+    <form [formGroup]="editForm" (ngSubmit)="saveAll()" novalidate>
 
       <ion-list-header>
         Projection
@@ -71,8 +71,6 @@
         <ion-row *ngFor="let actual of editForm.controls.actuals.controls; let i = index" [formGroupName]="i">
           <ion-col width-50 no-padding>
             <ion-item no-padding [class.invalid]="!editForm.controls.actuals.controls[i].controls.name.valid">
-              <!--<ion-icon name="information-circle" item-left class="no-margin"></ion-icon>-->
-              <!--<ion-icon formControlName="expense" id="toggle-switch" name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" item-left class="no-margin" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense" (click)="toggleAddSubtract(actual)"></ion-icon>-->
               <ion-checkbox id="actual-checkbox" formControlName="expense" color="danger"></ion-checkbox>
               <ion-input placeholder="Payment text" formControlName="name" text-capitalize type="text" class="no-padding"></ion-input>
             </ion-item>

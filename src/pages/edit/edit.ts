@@ -1,16 +1,13 @@
+// import statements
 import { Component } from '@angular/core';
 import {
   NavController, NavParams, AlertController, ToastController, PopoverController, Platform
 } from 'ionic-angular';
-
 import { ActualItems, Budget, BudgetItems } from '../../models/budget';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { AuthData } from '../../providers/auth-data';
 import { PopoverDueDatePage } from '../popovers/dueDate';
-
 import { Validators, FormGroup, FormArray, FormBuilder } from '@angular/forms';
 import { CurrencyValidator } from '../../validators/currency';
-
 import { LocalNotifications } from 'ionic-native';
 import * as moment from 'moment';
 
@@ -20,9 +17,7 @@ import * as moment from 'moment';
   templateUrl: './edit.html'
 })
 export class EditPage {
-  // declare / initialize variables
-  allBudgets: FirebaseListObservable<any>;
-  currentUser: any;
+  // initialize variables
   budget: Budget;
   item: BudgetItems;
   hasValidationErrors: boolean = false;
@@ -31,7 +26,6 @@ export class EditPage {
   saveAllData: Budget;
   errorMessage: any;
   notification: any;
-
   // form info
   editForm: FormGroup;
   submitAttempt: boolean = false;
@@ -44,16 +38,15 @@ export class EditPage {
               public toastCtrl: ToastController,
               private navParams: NavParams,
               public popoverCtrl: PopoverController,
-              public authData: AuthData,
-              af: AngularFire) {
+              public authData: AuthData) {
     // get data from navParams sent from home component
     this.budget = navParams.get('budget');
     this.item = navParams.get('budgetItem');
-
-    // assign current user info to currentUser variable
-    this.currentUser = this.authData.getUserInfo();
-    // this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets');
   }
+
+  ////////////////
+  // LIFECYCLE FUNCTIONS
+  ////////////////
 
   ngOnInit() {
     // initialize form here...could also initialize in the constructor
@@ -66,9 +59,10 @@ export class EditPage {
       ])
     });
 
-    // populates tha actual items into the form to be edited by user
+    // populates the actual items into the form to be edited by user
     this.populateActual();
 
+    // subscribes to the form changes in order to update ui properly
     this.formChanges = this.editForm.valueChanges.subscribe(data => {
       this.item.item = this.editForm.value.itemName;
       this.item.projection = this.editForm.value.projection;
@@ -78,6 +72,47 @@ export class EditPage {
 
   ngOnDestroy() {
     this.formChanges.unsubscribe();
+  }
+
+  ////////////////
+  // UTILITY FUNCTIONS
+  ////////////////
+
+  errorHandler(err) {
+    // if error display an alert to the user with the error message
+    const errorMessage: string = err.message;
+    const alert = this.alertCtrl.create({
+      message: errorMessage,
+      buttons: [{text: "Ok", role: 'cancel'}]
+    });
+
+    alert.present();
+  }
+
+  // creates toast message to inform user of changes
+  showToast(message:string, position: string, color: string) {
+    const toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: position,
+      cssClass: color
+    });
+
+    toast.present(toast);
+  }
+
+  // creates popover when user clicks that they want to create a due date for item
+  presentPopover(ev) {
+    // if there is an item due
+    if (this.item.due === true) {
+      const popover = this.popoverCtrl.create(PopoverDueDatePage, {budgetItem: this.item});
+
+      popover.present({
+        ev: ev
+      });
+    } else {
+      this.item.due_date = null;
+    }
   }
 
   // initialize the form for actual items within editForm
@@ -102,34 +137,33 @@ export class EditPage {
     }
   }
 
-  // creates toast message to inform user of changes
-  showToast(message:string, position: string, color: string) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: position,
-      cssClass: color
+  // capitalize the first letter of each word
+  capitalizeFirstLetter(str) {
+    return str.replace(/\w\S*/g, function(txt){
+      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
-
-    toast.present(toast);
   }
 
-  // creates popover when user clicks that they want to create a due date for item
-  presentPopover(ev) {
-    // if there is an item due
-    if (this.item.due === true) {
-      let popover = this.popoverCtrl.create(PopoverDueDatePage, {budgetItem: this.item});
-
-      popover.present({
-        ev: ev
-      });
-    } else {
-      this.item.due_date = null;
-    }
+  // removes edit component to go back to home component
+  goBack() {
+    this.navCtrl.pop();
   }
+
+  toggleAddSubtract(actual) {
+    actual.expense = !actual.expense;
+  }
+
+  // parses data for due date
+  parseDate(date: any) {
+    return moment().to(date);
+  }
+
+  ////////////////
+  // CORE FUNCTIONS
+  ////////////////
 
   // save all edits
-  saveAll(model?: ActualItems) {
+  saveAll() {
     this.submitAttempt = true;
 
     // if on cordova platform...log all notification items to console
@@ -148,21 +182,15 @@ export class EditPage {
       // else if form is valid
     } else {
 
-      let chosenBudgetKey: any;
-
-      chosenBudgetKey = this.budget.$key;
-
-      // delete the following key/values from budget object...if I don't firebase will scream with an error
-      // delete this.budget.$exists;
-      // delete this.budget.$key;
+      const chosenBudgetKey = this.budget.$key;
 
       // assign values from form to item object
       this.item.item = this.editForm.value.itemName;
       this.item.projection = +this.editForm.value.projection;
 
       // make sure each actual amount is coerced into a number value using + operator
-      for (let i = 0; i < this.editForm.value.actuals.length; i++) {
-        this.editForm.value.actuals[i].amount = +this.editForm.value.actuals[i].amount;
+      for (let item of this.editForm.value.actuals) {
+        item.amount = +item.amount;
       }
 
       // assign actual values to item object
@@ -180,35 +208,16 @@ export class EditPage {
         // lastly, show the toast
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
 
-      }, (err) => {
-        // if error display an alert to the user with the error message
-        let errorMessage: string = err.message;
-        let alert = this.alertCtrl.create({
-          message: errorMessage,
-          buttons: [{text: "Ok", role: 'cancel'}]
-        });
-
-        alert.present();
-      });
+      }, this.errorHandler);
 
       // then go back to home component
       this.goBack();
     }
   }
 
-  // removes edit component to go back to home component
-  goBack() {
-    this.navCtrl.pop();
-  }
-
-  // capitalize the first letter of each word
-  capitalizeFirstLetter(str) {
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-  }
-
   // display alert to delete some items
   showCheckbox() {
-    let alert = this.alertCtrl.create();
+    const alert = this.alertCtrl.create();
     alert.setTitle('Which to delete?');
 
     // adds main projection item to delete the whole thing
@@ -218,12 +227,11 @@ export class EditPage {
       value: this.item.item
     });
 
-    // loops through the actual items to display to delete
-    for (let i = 0; i < this.item.actual.length; i++) {
+    for (let item of this.item.actual) {
       alert.addInput({
         type: 'checkbox',
-        label: this.capitalizeFirstLetter(this.item.actual[i].name) + ' $' + this.item.actual[i].amount,
-        value: this.item.actual[i].name  + ' $' + this.item.actual[i].amount
+        label: this.capitalizeFirstLetter(item.name) + ' $' + item.amount,
+        value: item.name  + ' $' + item.amount
       });
     }
 
@@ -231,14 +239,12 @@ export class EditPage {
     alert.addButton({
       text: 'Delete',
       handler: data => {
-
-        for (let i = 0; i < data.length; i++) {
-          if (data[i] === this.item.item) {
-            console.log(this.item.item);
-            console.log('data item', data[i]);
-            this.deleteBudgetItem(data[i]);
+        // use .filter on array here
+        for (let item of data) {
+          if (item === this.item.item) {
+            this.deleteBudgetItem(item);
           } else {
-            this.deleteActual(this.item, data[i]);
+            this.deleteActual(this.item, item);
           }
         }
       }
@@ -247,15 +253,15 @@ export class EditPage {
   }
 
   // add new actual item to actual array under specific budget_items
-  // pass in which actual array we want to add to
   addActualItem(actual) {
     // create a new actual item using the defined types
-    let newActualItem = new ActualItems();
+    const newActualItem = new ActualItems();
     // add that item to the array
     actual.push(newActualItem);
 
-    // TODO: probably don't want to call ngOnInit() again
-    this.ngOnInit();
+    // call populateActual function to populate ui with new
+    // actual item
+    this.populateActual();
   }
 
   // delete specific actual item
@@ -276,16 +282,14 @@ export class EditPage {
       }
     }
 
-    // TODO: probably don't want to call ngOnInit() again
     this.ngOnInit();
   }
 
   // delete specific budget item
   deleteBudgetItem(budgetItem) {
-    let budget = this.budget.budget_items;
+    const budget = this.budget.budget_items;
     // loop through budget_items
     for (let i = 0; i < budget.length; i++) {
-      console.log(budget[i]);
       // if a match to the budget passed in
       if (budget[i].item === budgetItem) {
         // remove it
@@ -318,15 +322,6 @@ export class EditPage {
     return this.totalActual;
   }
 
-  toggleAddSubtract(actual) {
-    actual.expense = !actual.expense;
-  }
-
-  // parses data for due date
-  parseDate(date: any) {
-    return moment().to(date);
-  }
-
   // creates the notification based on the due date set
   addNotifications() {
     let d = new Date(this.item.due_date);
@@ -351,9 +346,6 @@ export class EditPage {
         LocalNotifications.schedule(this.notification);
 
       });
-
     }
-
   }
-
 }

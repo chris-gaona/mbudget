@@ -45,10 +45,7 @@ export class HomePage {
   errorMessage: any;
   upcomingItems: boolean = false;
   upcomingItemsArray: any = [];
-
   allBudgetsSubscription: any;
-
-
   // progress bar variables
   max: number = 100;
   radius: number = 95;
@@ -70,6 +67,10 @@ export class HomePage {
     this.currentUser = this.authData.getUserInfo();
   }
 
+  ////////////////
+  // LIFECYCLE FUNCTIONS
+  ////////////////
+
   ngOnInit() {
     this.getAllBudgets();
   }
@@ -77,6 +78,99 @@ export class HomePage {
   ngOnDestroy() {
     this.allBudgetsSubscription.unsubscribe();
   }
+
+  ////////////////
+  // UTILITY FUNCTIONS
+  ////////////////
+  handleError(err) {
+    // alert error message to user if there is one
+    let errorMessage: string = err.message;
+    let alert = this.alertCtrl.create({
+      message: errorMessage,
+      buttons: [{text: "Ok", role: 'cancel'}]
+    });
+
+    alert.present();
+  }
+
+  // creates toast to tell user of changes
+  showToast(message:string, position: string, color: string) {
+    let toast = this.toastCtrl.create({
+      message: message,
+      duration: 3000,
+      position: position,
+      cssClass: color
+    });
+
+    toast.present(toast);
+  }
+
+  // parse date with moment.js
+  parseMomentDate(date: any) {
+    return moment().to(date);
+  }
+
+  // when changing budget...check for due dates
+  onSelectChange(event) {
+    this.checkForDueDates(this.selectedBudget);
+  }
+
+  // add user popover
+  presentPopover(ev) {
+    const popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
+
+    // if logout is clicked
+    popover.onDidDismiss(data => {
+      if (data === 'logout') {
+        this.logoutUser();
+        this.navCtrl.setRoot(LoginPage);
+      }
+    });
+
+    popover.present({
+      ev: ev
+    });
+  }
+
+  goToEditPage(budget, budgetItems) {
+    //push another page onto the history stack
+    //causing the nav controller to animate the new page in
+    this.navCtrl.push(EditPage, {
+      budget: budget,
+      budgetItem: budgetItems
+    });
+  }
+
+  // confirm to delete specific BUDGET ITEM or ACTUAL ITEM
+  showConfirmation(budgetItem, budget, actual) {
+    const confirm = this.alertCtrl.create({
+      title: 'Are you sure?',
+      message: 'This will delete the item permanently.',
+      buttons: [
+        {
+          text: 'Nope',
+          handler: () => {
+
+          }
+        },
+        {
+          text: 'Yup',
+          handler: () => {
+            if (!budgetItem) {
+              this.deleteActual(budget, actual);
+            } else {
+              this.deleteBudgetItem(budgetItem);
+            }
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  ////////////////
+  // CORE FUNCTIONS
+  ////////////////
 
   getAllBudgets() {
     // show alert if no internet connection
@@ -125,28 +219,7 @@ export class HomePage {
         this.checkForDueDates(this.selectedBudget);
       }
 
-    }, (err) => {
-      // alert error message to user if there is one
-      let errorMessage: string = err.message;
-      let alert = this.alertCtrl.create({
-        message: errorMessage,
-        buttons: [{text: "Ok", role: 'cancel'}]
-      });
-
-      alert.present();
-    });
-  }
-
-  // creates toast to tell user of changes
-  showToast(message:string, position: string, color: string) {
-    let toast = this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: position,
-      cssClass: color
-    });
-
-    toast.present(toast);
+    }, this.handleError);
   }
 
   // check for due dates for current budget to display on the page
@@ -170,23 +243,13 @@ export class HomePage {
 
       // sort due dates by dueDate
       this.upcomingItemsArray.sort((a, b) => {
-        let firstDate: any = new Date(a.dueDate);
-        let secondDate: any = new Date(b.dueDate);
+        const firstDate: any = new Date(a.dueDate);
+        const secondDate: any = new Date(b.dueDate);
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
         return firstDate - secondDate;
       });
     }
-  }
-
-  // parse date with moment.js
-  parseMomentDate(date: any) {
-    return moment().to(date);
-  }
-
-  // when changing budget...check for due dates
-  onSelectChange(event) {
-    this.checkForDueDates(this.selectedBudget);
   }
 
   // calculate average saving amount for all budgets
@@ -204,10 +267,6 @@ export class HomePage {
     average = savings / totalNumber;
 
     return average;
-  }
-
-  openModalNew() {
-    this.createEmptyBudget();
   }
 
   // creates empty budget
@@ -282,91 +341,44 @@ export class HomePage {
     this.authData.logoutUser();
   }
 
-  // add user popover
-  presentPopover(ev) {
-    let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
-
-    // if logout is clicked
-    popover.onDidDismiss(data => {
-      if (data === 'logout') {
-        this.logoutUser();
-        this.navCtrl.setRoot(LoginPage);
-      }
-    });
-
-    popover.present({
-      ev: ev
-    });
-  }
-
   openModalEdit() {
-    let modal = this.modalCtrl.create(ModalContentPage, {
+    const modal = this.modalCtrl.create(ModalContentPage, {
       editing: true,
       selectedBudget: this.selectedBudget,
       budgets: this.budgets
     });
     modal.onDidDismiss(data => {
-      if (data) {
-        // loop through each budget entry
-        for (let i = 0; i < this.budgets.length; i++) {
-          // find the latest created budget entry in the array
-          if (data === this.budgets[i]) {
-            // make that one the selected budget on load
-            this.selectedBudget = this.budgets[i];
+      if (this.budgets && this.budgets.length > 0) {
+        if (data) {
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (data === this.budgets[i]) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+            }
+          }
+        } else {
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (i === (this.budgets.length - 1)) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+            }
           }
         }
-      } else {
-        // loop through each budget entry
-        for (let i = 0; i < this.budgets.length; i++) {
-          // find the latest created budget entry in the array
-          if (i === (this.budgets.length - 1)) {
-            // make that one the selected budget on load
-            this.selectedBudget = this.budgets[i];
-          }
-        }
-      }
 
-      this.checkForDueDates(this.selectedBudget);
+        this.checkForDueDates(this.selectedBudget);
+      }
 
     });
     modal.present();
   }
 
-  goToEditPage(budget, budgetItems) {
-    //push another page onto the history stack
-    //causing the nav controller to animate the new page in
-    this.navCtrl.push(EditPage, {
-      budget: budget,
-      budgetItem: budgetItems
-    });
-  }
-
-  // confirm to delete specific budget item
-  showConfirm(budgetItem) {
-    let confirm = this.alertCtrl.create({
-      title: 'Are you sure?',
-      message: 'This will delete the item permanently.',
-      buttons: [
-        {
-          text: 'Nope',
-          handler: () => {
-
-          }
-        },
-        {
-          text: 'Yup',
-          handler: () => {
-            this.deleteBudgetItem(budgetItem);
-          }
-        }
-      ]
-    });
-    confirm.present();
-  }
-
   // delete specific budget item
   deleteBudgetItem(budgetItem) {
-    let budget = this.selectedBudget.budget_items;
+    const budget = this.selectedBudget.budget_items;
     // loop through budget_items
     for (let i = 0; i < budget.length; i++) {
       // if a match to the budget passed in
@@ -381,29 +393,6 @@ export class HomePage {
         this.saveAll();
       }
     }
-  }
-
-  // confirm to delete specific actual item
-  showConfirmation(budget, actual) {
-    let confirm = this.alertCtrl.create({
-      title: 'Are you sure?',
-      message: 'This will delete the item permanently.',
-      buttons: [
-        {
-          text: 'Nope',
-          handler: () => {
-
-          }
-        },
-        {
-          text: 'Yup',
-          handler: () => {
-            this.deleteActual(budget, actual);
-          }
-        }
-      ]
-    });
-    confirm.present();
   }
 
   // delete specific actual item
@@ -427,13 +416,7 @@ export class HomePage {
 
   // save all edits
   saveAll(string?) {
-    let chosenBudgetKey;
-
-    chosenBudgetKey = this.selectedBudget.$key;
-
-    // delete key/value that causes firebase to error out
-    // delete this.selectedBudget.$exists;
-    // delete this.selectedBudget.$key;
+    const chosenBudgetKey = this.selectedBudget.$key;
 
     // adds updatedAt value
     this.selectedBudget.updatedAt = (new Date).toISOString();
@@ -444,16 +427,7 @@ export class HomePage {
       if (string !== 'toggle') {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
       }
-    }, (err) => {
-      // alert message to user
-      let errorMessage: string = err.message;
-      let alert = this.alertCtrl.create({
-        message: errorMessage,
-        buttons: [{ text: "Ok", role: 'cancel' } ]
-      });
-
-      alert.present();
-    });
+    }, this.handleError);
   }
 
   // add new budget item to budget_items array in specific budget

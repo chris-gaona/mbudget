@@ -29,7 +29,6 @@ export class AuthData {
 
   // simply return userInfo with data assigned to fireAuth variable above
   getUserInfo(): any {
-    console.log('here is the user info', this.fireAuth);
     return this.fireAuth;
   }
 
