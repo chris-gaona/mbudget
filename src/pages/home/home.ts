@@ -1,6 +1,7 @@
+// import statement
 import { Component } from '@angular/core';
 import {
-  ModalController, NavController, PopoverController, AlertController, ToastController, App
+  ModalController, NavController, PopoverController, AlertController, ToastController
 } from 'ionic-angular';
 import { PopoverPage } from '../popovers/userInfo';
 import { ModalContentPage } from '../modals/modalContent';
@@ -20,6 +21,7 @@ import * as moment from 'moment';
 })
 export class HomePage {
 
+  // declare variables
   budgets: Budget[];
   selectedBudget: Budget;
   currentUser: any;
@@ -43,10 +45,7 @@ export class HomePage {
   errorMessage: any;
   upcomingItems: boolean = false;
   upcomingItemsArray: any = [];
-
-  subscription: any;
-
-
+  allBudgetsSubscription: any;
   // progress bar variables
   max: number = 100;
   radius: number = 95;
@@ -61,40 +60,38 @@ export class HomePage {
               public popoverCtrl: PopoverController,
               public modalCtrl: ModalController,
               public alertCtrl: AlertController,
-              public app: App,
               private networkService: NetworkService,
               public authData: AuthData
   ) {
-    // assign data to variables
+    // assign current user data
     this.currentUser = this.authData.getUserInfo();
-    // this.allBudgets = af.database.list('/users/' + this.currentUser.uid + '/budgets', {
-    //   query: {
-    //     orderByChild: 'start_period',
-    //   }
-    // });
   }
 
+  ////////////////
+  // LIFECYCLE FUNCTIONS
+  ////////////////
+
   ngOnInit() {
-    // this.checkScroll();
     this.getAllBudgets();
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.allBudgetsSubscription.unsubscribe();
   }
 
-  // // refresh the data on pull down
-  // doRefresh(refresher) {
-  //   console.log('Begin async operation', refresher);
-  //
-  //   this.ngOnDestroy();
-  //
-  //   setTimeout(() => {
-  //     console.log('Async operation has ended');
-  //     refresher.complete();
-  //     this.getAllBudgets();
-  //   }, 2000);
-  // }
+  ////////////////
+  // UTILITY FUNCTIONS
+  ////////////////
+  handleError(err) {
+    // alert error message to user if there is one
+    let errorMessage: string = err.message;
+    let alert = this.alertCtrl.create({
+      message: errorMessage,
+      buttons: [{text: "Ok", role: 'cancel'}]
+    });
+
+    alert.present();
+  }
 
   // creates toast to tell user of changes
   showToast(message:string, position: string, color: string) {
@@ -108,36 +105,6 @@ export class HomePage {
     toast.present(toast);
   }
 
-  // check for due dates for current budget to display on the page
-  checkForDueDates(selectedBudget) {
-    this.upcomingItemsArray = [];
-
-    // loop through to get all the due dates
-    for (let i = 0; i < selectedBudget.budget_items.length; i++) {
-      if (selectedBudget.budget_items[i].due === true) {
-        this.upcomingItemsArray.push({name: selectedBudget.budget_items[i].item, dueDate: selectedBudget.budget_items[i].due_date});
-      }
-    }
-
-    // if there are not due dates set upcomingItems to false
-    if (this.upcomingItemsArray.length === 0) {
-      this.upcomingItems = false;
-
-      // else if there are due dates
-    } else {
-      this.upcomingItems = true;
-
-      // sort due dates by dueDate
-      this.upcomingItemsArray.sort((a, b) => {
-        let firstDate: any = new Date(a.dueDate);
-        let secondDate: any = new Date(b.dueDate);
-        // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return firstDate - secondDate;
-      });
-    }
-  }
-
   // parse date with moment.js
   parseMomentDate(date: any) {
     return moment().to(date);
@@ -148,6 +115,63 @@ export class HomePage {
     this.checkForDueDates(this.selectedBudget);
   }
 
+  // add user popover
+  presentPopover(ev) {
+    const popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
+
+    // if logout is clicked
+    popover.onDidDismiss(data => {
+      if (data === 'logout') {
+        this.logoutUser();
+        this.navCtrl.setRoot(LoginPage);
+      }
+    });
+
+    popover.present({
+      ev: ev
+    });
+  }
+
+  goToEditPage(budget, budgetItems) {
+    //push another page onto the history stack
+    //causing the nav controller to animate the new page in
+    this.navCtrl.push(EditPage, {
+      budget: budget,
+      budgetItem: budgetItems
+    });
+  }
+
+  // confirm to delete specific BUDGET ITEM or ACTUAL ITEM
+  showConfirmation(budgetItem, budget, actual) {
+    const confirm = this.alertCtrl.create({
+      title: 'Are you sure?',
+      message: 'This will delete the item permanently.',
+      buttons: [
+        {
+          text: 'Nope',
+          handler: () => {
+
+          }
+        },
+        {
+          text: 'Yup',
+          handler: () => {
+            if (!budgetItem) {
+              this.deleteActual(budget, actual);
+            } else {
+              this.deleteBudgetItem(budgetItem);
+            }
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  ////////////////
+  // CORE FUNCTIONS
+  ////////////////
+
   getAllBudgets() {
     // show alert if no internet connection
     if (this.networkService.isNoConnection()) {
@@ -155,9 +179,10 @@ export class HomePage {
     }
 
     // subscribe to get all budgets
-    this.subscription = this.authData.getBudgets().subscribe(data => {
+    this.allBudgetsSubscription = this.authData.getBudgets().subscribe(data => {
       // if no budgets show user welcome page to create first budget
       if (data.length === 0) {
+        console.log('no budget here!');
         this.budgets = null;
         this.visibleBudgets = false;
         this.selectedBudget = null;
@@ -194,16 +219,37 @@ export class HomePage {
         this.checkForDueDates(this.selectedBudget);
       }
 
-    }, (err) => {
-      // alert error message to user if there is one
-      let errorMessage: string = err.message;
-      let alert = this.alertCtrl.create({
-        message: errorMessage,
-        buttons: [{text: "Ok", role: 'cancel'}]
-      });
+    }, this.handleError);
+  }
 
-      alert.present();
-    });
+  // check for due dates for current budget to display on the page
+  checkForDueDates(selectedBudget) {
+    this.upcomingItemsArray = [];
+
+    // loop through to get all the due dates
+    for (let i = 0; i < selectedBudget.budget_items.length; i++) {
+      if (selectedBudget.budget_items[i].due === true) {
+        this.upcomingItemsArray.push({name: selectedBudget.budget_items[i].item, dueDate: selectedBudget.budget_items[i].due_date});
+      }
+    }
+
+    // if there are not due dates set upcomingItems to false
+    if (this.upcomingItemsArray.length === 0) {
+      this.upcomingItems = false;
+
+      // else if there are due dates
+    } else {
+      this.upcomingItems = true;
+
+      // sort due dates by dueDate
+      this.upcomingItemsArray.sort((a, b) => {
+        const firstDate: any = new Date(a.dueDate);
+        const secondDate: any = new Date(b.dueDate);
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return firstDate - secondDate;
+      });
+    }
   }
 
   // calculate average saving amount for all budgets
@@ -223,7 +269,6 @@ export class HomePage {
     return average;
   }
 
-
   // creates empty budget
   createEmptyBudget() {
     let newBudget = new Budget();
@@ -232,48 +277,28 @@ export class HomePage {
     newBudget.existing_cash = (previousBudget.existing_cash + previousBudget.current_income) - this.actualObject.totalSpent;
     newBudget.current_income = previousBudget.current_income;
     // make this new budget the shown one in the modal for editing
-    this.selectedBudget = newBudget;
-    this.budgets.push(this.selectedBudget);
+    // this.selectedBudget = newBudget;
+    // this.budgets.push(this.selectedBudget);
 
 
     let modal = this.modalCtrl.create(ModalContentPage, {
       editing: false,
-      selectedBudget: this.selectedBudget,
+      selectedBudget: newBudget,
       budgets: this.budgets
     });
 
-    modal.onDidDismiss(data => {
-      if (data) {
-        if (data.remove && data.remove === true) {
-          let newIndex = 0;
-
-          this.budgets.filter((item, i) => {
-            if (item.start_period === this.selectedBudget.start_period) {
-              this.budgets.splice(i, 1);
-              newIndex = i - 1;
-            }
-          });
-
-          // loop through each budget entry
-          for (let i = 0; i < this.budgets.length; i++) {
-            // find the latest created budget entry in the array
-            if (i === (this.budgets.length - 1)) {
-              // make that one the selected budget on load
-              this.selectedBudget = this.budgets[i];
-            }
-          }
-        } else {
-          // loop through each budget entry
-          for (let i = 0; i < this.budgets.length; i++) {
-            // find the latest created budget entry in the array
-            if (i === (this.budgets.length - 1)) {
-              // make that one the selected budget on load
-              this.selectedBudget = this.budgets[i];
-            }
-          }
+    modal.onDidDismiss(() => {
+      // loop through each budget entry
+      for (let i = 0; i < this.budgets.length; i++) {
+        // find the latest created budget entry in the array
+        if (i === (this.budgets.length - 1)) {
+          // make that one the selected budget on load
+          this.selectedBudget = this.budgets[i];
         }
-        this.checkForDueDates(this.selectedBudget);
       }
+
+      this.checkForDueDates(this.selectedBudget);
+
     });
 
     modal.present();
@@ -316,101 +341,44 @@ export class HomePage {
     this.authData.logoutUser();
   }
 
-  // add user popover
-  presentPopover(ev) {
-    let popover = this.popoverCtrl.create(PopoverPage, {userInfo: this.currentUser});
-
-    // if logout is clicked
-    popover.onDidDismiss(data => {
-      if (data === 'logout') {
-        this.logoutUser();
-        this.navCtrl.setRoot(LoginPage);
-      }
-    });
-
-    popover.present({
-      ev: ev
-    });
-  }
-
   openModalEdit() {
-    let modal = this.modalCtrl.create(ModalContentPage, {
+    const modal = this.modalCtrl.create(ModalContentPage, {
       editing: true,
       selectedBudget: this.selectedBudget,
       budgets: this.budgets
     });
     modal.onDidDismiss(data => {
-      if (data) {
-        if (data === 'no budgets') {
-          // don't really need this part of the if statement since it's handled in the getAllBudgets function above
-          this.visibleBudgets = false;
-
+      if (this.budgets && this.budgets.length > 0) {
+        if (data) {
+          // loop through each budget entry
+          for (let i = 0; i < this.budgets.length; i++) {
+            // find the latest created budget entry in the array
+            if (data === this.budgets[i]) {
+              // make that one the selected budget on load
+              this.selectedBudget = this.budgets[i];
+            }
+          }
         } else {
           // loop through each budget entry
           for (let i = 0; i < this.budgets.length; i++) {
             // find the latest created budget entry in the array
-            if (this.budgets[i].start_period === data.start_period) {
+            if (i === (this.budgets.length - 1)) {
               // make that one the selected budget on load
               this.selectedBudget = this.budgets[i];
             }
           }
         }
-      } else {
-        // loop through each budget entry
-        for (let i = 0; i < this.budgets.length; i++) {
-          // find the latest created budget entry in the array
-          if (i === (this.budgets.length - 1)) {
-            // make that one the selected budget on load
-            this.selectedBudget = this.budgets[i];
-          }
-        }
-      }
 
-      this.checkForDueDates(this.selectedBudget);
+        this.checkForDueDates(this.selectedBudget);
+      }
 
     });
     modal.present();
   }
 
-  openModalNew() {
-    this.createEmptyBudget();
-  }
-
-  goToEditPage(budget, budgetItems) {
-    //push another page onto the history stack
-    //causing the nav controller to animate the new page in
-    this.navCtrl.push(EditPage, {
-      budget: budget,
-      budgetItem: budgetItems
-    });
-  }
-
-  // confirm to delete specific budget item
-  showConfirm(budgetItem) {
-    let confirm = this.alertCtrl.create({
-      title: 'Are you sure?',
-      message: 'This will delete the item permanently.',
-      buttons: [
-        {
-          text: 'Nope',
-          handler: () => {
-
-          }
-        },
-        {
-          text: 'Yup',
-          handler: () => {
-            this.deleteBudgetItem(budgetItem);
-          }
-        }
-      ]
-    });
-    confirm.present();
-  }
-
   // delete specific budget item
   deleteBudgetItem(budgetItem) {
-    let budget = this.selectedBudget.budget_items;
+    const budget = this.selectedBudget.budget_items;
     // loop through budget_items
     for (let i = 0; i < budget.length; i++) {
       // if a match to the budget passed in
@@ -425,29 +393,6 @@ export class HomePage {
         this.saveAll();
       }
     }
-  }
-
-  // confirm to delete specific actual item
-  showConfirmation(budget, actual) {
-    let confirm = this.alertCtrl.create({
-      title: 'Are you sure?',
-      message: 'This will delete the item permanently.',
-      buttons: [
-        {
-          text: 'Nope',
-          handler: () => {
-
-          }
-        },
-        {
-          text: 'Yup',
-          handler: () => {
-            this.deleteActual(budget, actual);
-          }
-        }
-      ]
-    });
-    confirm.present();
   }
 
   // delete specific actual item
@@ -471,13 +416,7 @@ export class HomePage {
 
   // save all edits
   saveAll(string?) {
-    let chosenBudgetKey;
-
-    chosenBudgetKey = this.selectedBudget.$key;
-
-    // delete key/value that causes firebase to error out
-    // delete this.selectedBudget.$exists;
-    // delete this.selectedBudget.$key;
+    const chosenBudgetKey = this.selectedBudget.$key;
 
     // adds updatedAt value
     this.selectedBudget.updatedAt = (new Date).toISOString();
@@ -488,16 +427,7 @@ export class HomePage {
       if (string !== 'toggle') {
         this.showToast('Everything saved!', 'bottom', 'toaster-green');
       }
-    }, (err) => {
-      // alert message to user
-      let errorMessage: string = err.message;
-      let alert = this.alertCtrl.create({
-        message: errorMessage,
-        buttons: [{ text: "Ok", role: 'cancel' } ]
-      });
-
-      alert.present();
-    });
+    }, this.handleError);
   }
 
   // add new budget item to budget_items array in specific budget

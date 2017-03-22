@@ -33,7 +33,7 @@
       </div>
     </ion-title>
     <ion-buttons end *ngIf="budgets && currentUser">
-      <button margin-right ion-button icon-only color="dark" (click)="openModalNew()">
+      <button margin-right ion-button icon-only color="dark" (click)="createEmptyBudget()">
         <ion-icon name="add"></ion-icon>
       </button>
       <button ion-button icon-only ion-text color="dark" (click)="openModalEdit()">
@@ -172,7 +172,7 @@
       <ion-item-sliding *ngFor="let item of selectedBudget.budget_items" class="projActualItem" margin-bottom>
         <ion-item text-capitalize (click)="goToEditPage(selectedBudget, item)">{{item.item}} <ion-badge *ngIf="item.paid" class="paid-boolean" color="secondary" text-uppercase>paid</ion-badge> <ion-icon class="alarm-icon" *ngIf="item.due" name="alarm" color="light"></ion-icon><span>{{item.projection | currency:'USD':true}}</span></ion-item>
         <ion-item-options side="right">
-          <button ion-button color="danger" (click)="showConfirm(item)">
+          <button ion-button color="danger" (click)="showConfirmation(item)">
             Delete
           </button>
         </ion-item-options>
@@ -201,7 +201,7 @@
             <button ion-button color="lighter">
               <ion-toggle color="danger" checked="true" [(ngModel)]="actual.expense" (ngModelChange)="saveAll('toggle')"></ion-toggle>
             </button>
-            <button ion-button color="danger" (click)="showConfirmation(item, actual)">
+            <button ion-button color="danger" (click)="showConfirmation(null, item, actual)">
               Delete
             </button>
           </ion-item-options>

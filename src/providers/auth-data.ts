@@ -13,22 +13,18 @@ export class AuthData {
 
   constructor(public af: AngularFire) {
     // subscribe to check for user authentication
-    this.subscription = af.auth.subscribe( user => {
+    af.auth.subscribe( user => {
       // if user is authenticated assign data to fireAuth & user variables
       if (user) {
         this.authState = user;
         this.fireAuth = user.auth;
-        this.user = af.database.list('/users/' + this.fireAuth.uid + '/user-info');
+        // this.user = af.database.list('/users/' + this.fireAuth.uid + '/user-info');
       }
     }, (err) => {
       // else make sure variables are null
       this.fireAuth = null;
       this.user = null;
     });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 
   // simply return userInfo with data assigned to fireAuth variable above
