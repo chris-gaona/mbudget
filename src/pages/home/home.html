@@ -196,7 +196,7 @@
       <ion-item-group *ngFor="let item of selectedBudget.budget_items" margin-bottom>
         <ion-item-divider color="lighter" text-capitalize>{{item.item}} <ion-badge *ngIf="item.paid" class="paid-boolean" color="secondary" text-uppercase>paid</ion-badge> <ion-icon class="alarm-icon" *ngIf="item.due" name="alarm" color="light"></ion-icon><span item-right ion-text color="{{(item.projection - getActualTotal(item)) < 0 ? 'danger' : 'light'}}" class="small-text"><small>Left in budget</small> <b>{{item.projection - getActualTotal(item) | currency:'USD':true}}</b></span></ion-item-divider>
         <ion-item-sliding *ngFor="let actual of item.actual" class="projActualItem">
-          <ion-item text-capitalize (click)="goToEditPage(selectedBudget, item)">{{actual.name}}<span><ion-icon name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense"></ion-icon> {{actual.amount | currency:'USD':true}}</span></ion-item>
+          <ion-item text-capitalize (click)="goToEditPage(selectedBudget, item)">{{actual.name}}<span><ion-icon name="{{actual.expense ? 'remove-circle' : 'add-circle'}}" [class.indicator-subtract]="actual.expense" [class.indicator-add]="!actual.expense"></ion-icon> {{actual.amount === '' ? 0 : actual.amount | currency:'USD':true}}</span></ion-item>
           <ion-item-options side="right">
             <button ion-button color="lighter">
               <ion-toggle color="danger" checked="true" [(ngModel)]="actual.expense" (ngModelChange)="saveAll('toggle')"></ion-toggle>
